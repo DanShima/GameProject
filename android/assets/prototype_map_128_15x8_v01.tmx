@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="2017.10.31" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="128" tileheight="128" infinite="0" nextobjectid="1">
+ <tileset firstgid="1" source="prototypegame-png-128-v01.tsx"/>
+ <layer name="Tile Layer 1" width="15" height="8">
+  <data encoding="base64" compression="zlib">
+   eJwTY2BgEBvFwxYDAMIHClE=
+  </data>
+ </layer>
+</map>
