@@ -7,6 +7,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -23,12 +25,19 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private int tileSize = 128; //tile in pixel
     private int tileCountW = 15; //numbers of tiles in width
     private int tileCountH = 8; //numbers of tiles in height
+    //calculate the game world dimensions
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
+
+
     private Texture img;
     private TiledMap tiledMap;
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
+
+    private SpriteBatch sb;
+    private Texture texture;
+    private Sprite sprite;
 
     @Override
     public void create () {
@@ -43,6 +52,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMap = new TmxMapLoader().load("prototype_map_128_15x8_v04.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         Gdx.input.setInputProcessor(this);
+
+        //set up the sprite character
+        sb = new SpriteBatch();
+        //link the sprite image to the sprite
+        texture = new Texture(Gdx.files.internal("general-single.png"));
+        sprite = new Sprite(texture);
+        //set the initial starting position of the player
+        sprite.setPosition(0,128);
     }
 
     @Override
@@ -51,14 +68,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
-
         //update the camera (move using arrow keys)
         // pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+        //draw the sprite on the map
+        sb.begin();
+        sprite.draw(sb);
+        sb.end();
+
     }
 
     @Override
@@ -77,13 +96,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean keyUp(int keycode) {
         if(keycode == Input.Keys.LEFT)
-            camera.translate(-128,0);
+            sprite.translate(-128,0);
         if(keycode == Input.Keys.RIGHT)
-            camera.translate(128,0);
+            sprite.translate(128,0);
         if(keycode == Input.Keys.UP)
-            camera.translate(0,-128);
+            sprite.translate(0,128);
         if(keycode == Input.Keys.DOWN)
-            camera.translate(0,128);
+            sprite.translate(0,-128);
         if(keycode == Input.Keys.NUM_1)
             tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
         if(keycode == Input.Keys.NUM_2)
@@ -97,13 +116,27 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         return false;
     }
 
+    /** Called when the user touches the screen
+     *
+     * */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
+
+        if (Gdx.input.isTouched(pointer)) {
+            //float positionX = (float) Math.floor(screenX - (screenX % 128));
+           // float positionY = 1080 - (float) Math.floor(screenY - (screenY % 128)) - 128;
+            sprite.translate(128,0);} //TODO he only moves to the right...
+            //sprite.setPosition(positionX, positionY);
+        return true;
     }
 
+
+
+    /** Called when the user lifts their finger from the screen
+    **/
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
         return false;
     }
 
@@ -120,5 +153,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public boolean moveOnTouch(){
+    return false;
     }
 }
