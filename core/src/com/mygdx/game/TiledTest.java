@@ -20,21 +20,26 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
  */
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
-    Texture img;
-    TiledMap tiledMap;
-    OrthographicCamera camera;
-    TiledMapRenderer tiledMapRenderer;
+    private int tileSize = 128; //tile in pixel
+    private int tileCountW = 15; //numbers of tiles in width
+    private int tileCountH = 8; //numbers of tiles in height
+    private final int mapWidth = tileSize * tileCountW;
+    private final int mapHeight = tileSize * tileCountH;
+    private Texture img;
+    private TiledMap tiledMap;
+    private OrthographicCamera camera;
+    private TiledMapRenderer tiledMapRenderer;
 
     @Override
     public void create () {
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
 
-        //create an OrthographicCamera, set it to the dimensions of the screen and update() it.
+        //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,w,h);
+        camera.setToOrtho(false,width,height);
         camera.update();
-        //load map and create a OrthogonalTiledMapRenderer passing in our tiled map.
+        //load map and create a renderer passing in our tiled map
         tiledMap = new TmxMapLoader().load("prototype_map_128_15x8_v04.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         Gdx.input.setInputProcessor(this);
@@ -46,7 +51,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //update the camera (move using arrow keys),
+
+
+
+        //update the camera (move using arrow keys)
         // pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
