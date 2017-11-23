@@ -59,7 +59,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         texture = new Texture(Gdx.files.internal("general-single.png"));
         sprite = new Sprite(texture);
         //set the initial starting position of the player
-        sprite.setPosition(0,128);
+        sprite.setPosition(0,0);
     }
 
     @Override
@@ -123,6 +123,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
         if (Gdx.input.isTouched(pointer)) {
+            sprite.setPosition(tileSize/2,tileSize/2);
             //float positionX = (float) Math.floor(screenX - (screenX % 128));
            // float positionY = 1080 - (float) Math.floor(screenY - (screenY % 128)) - 128;
             sprite.translate(128,0);} //TODO he only moves to the right...
