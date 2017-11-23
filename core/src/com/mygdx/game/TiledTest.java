@@ -35,9 +35,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
 
+
+    private Animator girl; //animated player
     private SpriteBatch sb;
     private Texture texture;
-    private Sprite sprite;
+    private Sprite sprite; //static player
 
     @Override
     public void create () {
@@ -53,13 +55,18 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         Gdx.input.setInputProcessor(this);
 
-        //set up the sprite character
+        //set up the static player
         sb = new SpriteBatch();
         //link the sprite image to the sprite
         texture = new Texture(Gdx.files.internal("general-single.png"));
         sprite = new Sprite(texture);
         //set the initial starting position of the player
         sprite.setPosition(0,0);
+
+        //set up the animated player
+        girl = new Animator();
+        girl.create();
+
     }
 
     @Override
@@ -77,6 +84,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         sb.begin();
         sprite.draw(sb);
         sb.end();
+
+        girl.render();
 
     }
 
