@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -22,15 +23,20 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
  */
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
+
+
     private static final  int tileSize = 128; //tile in pixel
     private int tileCountW = 15; //numbers of tiles in width
     private int tileCountH = 8; //numbers of tiles in height
+
+
+
     //calculate the game world dimensions
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
     private static final int PNGwidth=42;
     private static final int PNGheight= 48;
-    private static final int NumberOfMovedTiles=2;
+    private int NumberOfMovedTiles=2;
 
 
     private Texture img;
@@ -43,6 +49,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private SpriteBatch sb;
     private Texture texture;
     private Sprite sprite; //static player
+    private SpriteBatch batch;
 
     @Override
     public void create () {
@@ -70,6 +77,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl = new Animator();
         girl.create();
 
+        batch = new SpriteBatch();
+
     }
 
     @Override
@@ -88,9 +97,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         sprite.draw(sb);
         sb.end();
 
+       girl.render();
 
-        
-        girl.render();
 
     }
 
@@ -109,38 +117,49 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     // testing
     @Override
     public boolean keyUp(int keycode) {
-        int oneStepHorizontaly = mapWidth/tileCountW;
-        int twoStepsHorizontally= mapWidth/tileCountW*NumberOfMovedTiles;
-        int oneStepVertically =mapHeight/tileCountH;
-        int twoStepsvertically = mapHeight/tileCountH*NumberOfMovedTiles;
+        int oneStepHorizontaly = mapWidth / tileCountW;
+        int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
+        int oneStepVertically = mapHeight / tileCountH;
+        int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
 
-        if(keycode == Input.Keys.LEFT)    // one step left
-            sprite.translate(-oneStepHorizontaly,0);
-        if(keycode == Input.Keys.A)                             // 2 steps left
-            sprite.translate(-twoStepsHorizontally,0);
-        if(keycode == Input.Keys.RIGHT)         // one step rigth
-            sprite.translate(oneStepHorizontaly,0);
-        if(keycode == Input.Keys.D)         // two steps step rigth
-            sprite.translate(twoStepsHorizontally,0);
 
-        if(keycode == Input.Keys.UP)            // one step up
-            sprite.translate(0,oneStepVertically);
 
-        if(keycode == Input.Keys.W)            // 2 steps up
-            sprite.translate(0,twoStepsvertically);
+            if (keycode == Input.Keys.LEFT)    // one step left
+                girl.setXandY(-oneStepHorizontaly, 0);
 
-        if(keycode == Input.Keys.DOWN)          // one step down
-            sprite.translate(0,-oneStepVertically);
 
-        if(keycode == Input.Keys.S)          // 2 steps down
-            sprite.translate(0,-twoStepsvertically);
+            //batch.draw(girl.getCurrentFrame(), -twoStepsHorizontally, 0);
 
-        if(keycode == Input.Keys.NUM_1)
-            tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
-        if(keycode == Input.Keys.NUM_2)
-            tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
-        return false;
-    }
+
+            if (keycode == Input.Keys.A)                             // 2 steps left
+                girl.setXandY(-twoStepsHorizontally, 0);
+            if (keycode == Input.Keys.RIGHT)         // one step rigth
+                girl.setXandY(oneStepHorizontaly, 0);
+            if (keycode == Input.Keys.D)         // two steps step rigth
+                girl.setXandY(twoStepsHorizontally, 0);
+
+            if (keycode == Input.Keys.UP)            // one step up
+                girl.setXandY(0, oneStepVertically);
+
+            if (keycode == Input.Keys.W)            // 2 steps up
+                girl.setXandY(0, twoStepsvertically);
+
+            if (keycode == Input.Keys.DOWN)          // one step down
+                girl.setXandY(0, -oneStepVertically);
+
+            if (keycode == Input.Keys.S)          // 2 steps down
+                girl.setXandY(0, -twoStepsvertically);
+
+            if (keycode == Input.Keys.NUM_1)
+                tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
+            if (keycode == Input.Keys.NUM_2)
+                tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
+            float x = girl.getX();
+            float y = girl.getY();
+            Gdx.app.log("", ""+x);
+            return false;
+
+        }
 
     @Override
     public boolean keyTyped(char character) {
@@ -153,13 +172,23 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      * */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        //need to get current position (x, y), compared it to future position(u, v)
+        //
 
         if (Gdx.input.isTouched(pointer)) {
-            sprite.setPosition(tileSize/2,tileSize/2);
+
+            int oneStepVertically = mapHeight / tileCountH;
+            sprite.setPosition(tileSize / 2, tileSize / 2);
             //float positionX = (float) Math.floor(screenX - (screenX % 128));
-           // float positionY = 1080 - (float) Math.floor(screenY - (screenY % 128)) - 128;
-            sprite.translate(128,0);} //TODO he only moves to the right...
+            // float positionY = 1080 - (float) Math.floor(screenY - (screenY % 128)) - 128;
+
             //sprite.setPosition(positionX, positionY);
+
+                girl.setXandY(0, oneStepVertically);
+
+
+        }girl.render();
+
         return true;
     }
 
@@ -190,5 +219,29 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
     public boolean moveOnTouch(){
     return false;
+    }
+
+    public int getTileCountW() {
+        return tileCountW;
+    }
+
+    public int getTileCountH() {
+        return tileCountH;
+    }
+
+    public int getMapWidth() {
+        return mapWidth;
+    }
+
+    public int getMapHeight() {
+        return mapHeight;
+    }
+
+    public int getNumberOfMovedTiles() {
+        return NumberOfMovedTiles;
+    }
+
+    public static int getTileSize() {
+        return tileSize;
     }
 }

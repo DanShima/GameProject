@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,14 +27,16 @@ public class Animator implements ApplicationListener {
     TextureRegion[] walkFrames;
 
 
+    TextureRegion currentFrame;
 
-
-
+    float x;
+    float y;
 
     //useless atm
     boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
     private static final float MOVE_TO_X = 128f; // unit will move in x direction
     private float originX, originalY;
+
 
 
     @Override
@@ -92,23 +95,72 @@ public class Animator implements ApplicationListener {
 
     }
 
-    //TODO make the player move
+
     public void move(Animator animator) {
 
 
+
+    }
+
+    public float getStateTime() {
+        return stateTime;
+    }
+
+    public TextureRegion getCurrentFrame() {
+        return currentFrame;
+    }
+
+
+    public void setCurrentFrame(TextureRegion currentFrame) {
+        this.currentFrame = currentFrame;
+    }
+
+    public Animation<TextureRegion> getWalkAnimation() {
+        return walkAnimation;
     }
 
     @Override
     public void render() {
+
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
         // this method takes an elapsed time parameter and returns the appropriate image for that time. it loops through a series of images and do it again
         //TODO put the movements in a separate method
-        TextureRegion currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+        currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+
         spriteBatch.begin();
-        spriteBatch.draw(currentFrame, 0, 0); // Draw current frame at (0, 0)
+        spriteBatch.draw(currentFrame, getX(), getY()); // Draw current frame at (0, 0)
         spriteBatch.end();
     }
+
+
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public void setXandY(float x, float y){
+        this.x = x;
+        this.y = y;
+    }
+
+    public void draw(float x, float y){
+
+    }
+
+
 
     @Override
     public void dispose() {
