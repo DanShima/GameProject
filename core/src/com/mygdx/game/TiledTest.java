@@ -1,4 +1,4 @@
-﻿package com.mygdx.game;
+package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -67,6 +67,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //set the player in the middle of the tile
         sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
 
+        girl = new Animator();
+        girl.create();
+
     }
 
     @Override
@@ -86,7 +89,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         sb.end();
 
 
-        girl = new Animator();
+        
         girl.render();
 
     }
