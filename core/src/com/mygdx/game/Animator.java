@@ -33,7 +33,7 @@ public class Animator implements ApplicationListener {
     TextureRegion[] walkFramesLEFT = new TextureRegion[FRAME_COLS];
     TextureRegion[] walkFramesRIGHT = new TextureRegion[FRAME_COLS];
 
-
+   private int TEST;
 
     //useless atm
     boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
