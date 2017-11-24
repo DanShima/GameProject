@@ -94,4 +94,5 @@ public class Animator implements ApplicationListener {
     public void pause(){}
     @Override
     public void resize(int x, int y){}
+    //test
 }
