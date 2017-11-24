@@ -24,20 +24,17 @@ public class Animator implements ApplicationListener {
 
     //movement arrays
     private Animation<TextureRegion> walkAnimation;
-    TextureRegion[] walkFrames;
+   // private TextureRegion[] walkFrames;
 
 
-    TextureRegion currentFrame;
+    private TextureRegion currentFrame;
 
-    float x;
-    float y;
+    private float x; //current x position
+    private float y; //current y position
+    private float oldX = 0; //old X position
+    private float oldY = 0; //old Y position
 
-    //useless atm
     boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
-    private static final float MOVE_TO_X = 128f; // unit will move in x direction
-    private float originX, originalY;
-
-
 
     @Override
     public void create() {
@@ -51,8 +48,7 @@ public class Animator implements ApplicationListener {
         //convert 2D array to normal array
         TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS];
         for (int i = 0; i < FRAME_COLS; i++) {
-            walkFrames[i] = tmp[0][i];
-        }
+            walkFrames[i] = tmp[0][i];}
 
 
         /*//TODO put the movements in a switch statement.
@@ -91,16 +87,7 @@ public class Animator implements ApplicationListener {
 
     }
     // Initialize the Animation with the frame interval and array of frames
-    public void initializeAnimation(TextureRegion[] walkFrames){
-
-    }
-
-
-    public void move(Animator animator) {
-
-
-
-    }
+    public void initializeAnimation(TextureRegion[] walkFrames){}
 
     public float getStateTime() {
         return stateTime;
@@ -135,9 +122,7 @@ public class Animator implements ApplicationListener {
 
 
 
-    public float getX() {
-        return x;
-    }
+    public float getX() { return x - (float)(TiledTest.tileSize*0.25); }
 
     public float getY() {
         return y;
@@ -151,25 +136,30 @@ public class Animator implements ApplicationListener {
         this.y = y;
     }
 
-    public void setXandY(float x, float y){
-        this.x = x;
-        this.y = y;
+    public void move(float stepX, float stepY){
+        x = stepX + oldX;
+        y = stepY + oldY;
+        oldX = x;
+        oldY = y;
     }
 
-    public void draw(float x, float y){
-
+    public float getOldX() {
+        return oldX;
     }
-
-
+    public float getOldY() {
+        return oldY;
+    }
+    public void draw(float x, float y){}
 
     @Override
     public void dispose() {
         spriteBatch.dispose();
         walkSheet.dispose();
     }
-
     @Override
-    public void resume(){}
+    public void resume(){
+        updateAnimationStateTime = true;
+    }
     @Override
     public void pause(){}
     @Override

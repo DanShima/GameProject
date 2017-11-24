@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -23,13 +22,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
  */
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
-
-
-    private static final  int tileSize = 128; //tile in pixel
+    public static final  int tileSize = 128; //tile in pixel
     private int tileCountW = 15; //numbers of tiles in width
     private int tileCountH = 8; //numbers of tiles in height
-
-
 
     //calculate the game world dimensions
     private final int mapWidth = tileSize * tileCountW;
@@ -38,12 +33,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private static final int PNGheight= 48;
     private int NumberOfMovedTiles=2;
 
-
-    private Texture img;
     private TiledMap tiledMap;
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
-
 
     private Animator girl; //animated player
     private SpriteBatch sb;
@@ -63,9 +55,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //load map and create a renderer passing in our tiled map
         tiledMap = new TmxMapLoader().load("prototype_map_128_15x8_v04.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+        tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
 
         //set up the static player
+        //TODO static player can be deleted once the animated player is working perfectly
         sb = new SpriteBatch();
         //link the sprite image to the sprite
         texture = new Texture(Gdx.files.internal("general-single.png"));
@@ -78,7 +72,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl.create();
 
         batch = new SpriteBatch();
-
     }
 
     @Override
@@ -98,8 +91,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         sb.end();
 
        girl.render();
-
-
     }
 
     @Override
@@ -121,75 +112,61 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
         int oneStepVertically = mapHeight / tileCountH;
         int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
-
-
-
             if (keycode == Input.Keys.LEFT)    // one step left
-                girl.setXandY(-oneStepHorizontaly, 0);
-
-
-            //batch.draw(girl.getCurrentFrame(), -twoStepsHorizontally, 0);
-
-
+                girl.move(-oneStepHorizontaly, 0);
             if (keycode == Input.Keys.A)                             // 2 steps left
-                girl.setXandY(-twoStepsHorizontally, 0);
+                girl.move(-twoStepsHorizontally, 0);
             if (keycode == Input.Keys.RIGHT)         // one step rigth
-                girl.setXandY(oneStepHorizontaly, 0);
+                girl.move(oneStepHorizontaly, 0);
             if (keycode == Input.Keys.D)         // two steps step rigth
-                girl.setXandY(twoStepsHorizontally, 0);
+                girl.move(twoStepsHorizontally, 0);
 
             if (keycode == Input.Keys.UP)            // one step up
-                girl.setXandY(0, oneStepVertically);
+                girl.move(0, oneStepVertically);
 
             if (keycode == Input.Keys.W)            // 2 steps up
-                girl.setXandY(0, twoStepsvertically);
+                girl.move(0, twoStepsvertically);
 
             if (keycode == Input.Keys.DOWN)          // one step down
-                girl.setXandY(0, -oneStepVertically);
+                girl.move(0, -oneStepVertically);
 
             if (keycode == Input.Keys.S)          // 2 steps down
-                girl.setXandY(0, -twoStepsvertically);
+                girl.move(0, -twoStepsvertically);
 
             if (keycode == Input.Keys.NUM_1)
                 tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
             if (keycode == Input.Keys.NUM_2)
                 tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
-            float x = girl.getX();
-            float y = girl.getY();
-            Gdx.app.log("", ""+x);
+
             return false;
-
-        }
-
-    @Override
-    public boolean keyTyped(char character) {
-
-        return false;
     }
 
-    /** Called when the user touches the screen
+    @Override
+    public boolean keyTyped(char character) {return false;}
+
+    /**
+     * Called when the user touches the screen
      *
      * */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        //need to get current position (x, y), compared it to future position(u, v)
-        //
-
-        if (Gdx.input.isTouched(pointer)) {
-
-            int oneStepVertically = mapHeight / tileCountH;
-            sprite.setPosition(tileSize / 2, tileSize / 2);
-            //float positionX = (float) Math.floor(screenX - (screenX % 128));
-            // float positionY = 1080 - (float) Math.floor(screenY - (screenY % 128)) - 128;
-
-            //sprite.setPosition(positionX, positionY);
-
-                girl.setXandY(0, oneStepVertically);
-
-
-        }girl.render();
-
-        return true;
+        int oneStepHorizontaly = mapWidth / tileCountW;
+        int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
+        int oneStepVertically = mapHeight / tileCountH;
+        int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
+        //TODO complete this
+        if (Gdx.input.isTouched(pointer) && screenX>girl.getOldX()+200) {
+            girl.move(oneStepHorizontaly, 0); //move right
+        } else if (Gdx.input.isTouched(pointer) && screenX<girl.getOldX()-200) {
+            girl.move(-oneStepHorizontaly, 0); //move left
+        } else if(Gdx.input.isTouched(pointer) && screenY>girl.getOldY()){
+            girl.move(0, oneStepVertically); //move up
+        } else if(Gdx.input.isTouched(pointer) ){//&& screenY<girl.getOldY()
+            girl.move(0, -oneStepVertically); //move down
+        } else {
+            return true;
+        }
+        return false;
     }
 
 
@@ -197,10 +174,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     /** Called when the user lifts their finger from the screen
     **/
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
-        return false;
-    }
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;}
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
