@@ -22,12 +22,15 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
  */
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
-    private int tileSize = 128; //tile in pixel
+    private static final  int tileSize = 128; //tile in pixel
     private int tileCountW = 15; //numbers of tiles in width
     private int tileCountH = 8; //numbers of tiles in height
     //calculate the game world dimensions
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
+    private static final int PNGwidth=42;
+    private static final int PNGheight= 48;
+    private static final int NumberOfMovedTiles=2;
 
 
     private Texture img;
@@ -59,7 +62,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         texture = new Texture(Gdx.files.internal("general-single.png"));
         sprite = new Sprite(texture);
         //set the initial starting position of the player
-        sprite.setPosition(0,0);
+        sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
     }
 
     @Override
@@ -95,14 +98,32 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.LEFT)
-            sprite.translate(-128,0);
-        if(keycode == Input.Keys.RIGHT)
-            sprite.translate(128,0);
-        if(keycode == Input.Keys.UP)
-            sprite.translate(0,128);
-        if(keycode == Input.Keys.DOWN)
-            sprite.translate(0,-128);
+        int oneStepHorizontaly = mapWidth/tileCountW;
+        int twoStepsHorizontally= mapWidth/tileCountW*NumberOfMovedTiles;
+        int oneStepVertically =mapHeight/tileCountH;
+        int twoStepsvertically = mapHeight/tileCountH*NumberOfMovedTiles;
+
+        if(keycode == Input.Keys.LEFT)    // one step left
+            sprite.translate(-oneStepHorizontaly,0);
+        if(keycode == Input.Keys.A)                             // 2 steps left
+            sprite.translate(-twoStepsHorizontally,0);
+        if(keycode == Input.Keys.RIGHT)         // one step rigth
+            sprite.translate(oneStepHorizontaly,0);
+        if(keycode == Input.Keys.D)         // two steps step rigth
+            sprite.translate(twoStepsHorizontally,0);
+
+        if(keycode == Input.Keys.UP)            // one step up
+            sprite.translate(0,oneStepVertically);
+
+        if(keycode == Input.Keys.W)            // 2 steps up
+            sprite.translate(0,twoStepsvertically);
+
+        if(keycode == Input.Keys.DOWN)          // one step down
+            sprite.translate(0,-oneStepVertically);
+
+        if(keycode == Input.Keys.S)          // 2 steps down
+            sprite.translate(0,-twoStepsvertically);
+
         if(keycode == Input.Keys.NUM_1)
             tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
         if(keycode == Input.Keys.NUM_2)
