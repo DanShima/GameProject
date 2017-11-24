@@ -1,4 +1,4 @@
-package com.mygdx.game;
+﻿package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -38,9 +38,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
 
+
+    private Animator girl; //animated player
     private SpriteBatch sb;
     private Texture texture;
-    private Sprite sprite;
+    private Sprite sprite; //static player
 
     @Override
     public void create () {
@@ -56,13 +58,15 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         Gdx.input.setInputProcessor(this);
 
-        //set up the sprite character
+        //set up the static player
         sb = new SpriteBatch();
         //link the sprite image to the sprite
         texture = new Texture(Gdx.files.internal("general-single.png"));
         sprite = new Sprite(texture);
         //set the initial starting position of the player
+
         sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
+
     }
 
     @Override
@@ -80,6 +84,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         sb.begin();
         sprite.draw(sb);
         sb.end();
+
+        girl.render();
 
     }
 
