@@ -66,6 +66,6 @@ public class Player {
         // Elapsed time
         stateTime += Gdx.graphics.getDeltaTime();
         // get initial frame
-        currentFrame = moving.getKeyFrame(stateTime);
+       // currentFrame = moving.getKeyFrame(stateTime);
     }
 }
