@@ -35,6 +35,8 @@ public class Animator implements ApplicationListener {
 
 
 
+
+
     //useless atm
     boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
     private static final float MOVE_TO_X = 3f; // unit will move in x direction
