@@ -64,7 +64,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         texture = new Texture(Gdx.files.internal("general-single.png"));
         sprite = new Sprite(texture);
         //set the initial starting position of the player
-
+        //set the player in the middle of the tile
         sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
 
     }
@@ -85,6 +85,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         sprite.draw(sb);
         sb.end();
 
+
+        girl = new Animator();
         girl.render();
 
     }
