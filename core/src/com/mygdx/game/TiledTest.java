@@ -52,12 +52,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,width,height);
+        camera.setToOrtho(false,mapWidth,mapHeight);
         camera.update();
         //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load("prototype_map_128_15x8_v04.tmx");
+        tiledMap = new TmxMapLoader().load("blocking_v1.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         Gdx.input.setInputProcessor(this);
+
 
         //set up the static player
         sb = new SpriteBatch();
@@ -65,7 +66,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         texture = new Texture(Gdx.files.internal("general-single.png"));
         sprite = new Sprite(texture);
         //set the initial starting position of the player
-        sprite.setPosition(0,0);
+        sprite.setPosition(128,128);
 
         //set up the animated player
         girl = new Animator();
@@ -125,13 +126,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         return false;
     }
     public void collision(){
-        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("blocked");
-        float oldX = sprite.getX () , oldY = sprite.getY ()
-                ,tileWidth= Blockedlayer.getTileWidth (), tileHight= Blockedlayer.getTileHeight ();
-        boolean CollisoinX = false , CollisionY=false;
+        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
+        float oldX = sprite.getX () , oldY = sprite.getY ();
+        float tileWidth= Blockedlayer.getTileWidth ();
+        float tileHeight= Blockedlayer.getTileHeight ();
+        boolean CollisionX = false , CollisionY=false;
         if(
-       CollisoinX = Blockedlayer.getCell ( (int)(oldX / tileWidth ), (int) (oldY+ sprite.getHeight() / tileHight) )
-        .getTile ().getProperties ().containsKey ( "blocked" ))
+       CollisionX = Blockedlayer.getCell((int)(oldX / tileWidth)-1, (int) (oldY / tileHeight)) //+ sprite.getHeight()
+        .getTile().getProperties().containsKey( "blocked" ))
         sprite.translate ( 0,0 );
        else sprite.translate ( -128,0 );
 
