@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
@@ -28,6 +30,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     //calculate the game world dimensions
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
+    MapLayer layer ;
+
 
 
     private Texture img;
@@ -104,8 +108,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
+
         if(keycode == Input.Keys.LEFT)
-            sprite.translate(-128,0);
+            collision();
+           // sprite.translate(-128,0);
         if(keycode == Input.Keys.RIGHT)
             sprite.translate(128,0);
         if(keycode == Input.Keys.UP)
@@ -118,6 +124,22 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
             tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
         return false;
     }
+    public void collision(){
+        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("blocked");
+        float oldX = sprite.getX () , oldY = sprite.getY ()
+                ,tileWidth= Blockedlayer.getTileWidth (), tileHight= Blockedlayer.getTileHeight ();
+        boolean CollisoinX = false , CollisionY=false;
+        if(
+       CollisoinX = Blockedlayer.getCell ( (int)(oldX / tileWidth ), (int) (oldY+ sprite.getHeight() / tileHight) )
+        .getTile ().getProperties ().containsKey ( "blocked" ))
+        sprite.translate ( 0,0 );
+       else sprite.translate ( -128,0 );
+
+
+
+        }
+
+
 
     @Override
     public boolean keyTyped(char character) {
