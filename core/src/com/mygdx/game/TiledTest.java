@@ -52,7 +52,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,mapWidth,mapHeight);
+        camera.setToOrtho(false,width,height);
         camera.update();
         //load map and create a renderer passing in our tiled map
         tiledMap = new TmxMapLoader().load("blocking_v1.tmx");
