@@ -21,10 +21,19 @@ public class Animator implements ApplicationListener {
     private SpriteBatch spriteBatch; //to draw on screen
     // A variable for tracking elapsed time for the animation (when the player moves)
     private float stateTime;
+    private float fps = 0.3f; //time between frames in seconds
 
     //movement arrays
     private Animation<TextureRegion> walkAnimation;
-   // private TextureRegion[] walkFrames;
+    private Animation<TextureRegion> walkAnimationDOWN;
+    private Animation<TextureRegion> walkAnimationUP;
+    private Animation<TextureRegion> walkAnimationLEFT;
+    private Animation<TextureRegion> walkAnimationRIGHT;
+   //
+    private TextureRegion[] walkFramesDOWN;
+    private TextureRegion[] walkFramesUP;
+    private TextureRegion[] walkFramesLEFT;
+    private TextureRegion[] walkFramesRIGHT;
 
 
     private TextureRegion currentFrame;
@@ -40,7 +49,6 @@ public class Animator implements ApplicationListener {
     public void create() {
         // Load the sprite sheet as a Texture
         walkSheet = new Texture(Gdx.files.internal("spritebase_hero.png"));
-
         // Create a 2D array of TextureRegions by splitting the sheet into separate frames
         TextureRegion[][] tmp = TextureRegion.split(walkSheet,
                 walkSheet.getWidth() / FRAME_COLS,
@@ -48,10 +56,8 @@ public class Animator implements ApplicationListener {
         //convert 2D array to normal array
         TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS];
         for (int i = 0; i < FRAME_COLS; i++) {
-            walkFrames[i] = tmp[0][i];}
-
-
-        /*//TODO put the movements in a switch statement.
+          walkFrames[i] = tmp[0][i];}
+        //TODO put the movements in a switch statement.
         walkFramesDOWN = new TextureRegion[FRAME_COLS];
         walkFramesUP = new TextureRegion[FRAME_COLS];
         walkFramesLEFT = new TextureRegion[FRAME_COLS];
@@ -72,34 +78,21 @@ public class Animator implements ApplicationListener {
         //GO UP
         for (int i = 0; i < FRAME_COLS; i++) {
             walkFramesUP[i] = tmp[3][i];
-        }*/
+        }
 
-        walkAnimation = new Animation<TextureRegion>(0.5f, walkFrames);
-
-        //walkAnimationDOWN = new Animation<TextureRegion>(0.5f, walkFrames);
-        //walkAnimationUP = new Animation<TextureRegion>(0.5f, walkFrames);
-        //walkAnimationLEFT = new Animation<TextureRegion>(0.5f, walkFrames);
-        //walkAnimationRIGHT = new Animation<TextureRegion>(0.5f, walkFrames);
-
+        walkAnimation = new Animation<TextureRegion>(fps, walkFrames);
+        walkAnimationDOWN = new Animation<TextureRegion>(fps, walkFramesDOWN);
+        walkAnimationUP = new Animation<TextureRegion>(fps, walkFramesUP);
+        walkAnimationLEFT = new Animation<TextureRegion>(fps, walkFramesLEFT);
+        walkAnimationRIGHT = new Animation<TextureRegion>(fps, walkFramesRIGHT);
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
 
     }
-    // Initialize the Animation with the frame interval and array of frames
-    public void initializeAnimation(TextureRegion[] walkFrames){}
 
-    public float getStateTime() {
-        return stateTime;
-    }
-
-    public TextureRegion getCurrentFrame() {
-        return currentFrame;
-    }
-
-
-    public void setCurrentFrame(TextureRegion currentFrame) {
-        this.currentFrame = currentFrame;
+    public void setWalkAnimation(Animation<TextureRegion> walkAnimation) {
+        this.walkAnimation = walkAnimation;
     }
 
     public Animation<TextureRegion> getWalkAnimation() {
@@ -113,27 +106,17 @@ public class Animator implements ApplicationListener {
         // Get current frame of animation for the current stateTime:
         // this method takes an elapsed time parameter and returns the appropriate image for that time. it loops through a series of images and do it again
         //TODO put the movements in a separate method
-        currentFrame = walkAnimation.getKeyFrame(stateTime, true);
+        currentFrame = getWalkAnimation().getKeyFrame(stateTime, true);
 
         spriteBatch.begin();
         spriteBatch.draw(currentFrame, getX(), getY()); // Draw current frame at (0, 0)
         spriteBatch.end();
     }
 
-
-
     public float getX() { return x - (float)(TiledTest.tileSize*0.25); }
 
     public float getY() {
         return y;
-    }
-
-    public void setX(float x) {
-        this.x = x;
-    }
-
-    public void setY(float y) {
-        this.y = y;
     }
 
     public void move(float stepX, float stepY){
@@ -149,7 +132,6 @@ public class Animator implements ApplicationListener {
     public float getOldY() {
         return oldY;
     }
-    public void draw(float x, float y){}
 
     @Override
     public void dispose() {
@@ -163,5 +145,39 @@ public class Animator implements ApplicationListener {
     @Override
     public void pause(){}
     @Override
-    public void resize(int x, int y){}
+    public void resize(int x, int y)
+    {
+    }
+
+    public Animation<TextureRegion> getWalkAnimationDOWN() {
+        return walkAnimationDOWN;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationUP() {
+        return walkAnimationUP;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationLEFT() {
+        return walkAnimationLEFT;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationRIGHT() {
+        return walkAnimationRIGHT;
+    }
+
+    public TextureRegion[] getWalkFramesDOWN() {
+        return walkFramesDOWN;
+    }
+
+    public TextureRegion[] getWalkFramesUP() {
+        return walkFramesUP;
+    }
+
+    public TextureRegion[] getWalkFramesLEFT() {
+        return walkFramesLEFT;
+    }
+
+    public TextureRegion[] getWalkFramesRIGHT() {
+        return walkFramesRIGHT;
+    }
 }

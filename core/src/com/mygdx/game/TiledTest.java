@@ -112,26 +112,34 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
         int oneStepVertically = mapHeight / tileCountH;
         int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
-            if (keycode == Input.Keys.LEFT)    // one step left
-                girl.move(-oneStepHorizontaly, 0);
-            if (keycode == Input.Keys.A)                             // 2 steps left
-                girl.move(-twoStepsHorizontally, 0);
-            if (keycode == Input.Keys.RIGHT)         // one step rigth
-                girl.move(oneStepHorizontaly, 0);
-            if (keycode == Input.Keys.D)         // two steps step rigth
-                girl.move(twoStepsHorizontally, 0);
+            if (keycode == Input.Keys.LEFT){    // one step left
+                girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                girl.move(-oneStepHorizontaly, 0);}
+            if (keycode == Input.Keys.A)    {   // 2 steps left
+                girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                girl.move(-twoStepsHorizontally, 0);}
+            if (keycode == Input.Keys.RIGHT)   {      // one step right
+                girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
+                girl.move(oneStepHorizontaly, 0);}
+            if (keycode == Input.Keys.D)  {       // two steps step right
+                girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
+                girl.move(twoStepsHorizontally, 0);}
 
-            if (keycode == Input.Keys.UP)            // one step up
-                girl.move(0, oneStepVertically);
+            if (keycode == Input.Keys.UP)    {        // one step up
+                girl.setWalkAnimation(girl.getWalkAnimationUP());
+                girl.move(0, oneStepVertically);}
 
-            if (keycode == Input.Keys.W)            // 2 steps up
-                girl.move(0, twoStepsvertically);
+            if (keycode == Input.Keys.W)  {          // 2 steps up
+                girl.setWalkAnimation(girl.getWalkAnimationUP());
+                girl.move(0, twoStepsvertically); }
 
-            if (keycode == Input.Keys.DOWN)          // one step down
-                girl.move(0, -oneStepVertically);
+            if (keycode == Input.Keys.DOWN)    {     // one step down
+                girl.setWalkAnimation(girl.getWalkAnimationDOWN());
+                girl.move(0, -oneStepVertically); }
 
-            if (keycode == Input.Keys.S)          // 2 steps down
-                girl.move(0, -twoStepsvertically);
+            if (keycode == Input.Keys.S)    {      // 2 steps down
+                girl.setWalkAnimation(girl.getWalkAnimationDOWN());
+                girl.move(0, -twoStepsvertically);}
 
             if (keycode == Input.Keys.NUM_1)
                 tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
