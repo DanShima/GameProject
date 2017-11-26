@@ -18,7 +18,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
  * This class renders the tile map made with Tiled and shows it on the screen
  * When you run the code you should see your map.  Pressing the arrow keys will scroll around the map ( and show bright red when you’ve moved beyond the extents of your map ) .
  * Pressing 0 or 1 will toggle the visibility of each of the two layers in your map.
- * TODO make the map fixed
+ * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
  */
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
@@ -37,11 +37,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
 
+    private Item underwear;
+    private float posX, posY;
+
     private Animator girl; //animated player
     private SpriteBatch sb;
     private Texture texture;
     private Sprite sprite; //static player
-    private SpriteBatch batch;
+
 
     @Override
     public void create () {
@@ -68,10 +71,18 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //set the player in the middle of the tile
         sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
 
+
+
+        underwear = new Item();
+        //posX = width/2 - underwear.getPositionX()/2;
+       // posY = height/2 - underwear.getPositionY()/2;
+        underwear.create("underwear.png", 768, 768);
+
+
         girl = new Animator();
         girl.create();
 
-        batch = new SpriteBatch();
+
     }
 
     @Override
@@ -91,6 +102,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         sb.end();
 
        girl.render();
+       underwear.render();
     }
 
     @Override
