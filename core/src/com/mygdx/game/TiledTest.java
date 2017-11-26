@@ -52,13 +52,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
-<<<<<<< HEAD
         camera.setToOrtho(false,mapWidth,mapHeight);
         camera.translate ( 128 ,128 );
         //camera.zoom=3/2f;
-=======
         camera.setToOrtho(false,width,height);
->>>>>>> ea062ab7c2b7d949c90d9d9e4249cd1de522430f
         camera.update();
         //load map and create a renderer passing in our tiled map
         tiledMap = new TmxMapLoader().load("blocking_v1.tmx");
@@ -116,16 +113,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
 
         if(keycode == Input.Keys.LEFT)
-            collisionl(-128,0);
+            collisionL();
         // sprite.translate(-128,0);
         if(keycode == Input.Keys.RIGHT)
-            collisionr(+128,0);
+            collisionR();
         // sprite.translate(128,0);
         if(keycode == Input.Keys.UP)
-            collisionu(0,+128);
+            collisionU();
         // sprite.translate(0,128);
         if(keycode == Input.Keys.DOWN)
-            collisiond(0,-128);
+            collisionD();
         // sprite.translate(0,-128);
         if(keycode == Input.Keys.NUM_1)
             tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
@@ -133,7 +130,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
             tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
         return false;
     }
-    public void collisionl(int x , int y){
+    public void collisionL(){
 
 
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
@@ -153,7 +150,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
 
     }
-    public void collisionr(int x , int y){
+    public void collisionR(){
 
 
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
@@ -173,7 +170,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
 
     }
-    public void collisionu(int x , int y){
+    public void collisionU(){
 
 
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
@@ -193,7 +190,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
 
     }
-    public void collisiond(int x , int y){
+    public void collisionD(){
 
 
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
@@ -213,45 +210,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
 
     }
-    //@Override
-    /*public boolean keyUp(int keycode) {
-
-        if(keycode == Input.Keys.LEFT)
-
-            sprite.translate(-128,0);
-        if(keycode == Input.Keys.RIGHT)
-            collision();
-           // sprite.translate(128,0);
-        if(keycode == Input.Keys.UP)
-            sprite.translate(0,128);
-        if(keycode == Input.Keys.DOWN)
-            sprite.translate(0,-128);
-        if(keycode == Input.Keys.NUM_1)
-            tiledMap.getLayers().get(0).setVisible(!tiledMap.getLayers().get(0).isVisible());
-        if(keycode == Input.Keys.NUM_2)
-            tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
-        return false;
-    }*/
-
-
-
-    /*public void collision(){
-
-        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
-        float oldX = sprite.getX () , oldY = sprite.getY ();
-        float tileWidth= Blockedlayer.getTileWidth ();
-        float tileHeight= Blockedlayer.getTileHeight ();
-        boolean CollisionX = false , CollisionY=false;
-
-        if(
-       CollisionX = Blockedlayer.getCell((int)(oldX / tileWidth)+1, (int) (oldY / tileHeight))
-        .getTile().getProperties().containsKey( "blocked" ))
-        sprite.translate ( 0,0 );
-       else sprite.translate ( 128,0 );
-
-
-
-        }*/
 
 
 
