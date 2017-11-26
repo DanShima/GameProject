@@ -76,7 +76,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         underwear = new Item();
         //posX = width/2 - underwear.getPositionX()/2;
        // posY = height/2 - underwear.getPositionY()/2;
-        underwear.create("underwear.png", 768, 768);
+        underwear.create("socks.png", 768, 768);
 
 
         girl = new Animator();
