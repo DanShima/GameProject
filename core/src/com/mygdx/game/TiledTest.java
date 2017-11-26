@@ -70,19 +70,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //set the initial starting position of the player
         //set the player in the middle of the tile
         sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
-
-
-
+        
         underwear = new Item();
         //posX = width/2 - underwear.getPositionX()/2;
        // posY = height/2 - underwear.getPositionY()/2;
         underwear.create("socks.png", 768, 768);
 
-
         girl = new Animator();
         girl.create();
-
-
     }
 
     @Override
