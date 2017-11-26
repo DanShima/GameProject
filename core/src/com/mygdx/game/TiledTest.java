@@ -28,8 +28,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private int tileCountW = 15; //numbers of tiles in width
     private int tileCountH = 8; //numbers of tiles in height
     //calculate the game world dimensions
-    private final int mapWidth = tileSize * tileCountW -128 ;
-    private final int mapHeight = tileSize * tileCountH -128;
+    private final int mapWidth = tileSize * tileCountW ;
+    private final int mapHeight = tileSize * tileCountH ;
     MapLayer layer ;
 
 
@@ -52,10 +52,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,mapWidth,mapHeight);
-        camera.translate ( 128 ,128 );
+        //camera.setToOrtho(false,mapWidth,mapHeight);
+        //camera.translate ( 128 ,512 );
         //camera.zoom=3/2f;
         camera.setToOrtho(false,width,height);
+        camera.translate ( 128 ,128 );
         camera.update();
         //load map and create a renderer passing in our tiled map
         tiledMap = new TmxMapLoader().load("blocking_v1.tmx");
@@ -110,8 +111,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      * @return
      */
     public boolean keyUp(int keycode) {
-
-
         if(keycode == Input.Keys.LEFT)
             collisionL();
         // sprite.translate(-128,0);
@@ -131,47 +130,33 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         return false;
     }
     public void collisionL(){
-
-
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
         float oldX = sprite.getX () , oldY = sprite.getY ();
         float tileWidth= Blockedlayer.getTileWidth ();
         float tileHeight= Blockedlayer.getTileHeight ();
         boolean CollisionX = false , CollisionY=false;
-
-
         if (
-                CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth) - 1, (int) (oldY / tileHeight))
+                CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
                         .getTile().getProperties().containsKey("blocked"))
             sprite.translate(0, 0);
         else sprite.translate(-128, 0);
-
-
-
-
     }
+
     public void collisionR(){
-
-
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
         float oldX = sprite.getX () , oldY = sprite.getY ();
         float tileWidth= Blockedlayer.getTileWidth ();
         float tileHeight= Blockedlayer.getTileHeight ();
         boolean CollisionX = false , CollisionY=false;
 
-
         if (
-                CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth) +1, (int) (oldY / tileHeight))
+                CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1)
                         .getTile().getProperties().containsKey("blocked"))
             sprite.translate(0, 0);
         else sprite.translate(+128, 0);
-
-
-
-
     }
-    public void collisionU(){
 
+    public void collisionU(){
 
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
         float oldX = sprite.getX () , oldY = sprite.getY ();
@@ -179,45 +164,29 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         float tileHeight= Blockedlayer.getTileHeight ();
         boolean CollisionX = false , CollisionY=false;
 
-
         if (
-                CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth) , (int) (oldY / tileHeight)+1)
+                CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2)
                         .getTile().getProperties().containsKey("blocked"))
             sprite.translate(0, 0);
         else sprite.translate(0, +128);
-
-
-
-
     }
     public void collisionD(){
-
-
         TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
         float oldX = sprite.getX () , oldY = sprite.getY ();
         float tileWidth= Blockedlayer.getTileWidth ();
         float tileHeight= Blockedlayer.getTileHeight ();
         boolean CollisionX = false , CollisionY=false;
 
-
         if (
-                CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth) , (int) (oldY / tileHeight)-1)
+                CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight))
                         .getTile().getProperties().containsKey("blocked"))
             sprite.translate(0, 0);
         else sprite.translate(0, -128);
 
-
-
-
     }
-
-
 
     @Override
-    public boolean keyTyped(char character) {
-
-        return false;
-    }
+    public boolean keyTyped(char character) {return false;}
 
     /** Called when the user touches the screen
      *
@@ -239,10 +208,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     /** Called when the user lifts their finger from the screen
     **/
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
-        return false;
-    }
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;}
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
