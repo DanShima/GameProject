@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller class for managing the interaction between player, items and monsters.
+ * This class is the container for levels
  * Some stuff in TiledTest needs to be moved here
  */
 
