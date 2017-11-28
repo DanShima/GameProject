@@ -28,7 +28,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private int tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
-
     float tileWidth;
     float tileHeight;
     float oldX , oldY;
@@ -36,8 +35,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
-    private static final int PNGwidth=42;
-    private static final int PNGheight= 48;
     private int NumberOfMovedTiles=2;
 
     private TiledMap tiledMap;
@@ -46,16 +43,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMapTileLayer Blockedlayer;
 
     private Animator girl; //animated player
-    private SpriteBatch sb;
-    private Texture texture;
-    private Sprite sprite; //static player
     private SpriteBatch batch;
 
     int oneStepHorizontaly ;
     int twoStepsHorizontally;
     int oneStepVertically ;
     int twoStepsvertically ;
-
 
 
     @Override
@@ -74,18 +67,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
 
-
-        //set up the static player
-        //TODO static player can be deleted once the animated player is working perfectly
-        sb = new SpriteBatch();
-        //link the sprite image to the sprite
-        texture = new Texture(Gdx.files.internal("general-single.png"));
-        sprite = new Sprite(texture);
-        //set the initial starting position of the player
-        sprite.setPosition(512,512);
-        //set the player in the middle of the tile
-        sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
-
         girl = new Animator();
         girl.create();
 
@@ -103,18 +84,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-        //draw the sprite on the map
-        sb.begin();
-        sprite.draw(sb);
-        sb.end();
-
-       girl.render();
+        girl.render();
     }
 
     @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
+    public boolean keyDown(int keycode) {return false;}
 
     /**
      * Navigating around the map is simply a matter of moving around the camera. Move in 128px per tile size.
@@ -123,9 +97,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      * @param keycode
      * @return
      */
-
-    // testing
-    public boolean keyUp(int keycode) {
+     public boolean keyUp(int keycode) {
 
             if (keycode == Input.Keys.LEFT){// one step left
                 collisionL();
@@ -174,22 +146,22 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
             return false;
     }
-    /*
-      check the collision on the left side.
-      if the Properties is blocked the character will stay on the old x, y
 
+    public void toIdle(){
+
+    }
+    /**
+      *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
      */
     public void collisionL(){
         GetProperties();
-
+        girl.resetTimeTillIdle();
         if (CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
                         .getTile().getProperties().containsKey("blocked"))
                          girl.move ( 0,0 );
                              else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
                                     girl.move(-oneStepHorizontaly, 0);}
-            }
-
-
+    }
 
 
     /**
@@ -197,6 +169,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      */
     public void collisionR(){
         GetProperties();
+        girl.resetTimeTillIdle();
         if (CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1)
                         .getTile().getProperties().containsKey("blocked"))
             girl.move ( 0,0 );
@@ -209,7 +182,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public void collisionU(){
 
         GetProperties();
-
+        girl.resetTimeTillIdle(); //go back to idle state
         if (CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2)
                         .getTile().getProperties().containsKey("blocked"))
             girl.move ( 0,0 );
@@ -222,18 +195,18 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      */
     public void collisionD(){
         GetProperties();
-
+        girl.resetTimeTillIdle();
         if (CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight))
                         .getTile().getProperties().containsKey("blocked"))
             girl.move ( 0,0 );
             else {girl.setWalkAnimation(girl.getWalkAnimationDOWN ());
             girl.move(0, -oneStepVertically);}
+            //girl.setWalkAnimation(girl.getWalkAnimationDOWN ());
     }
 
     /**
      * assign the values of the tiles Properties
      */
-
     public void GetProperties(){
 
          Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
@@ -247,15 +220,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
          twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
          oneStepVertically = mapHeight / tileCountH;
          twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
-
     }
 
     @Override
     public boolean keyTyped(char character) {return false;}
 
-    /** Called when the user touches the screen
-    @Override
-    public boolean keyTyped(char character) {return false;}
 
     /**
      * Called when the user touches the screen
