@@ -30,7 +30,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     //calculate the game world dimensions
     private final int mapWidth = tileSize * tileCountW ;
     private final int mapHeight = tileSize * tileCountH ;
-    MapLayer layer ;
+    float tileWidth;
+    float tileHeight;
+    float oldX , oldY;
+    boolean CollisionX, CollisionY;
 
 
 
@@ -38,12 +41,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMap tiledMap;
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
+    private TiledMapTileLayer Blockedlayer;
 
 
     private Animator girl; //animated player
     private SpriteBatch sb;
     private Texture texture;
     private Sprite sprite; //static player
+
+
+
 
     @Override
     public void create () {
@@ -129,12 +136,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
             tiledMap.getLayers().get(1).setVisible(!tiledMap.getLayers().get(1).isVisible());
         return false;
     }
+    /*
+      check the collision on the left side.
+      if the Properties is blocked the character will stay on the old x, y
+
+     */
     public void collisionL(){
-        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
-        float oldX = sprite.getX () , oldY = sprite.getY ();
-        float tileWidth= Blockedlayer.getTileWidth ();
-        float tileHeight= Blockedlayer.getTileHeight ();
-        boolean CollisionX = false , CollisionY=false;
+        GetProperties();
         if (
                 CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
                         .getTile().getProperties().containsKey("blocked"))
@@ -142,27 +150,24 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         else sprite.translate(-128, 0);
     }
 
-    public void collisionR(){
-        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
-        float oldX = sprite.getX () , oldY = sprite.getY ();
-        float tileWidth= Blockedlayer.getTileWidth ();
-        float tileHeight= Blockedlayer.getTileHeight ();
-        boolean CollisionX = false , CollisionY=false;
 
+    /**
+     *  collision for the right side
+     */
+    public void collisionR(){
+        GetProperties();
         if (
                 CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1)
                         .getTile().getProperties().containsKey("blocked"))
             sprite.translate(0, 0);
         else sprite.translate(+128, 0);
     }
-
+    /**
+     *  collision for the upward
+     */
     public void collisionU(){
 
-        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
-        float oldX = sprite.getX () , oldY = sprite.getY ();
-        float tileWidth= Blockedlayer.getTileWidth ();
-        float tileHeight= Blockedlayer.getTileHeight ();
-        boolean CollisionX = false , CollisionY=false;
+        GetProperties();
 
         if (
                 CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2)
@@ -170,18 +175,33 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
             sprite.translate(0, 0);
         else sprite.translate(0, +128);
     }
+    /**
+     *  collision for the downward
+     */
     public void collisionD(){
-        TiledMapTileLayer Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
-        float oldX = sprite.getX () , oldY = sprite.getY ();
-        float tileWidth= Blockedlayer.getTileWidth ();
-        float tileHeight= Blockedlayer.getTileHeight ();
-        boolean CollisionX = false , CollisionY=false;
+        GetProperties();
 
         if (
                 CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight))
                         .getTile().getProperties().containsKey("blocked"))
             sprite.translate(0, 0);
         else sprite.translate(0, -128);
+
+    }
+
+    /**
+     * assign the values of the tiles Properties
+     */
+
+    public void GetProperties(){
+
+         Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
+         oldX = sprite.getX () ;
+         oldY = sprite.getY ();
+         tileWidth= Blockedlayer.getTileWidth ();
+         tileHeight= Blockedlayer.getTileHeight ();
+         CollisionX = false ;
+         CollisionY=false;
 
     }
 
