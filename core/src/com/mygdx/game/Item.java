@@ -18,6 +18,12 @@ public class Item {
     private Texture texture;
     private float positionX;
     private float positionY;
+    private boolean collected;
+    private Animator animator;
+
+    public Item(String pngFile, float x, float y) {
+        create(pngFile, x, y);
+    }
 
     public void create(String pngFile, float x, float y) {
         spriteBatch = new SpriteBatch();
@@ -26,15 +32,39 @@ public class Item {
         //set the initial starting position of the player
         //set the player in the middle of the tile
         sprite.setPosition(x, y);
+        collected = false;
     }
 
+    /**
+     * render the item to the screen. if the object is collected then it won't be rendered.
+     * */
     public void render() {
+        if(collected) return; //if it is collected by the player then it becomes invisible
         spriteBatch.begin();
         sprite.draw(spriteBatch);
         spriteBatch.end();
     }
 
-    //this maybe should also be in tiledtest class
+
+    /**
+     * check if player is on the same position as the item. If it is, then the item is collected by the player
+     * @return
+     */
+    /*public boolean checkCollision(){
+        if(getPositionY() == animator.getY() && getPositionX() == animator.getX()){
+            collected = true;}
+            return false;
+    }*/
+
+    /**
+     * this method returns the item's score that the player will receive when he collects it.
+     * @return
+     */
+    public int giveScorePoint() {
+        return 20;
+    }
+
+    //this maybe should be in tiledtest class
     public void dispose() {
         spriteBatch.dispose();
         texture.dispose();

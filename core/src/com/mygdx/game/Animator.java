@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import static com.mygdx.game.Constants.GIRL_NAKED;
+
 /**
  * Created by Giddy on 23/11/2017.
  */
@@ -23,19 +25,17 @@ public class Animator implements ApplicationListener {
     private float stateTime;
     private float fps = 0.3f; //time between frames in seconds
 
-    //movement arrays
+    //movement animation arrays
     private Animation<TextureRegion> walkAnimation;
     private Animation<TextureRegion> walkAnimationDOWN;
     private Animation<TextureRegion> walkAnimationUP;
     private Animation<TextureRegion> walkAnimationLEFT;
     private Animation<TextureRegion> walkAnimationRIGHT;
-   //
+   //arrays for holding the frames
     private TextureRegion[] walkFramesDOWN;
     private TextureRegion[] walkFramesUP;
     private TextureRegion[] walkFramesLEFT;
     private TextureRegion[] walkFramesRIGHT;
-
-
     private TextureRegion currentFrame;
 
     private float x; //current x position
@@ -48,7 +48,7 @@ public class Animator implements ApplicationListener {
     @Override
     public void create() {
         // Load the sprite sheet as a Texture
-        walkSheet = new Texture(Gdx.files.internal("spritebase_hero.png"));
+        walkSheet = new Texture(Gdx.files.internal(GIRL_NAKED));
         // Create a 2D array of TextureRegions by splitting the sheet into separate frames
         TextureRegion[][] tmp = TextureRegion.split(walkSheet,
                 walkSheet.getWidth() / FRAME_COLS,
@@ -113,11 +113,9 @@ public class Animator implements ApplicationListener {
         spriteBatch.end();
     }
 
-    public float getX() { return x - (float)(TiledTest.tileSize*0.25); }
+    public float getX() { return x - (float)(TiledTest.tileSize*0.25); } //place the animation in the center of the tile
 
-    public float getY() {
-        return y;
-    }
+    public float getY() {return y;}
 
     public void move(float stepX, float stepY){
         x = stepX + oldX;
@@ -126,12 +124,8 @@ public class Animator implements ApplicationListener {
         oldY = y;
     }
 
-    public float getOldX() {
-        return oldX;
-    }
-    public float getOldY() {
-        return oldY;
-    }
+    public float getOldX() {return oldX;}
+    public float getOldY() {return oldY;}
 
     @Override
     public void dispose() {
@@ -139,15 +133,11 @@ public class Animator implements ApplicationListener {
         walkSheet.dispose();
     }
     @Override
-    public void resume(){
-        updateAnimationStateTime = true;
-    }
+    public void resume(){updateAnimationStateTime = true;}
     @Override
     public void pause(){}
     @Override
-    public void resize(int x, int y)
-    {
-    }
+    public void resize(int x, int y){}
 
     public Animation<TextureRegion> getWalkAnimationDOWN() {
         return walkAnimationDOWN;

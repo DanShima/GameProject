@@ -14,6 +14,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import static com.mygdx.game.Constants.LEVEL_ONE;
+
 /**
  * This class renders the tile map made with Tiled and shows it on the screen
  * When you run the code you should see your map.  Pressing the arrow keys will scroll around the map ( and show bright red when you’ve moved beyond the extents of your map ) .
@@ -56,7 +58,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         camera.setToOrtho(false,width,height);
         camera.update();
         //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load("prototype_map_128_15x8_v04.tmx");
+        tiledMap = new TmxMapLoader().load(LEVEL_ONE);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
@@ -71,13 +73,15 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //set the player in the middle of the tile
         sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
         
-        underwear = new Item();
+
         //posX = width/2 - underwear.getPositionX()/2;
        // posY = height/2 - underwear.getPositionY()/2;
-        underwear.create("socks.png", 768, 768);
+        //underwear.create("socks.png", 768, 768);
 
         girl = new Animator();
         girl.create();
+        underwear = new Item("socks.png", 768, 768);
+        //underwear.checkCollision();
     }
 
     @Override
@@ -98,6 +102,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
        girl.render();
        underwear.render();
+
     }
 
     @Override
@@ -122,6 +127,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
             if (keycode == Input.Keys.LEFT){    // one step left
                 girl.setWalkAnimation(girl.getWalkAnimationLEFT());
                 girl.move(-oneStepHorizontaly, 0);}
+
             if (keycode == Input.Keys.A)    {   // 2 steps left
                 girl.setWalkAnimation(girl.getWalkAnimationLEFT());
                 girl.move(-twoStepsHorizontally, 0);}

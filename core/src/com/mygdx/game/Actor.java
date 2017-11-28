@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
- * Created by Giddy on 25/11/2017.
+ * A super class for monster and player and maybe also items?
  */
-
 public abstract class Actor {
     private Sprite sprite;
     private SpriteBatch spriteBatch;
