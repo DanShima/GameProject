@@ -145,9 +145,8 @@ public class Animator implements ApplicationListener {
     @Override
     public void pause(){}
     @Override
-    public void resize(int x, int y)
-    {
-    }
+    public void resize(int x, int y){}
+
 
     public Animation<TextureRegion> getWalkAnimationDOWN() {
         return walkAnimationDOWN;
@@ -180,4 +179,5 @@ public class Animator implements ApplicationListener {
     public TextureRegion[] getWalkFramesRIGHT() {
         return walkFramesRIGHT;
     }
+
 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
@@ -27,6 +28,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private int tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
+
+    float tileWidth;
+    float tileHeight;
+    float oldX , oldY;
+    boolean CollisionX, CollisionY;
+
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
     private static final int PNGwidth=42;
@@ -36,12 +43,20 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMap tiledMap;
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
+    private TiledMapTileLayer Blockedlayer;
 
     private Animator girl; //animated player
     private SpriteBatch sb;
     private Texture texture;
     private Sprite sprite; //static player
     private SpriteBatch batch;
+
+    int oneStepHorizontaly ;
+    int twoStepsHorizontally;
+    int oneStepVertically ;
+    int twoStepsvertically ;
+
+
 
     @Override
     public void create () {
@@ -51,12 +66,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
         camera.setToOrtho(false,width,height);
+        camera.translate ( 128 ,128 );
         camera.update();
         //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load("prototype_map_128_15x8_v04.tmx");
+        tiledMap = new TmxMapLoader().load("blocking_v1.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
+
 
         //set up the static player
         //TODO static player can be deleted once the animated player is working perfectly
@@ -65,6 +82,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         texture = new Texture(Gdx.files.internal("general-single.png"));
         sprite = new Sprite(texture);
         //set the initial starting position of the player
+        sprite.setPosition(512,512);
         //set the player in the middle of the tile
         sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
 
@@ -105,37 +123,45 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      * @param keycode
      * @return
      */
+
     // testing
-    @Override
     public boolean keyUp(int keycode) {
-        int oneStepHorizontaly = mapWidth / tileCountW;
-        int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
-        int oneStepVertically = mapHeight / tileCountH;
-        int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
-            if (keycode == Input.Keys.LEFT){    // one step left
-                girl.setWalkAnimation(girl.getWalkAnimationLEFT());
-                girl.move(-oneStepHorizontaly, 0);}
+
+            if (keycode == Input.Keys.LEFT){// one step left
+                collisionL();
+               // girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                //girl.move(-oneStepHorizontaly, 0);
+                }
             if (keycode == Input.Keys.A)    {   // 2 steps left
+
                 girl.setWalkAnimation(girl.getWalkAnimationLEFT());
-                girl.move(-twoStepsHorizontally, 0);}
-            if (keycode == Input.Keys.RIGHT)   {      // one step right
-                girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
-                girl.move(oneStepHorizontaly, 0);}
+                girl.move(-twoStepsHorizontally, 0);
+                }
+            if (keycode == Input.Keys.RIGHT)   {// one step right
+                collisionR ();
+                //girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
+                //girl.move(oneStepHorizontaly, 0);
+            }
             if (keycode == Input.Keys.D)  {       // two steps step right
                 girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
                 girl.move(twoStepsHorizontally, 0);}
 
             if (keycode == Input.Keys.UP)    {        // one step up
-                girl.setWalkAnimation(girl.getWalkAnimationUP());
-                girl.move(0, oneStepVertically);}
+                collisionU ();
+                //girl.setWalkAnimation(girl.getWalkAnimationUP());
+                //girl.move(0, oneStepVertically);
+            }
 
             if (keycode == Input.Keys.W)  {          // 2 steps up
                 girl.setWalkAnimation(girl.getWalkAnimationUP());
                 girl.move(0, twoStepsvertically); }
 
             if (keycode == Input.Keys.DOWN)    {     // one step down
-                girl.setWalkAnimation(girl.getWalkAnimationDOWN());
-                girl.move(0, -oneStepVertically); }
+                collisionD ();
+               // girl.setWalkAnimation(girl.getWalkAnimationDOWN());
+                //girl.move(0, -oneStepVertically);
+                //
+                }
 
             if (keycode == Input.Keys.S)    {      // 2 steps down
                 girl.setWalkAnimation(girl.getWalkAnimationDOWN());
@@ -148,7 +174,86 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
             return false;
     }
+    /*
+      check the collision on the left side.
+      if the Properties is blocked the character will stay on the old x, y
 
+     */
+    public void collisionL(){
+        GetProperties();
+
+        if (CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
+                        .getTile().getProperties().containsKey("blocked"))
+                         girl.move ( 0,0 );
+                             else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                                    girl.move(-oneStepHorizontaly, 0);}
+            }
+
+
+
+
+    /**
+     *  collision for the right side
+     */
+    public void collisionR(){
+        GetProperties();
+        if (CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1)
+                        .getTile().getProperties().containsKey("blocked"))
+            girl.move ( 0,0 );
+        else {girl.setWalkAnimation(girl.getWalkAnimationRIGHT ());
+            girl.move(+oneStepHorizontaly, 0);}
+    }
+    /**
+     *  collision for the upward
+     */
+    public void collisionU(){
+
+        GetProperties();
+
+        if (CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2)
+                        .getTile().getProperties().containsKey("blocked"))
+            girl.move ( 0,0 );
+        else {girl.setWalkAnimation(girl.getWalkAnimationUP ());
+            girl.move(0, +oneStepVertically);}
+
+    }
+    /**
+     *  collision for the downward
+     */
+    public void collisionD(){
+        GetProperties();
+
+        if (CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight))
+                        .getTile().getProperties().containsKey("blocked"))
+            girl.move ( 0,0 );
+            else {girl.setWalkAnimation(girl.getWalkAnimationDOWN ());
+            girl.move(0, -oneStepVertically);}
+    }
+
+    /**
+     * assign the values of the tiles Properties
+     */
+
+    public void GetProperties(){
+
+         Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
+         oldX = girl .getOldX () ;
+         oldY = girl .getOldY ();
+         tileWidth= Blockedlayer.getTileWidth ();
+         tileHeight= Blockedlayer.getTileHeight ();
+         CollisionX = false ;
+         CollisionY=false;
+         oneStepHorizontaly = mapWidth / tileCountW;
+         twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
+         oneStepVertically = mapHeight / tileCountH;
+         twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
+
+    }
+
+    @Override
+    public boolean keyTyped(char character) {return false;}
+
+    /** Called when the user touches the screen
     @Override
     public boolean keyTyped(char character) {return false;}
 
