@@ -8,18 +8,30 @@ import java.util.List;
  * Some stuff in TiledTest needs to be moved here
  */
 
-public class GameplayController {
+public class LevelController {
     Animator animator;
     List<Item> items;
     List<Monster> monsters;
     boolean hasItem;
     //int score;
-
-    public GameplayController(){
+    //TODO add map
+    public LevelController(){
         animator = new Animator();
         items = new ArrayList<Item>();
         monsters = new ArrayList<Monster>();
         hasItem = false;
+    }
+
+    public void render() {
+        animator.render();
+        for(Item item : items){
+            item.render();
+        }
+        for(Monster monster: monsters){
+            monster.render();
+        }
+
+        //map should be rendered here too
     }
 
     public void addItem() {
@@ -38,5 +50,7 @@ public class GameplayController {
 
         }
     }
+
+
 
 }

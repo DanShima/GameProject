@@ -18,8 +18,10 @@ public class Item {
     private Texture texture;
     private float positionX;
     private float positionY;
+
+
     private boolean collected;
-    private Animator animator;
+
 
     public Item(String pngFile, float x, float y) {
         create(pngFile, x, y);
@@ -47,16 +49,6 @@ public class Item {
 
 
     /**
-     * check if player is on the same position as the item. If it is, then the item is collected by the player
-     * @return
-     */
-    /*public boolean checkCollision(){
-        if(getPositionY() == animator.getY() && getPositionX() == animator.getX()){
-            collected = true;}
-            return false;
-    }*/
-
-    /**
      * this method returns the item's score that the player will receive when he collects it.
      * @return
      */
@@ -70,6 +62,15 @@ public class Item {
         texture.dispose();
     }
 
+
+
+    public boolean isCollected() {
+        return collected;
+    }
+
+    public void setCollected(boolean collected) {
+        this.collected = collected;
+    }
     public float getPositionX() {
         return positionX;
     }

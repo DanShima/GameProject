@@ -39,9 +39,4 @@ public class Monster {
         }
         spriteBatch.end();
     }
-
-    public void collisionWithPlayer() {
-        //if monster X and Y are the same as Player X and Y, then lose one life or game over
-    }
-
 }

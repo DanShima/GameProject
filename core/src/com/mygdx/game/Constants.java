@@ -18,9 +18,9 @@ public class Constants {
     public static final float VIEWPORT_GUI_HEIGHT = 0f;
 
     // number of points at the start of the game
-    public static final int SCORE_POINTS = 20;
+    public static final int SCORE_START = 0;
     // number of lives at the start of the game
-    public static final int LIVES_START = 3;
+    public static final int LIVES = 4;
     // location of tilemap file for map level 1
     public static final String LEVEL_ONE = "prototype_map_128_15x8_v04.tmx";
     // location of tilemap file for map level 2

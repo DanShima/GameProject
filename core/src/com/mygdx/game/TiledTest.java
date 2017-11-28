@@ -29,6 +29,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private int tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
+    float tileWidth;
+    float tileHeight;
+    float oldX , oldY;
+    boolean CollisionX, CollisionY;
+
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
     private static final int PNGwidth=42;
