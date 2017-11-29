@@ -15,11 +15,14 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import static com.mygdx.game.Constants.LEVEL_ONE;
+import static com.mygdx.game.Constants.LEVEL_TWO;
+
 /**
  * This class renders the tile map made with Tiled and shows it on the screen
  * When you run the code you should see your map.  Pressing the arrow keys will scroll around the map ( and show bright red when you’ve moved beyond the extents of your map ) .
  * Pressing 0 or 1 will toggle the visibility of each of the two layers in your map.
- * TODO make the map fixed
+ * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
  */
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
@@ -42,8 +45,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMapRenderer tiledMapRenderer;
     private TiledMapTileLayer Blockedlayer;
 
+    private Item underwear;
+    private float posX, posY;
+
     private Animator girl; //animated player
     private SpriteBatch batch;
+
 
     int oneStepHorizontaly ;
     int twoStepsHorizontally;
@@ -62,15 +69,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         camera.translate ( 128 ,128 );
         camera.update();
         //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load("blocking_v1.tmx");
+
+        tiledMap = new TmxMapLoader().load(LEVEL_TWO);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
 
         girl = new Animator();
         girl.create();
-
-        batch = new SpriteBatch();
+        underwear = new Item("socks.png", 768, 768);
+        //underwear.checkCollision();
     }
 
     @Override
@@ -84,7 +92,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-        girl.render();
+       girl.render();
+       underwear.render();
+
     }
 
     @Override
@@ -97,6 +107,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      * @param keycode
      * @return
      */
+  
+
      public boolean keyUp(int keycode) {
 
             if (keycode == Input.Keys.LEFT){// one step left
