@@ -31,7 +31,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     float tileWidth;
     float tileHeight;
     float oldX , oldY;
-    boolean CollisionX, CollisionY ,CollisionX1;
 
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
@@ -45,11 +44,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
 
     private Item underwear;
-    private float posX, posY;
-
     private Player girl; //animated player
-    private SpriteBatch batch;
-
     private Monster yeti;
 
 
@@ -57,6 +52,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     int twoStepsHorizontally;
     int oneStepVertically ;
     int twoStepsvertically ;
+
+    private TiledMapTileLayer.Cell ground;
+    private TiledMapTileLayer.Cell obstacles;
 
 
     @Override
@@ -164,19 +162,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
             return false;
     }
 
-    public void toIdle(){
 
-    }
     /**
       *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
      */
     public void collisionL(){
         GetProperties();
         girl.resetTimeTillIdle();
-        if(CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
-        .getTile().getProperties().containsKey("blocked")) //|| (CollisionX1 = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
-               // .getTile().getProperties().containsKey("blocked")))
-
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
+        obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
+        if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
                          girl.move ( 0,0 );
                              else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
                                     girl.move(-oneStepHorizontaly, 0);}
@@ -189,25 +184,24 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public void collisionR(){
         GetProperties();
         girl.resetTimeTillIdle();
-        if (CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1)
-                        .getTile().getProperties().containsKey("blocked"))
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1);
+        obstacles = terrain.getCell((int) (oldX / tileWidth)+2, (int) (oldY / tileHeight) + 1);
+        if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
             girl.move ( 0,0 );
         else {girl.setWalkAnimation(girl.getWalkAnimationRIGHT ());
             girl.move(+oneStepHorizontaly, 0);}
     }
-    /**
-     *  collision for the upward
-     */
-    public void collisionU(){
 
+
+    public void collisionU(){
         GetProperties();
         girl.resetTimeTillIdle(); //go back to idle state
-        if (CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2)
-                        .getTile().getProperties().containsKey("blocked"))
-            girl.move ( 0,0 );
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2);
+        obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight) +2);
+        if((checkFirstLayer(ground))||checkSecondLayer(obstacles)){
+            girl.move ( 0,0 );}
         else {girl.setWalkAnimation(girl.getWalkAnimationUP ());
             girl.move(0, +oneStepVertically);}
-
     }
     /**
      *  collision for the downward
@@ -215,12 +209,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public void collisionD(){
         GetProperties();
         girl.resetTimeTillIdle();
-        if (CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight))
-                        .getTile().getProperties().containsKey("blocked"))
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight));
+        obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight));
+        if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
             girl.move ( 0,0 );
             else {girl.setWalkAnimation(girl.getWalkAnimationDOWN());
             girl.move(0, -oneStepVertically);}
-            //girl.setWalkAnimation(girl.getWalkAnimationDOWN ());
     }
 
     /**
@@ -228,21 +222,39 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      */
     public void GetProperties(){
 
-
          Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("background");
-         //terrain = (TiledMapTileLayer)tiledMap.getLayers().get("terrain");
-
+         terrain = (TiledMapTileLayer)tiledMap.getLayers().get("terrain");
 
          oldX = girl.getOldX () ;
          oldY = girl.getOldY ();
          tileWidth= Blockedlayer.getTileWidth ();
          tileHeight= Blockedlayer.getTileHeight ();
-         CollisionX = false;
-         CollisionY = false;
+
          oneStepHorizontaly = mapWidth / tileCountW;
          twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
          oneStepVertically = mapHeight / tileCountH;
          twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
+    }
+
+    /**
+     *  This method checks whether a tile for the second layer contains the property "blocked"
+     */
+    public boolean checkSecondLayer(TiledMapTileLayer.Cell obstacle){
+        if(obstacle != null) { //if it is not an empty cell
+            return obstacle.getTile().getProperties().containsKey("blocked");}
+        return false;     //else do nothing
+    }
+
+    /**
+     * This method checks whether a tile from the first layer contains the property "blocked"
+     * @param ground the first tile layer
+     * @return false if it is an empty cell
+     */
+
+    public boolean checkFirstLayer(TiledMapTileLayer.Cell ground){
+        if(ground != null) { //if it is not an empty cell
+            return ground.getTile().getProperties().containsKey("blocked");}
+        return false;     //else do nothing
     }
 
     @Override
