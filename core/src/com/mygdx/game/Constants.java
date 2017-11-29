@@ -21,9 +21,9 @@ public class Constants {
     public static final int SCORE_START = 0;
     // number of lives at the start of the game
     public static final int LIVES = 4;
-    // location of tilemap file for map level 1
+    // location of tilemap file for map level 1 desert
     public static final String LEVEL_ONE = "prototype_map_128_15x8_v04.tmx";
-    // location of tilemap file for map level 2
+    // location of tilemap file for map level 2 snow
     public static final String LEVEL_TWO = "snow128_16x10_v02.tmx";
     // location of the sprite sheet for the player without clothes
     public static final String GIRL_NAKED = "pinkGirl_v02.png";

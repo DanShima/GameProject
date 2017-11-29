@@ -14,7 +14,7 @@ import static com.mygdx.game.Constants.GIRL_NAKED;
  * Created by Giddy on 23/11/2017.
  */
 
-public class Animator implements ApplicationListener {
+public class Player implements ApplicationListener {
 
     // Constant rows and columns of the sprite sheet
     private static final int FRAME_COLS = 3, FRAME_ROWS = 5;
@@ -47,6 +47,7 @@ public class Animator implements ApplicationListener {
     private float oldY = 0; //old Y position
 
     boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
+
 
     @Override
     public void create() {
@@ -134,6 +135,7 @@ public class Animator implements ApplicationListener {
 
     public float getY() {return y;}
 
+
     public void move(float stepX, float stepY){
         x = stepX + oldX;
         y = stepY + oldY;
@@ -174,22 +176,6 @@ public class Animator implements ApplicationListener {
 
     public Animation<TextureRegion> getIdleAnimation() {
         return idleAnimation;
-    }
-
-    public TextureRegion[] getWalkFramesDOWN() {
-        return walkFramesDOWN;
-    }
-
-    public TextureRegion[] getWalkFramesUP() {
-        return walkFramesUP;
-    }
-
-    public TextureRegion[] getWalkFramesLEFT() {
-        return walkFramesLEFT;
-    }
-
-    public TextureRegion[] getWalkFramesRIGHT() {
-        return walkFramesRIGHT;
     }
 
 }

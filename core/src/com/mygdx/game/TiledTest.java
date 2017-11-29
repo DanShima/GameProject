@@ -6,8 +6,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -15,7 +13,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import static com.mygdx.game.Constants.LEVEL_ONE;
 import static com.mygdx.game.Constants.LEVEL_TWO;
 
 /**
@@ -50,7 +47,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private Item underwear;
     private float posX, posY;
 
-    private Animator girl; //animated player
+    private Player girl; //animated player
     private SpriteBatch batch;
 
 
@@ -77,7 +74,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
 
-        girl = new Animator();
+        girl = new Player();
         girl.create();
         underwear = new Item("underwear.png", 768, 768);
 

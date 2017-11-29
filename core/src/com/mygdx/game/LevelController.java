@@ -9,14 +9,14 @@ import java.util.List;
  */
 
 public class LevelController {
-    Animator animator;
+    Player animator;
     List<Item> items;
     List<Monster> monsters;
     boolean hasItem;
     //int score;
     //TODO add map
     public LevelController(){
-        animator = new Animator();
+        animator = new Player();
         items = new ArrayList<Item>();
         monsters = new ArrayList<Monster>();
         hasItem = false;

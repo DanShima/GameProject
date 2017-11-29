@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
  */
 public abstract class Actor {
     private Sprite sprite;
-    private SpriteBatch spriteBatch;
-    private Texture texture;
+    private SpriteBatch spriteBatch; //to draw on screen
+    private Texture texture; //sprite sheet
     private float positionX;
     private float positionY;
-    public abstract void move();
-    public abstract void render(SpriteBatch batch);
+    public abstract void move(float x, float y);
+    public abstract void render();
 }
