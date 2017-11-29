@@ -4,6 +4,9 @@ package com.example.tmp_sda_1124.firebasedataconnectivity;
  * Created by tmp-sda-1124 on 11/24/17.
  */
 
+/**
+ * User detail for Login
+ */
 public class User {
     private String userId;
     private String userName;
@@ -11,6 +14,7 @@ public class User {
     private long HighScore;
     private int Score;
 
+    //Constructors
 
     public User(){
     }
@@ -31,6 +35,8 @@ public class User {
         this.Score=0;
     }
 
+    //Getter methods
+
     public String getUserName() {
         return userName;
     }
@@ -43,9 +49,7 @@ public class User {
         return userId;
     }
 
-    public long getHighScore() {
-        return HighScore;
-    }
+    public long getHighScore() { return HighScore; }
 
     public int getScore() {
         return Score;
