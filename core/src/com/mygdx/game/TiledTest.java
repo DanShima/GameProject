@@ -78,7 +78,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl = new Animator();
         girl.create();
         underwear = new Item("socks.png", 768, 768);
-        //underwear.checkCollision();
+
     }
 
     @Override
@@ -87,13 +87,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //update the camera (move using arrow keys)
+
         // pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-       girl.render();
-       underwear.render();
+        girl.render();
+        underwear.render();
 
     }
 
@@ -221,7 +221,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      */
     public void GetProperties(){
 
-         Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("Tile Layer 1");
+         Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("background");
          oldX = girl .getOldX () ;
          oldY = girl .getOldY ();
          tileWidth= Blockedlayer.getTileWidth ();

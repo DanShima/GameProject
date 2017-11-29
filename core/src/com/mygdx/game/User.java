@@ -1,4 +1,4 @@
-package com.example.tmp_sda_1124.firebasedataconnectivity;
+package com.mygdx.game;
 
 /**
  * Created by tmp-sda-1124 on 11/24/17.
