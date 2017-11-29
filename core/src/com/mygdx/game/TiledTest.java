@@ -34,7 +34,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     float tileWidth;
     float tileHeight;
     float oldX , oldY;
-    boolean CollisionX, CollisionY;
+    boolean CollisionX, CollisionY ,CollisionX1;
 
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
@@ -44,6 +44,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
     private TiledMapTileLayer Blockedlayer;
+    private TiledMapTileLayer terrain;
+
 
     private Item underwear;
     private float posX, posY;
@@ -77,7 +79,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
         girl = new Animator();
         girl.create();
-        underwear = new Item("socks.png", 768, 768);
+        underwear = new Item("underwear.png", 768, 768);
 
     }
 
@@ -168,8 +170,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public void collisionL(){
         GetProperties();
         girl.resetTimeTillIdle();
-        if (CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
-                        .getTile().getProperties().containsKey("blocked"))
+        if(CollisionX = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
+        .getTile().getProperties().containsKey("blocked")) //|| (CollisionX1 = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1)
+               // .getTile().getProperties().containsKey("blocked")))
+
                          girl.move ( 0,0 );
                              else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
                                     girl.move(-oneStepHorizontaly, 0);}
@@ -211,7 +215,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         if (CollisionY = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight))
                         .getTile().getProperties().containsKey("blocked"))
             girl.move ( 0,0 );
-            else {girl.setWalkAnimation(girl.getWalkAnimationDOWN ());
+            else {girl.setWalkAnimation(girl.getWalkAnimationDOWN());
             girl.move(0, -oneStepVertically);}
             //girl.setWalkAnimation(girl.getWalkAnimationDOWN ());
     }
@@ -221,13 +225,17 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      */
     public void GetProperties(){
 
+
          Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("background");
-         oldX = girl .getOldX () ;
-         oldY = girl .getOldY ();
+         //terrain = (TiledMapTileLayer)tiledMap.getLayers().get("terrain");
+
+
+         oldX = girl.getOldX () ;
+         oldY = girl.getOldY ();
          tileWidth= Blockedlayer.getTileWidth ();
          tileHeight= Blockedlayer.getTileHeight ();
-         CollisionX = false ;
-         CollisionY=false;
+         CollisionX = false;
+         CollisionY = false;
          oneStepHorizontaly = mapWidth / tileCountW;
          twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
          oneStepVertically = mapHeight / tileCountH;
