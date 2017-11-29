@@ -41,7 +41,7 @@ public class LevelController {
     }
 
     public void addMonster(){
-
+       // monsters.add(new Monster("yeti03.png", 512, 256));
     }
 
     public void hasItemOn(boolean collected){

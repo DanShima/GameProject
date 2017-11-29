@@ -50,6 +50,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private Player girl; //animated player
     private SpriteBatch batch;
 
+    private Monster yeti;
+
 
     int oneStepHorizontaly ;
     int twoStepsHorizontally;
@@ -78,6 +80,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl.create();
         underwear = new Item("underwear.png", 768, 768);
 
+        yeti = new Monster();
+        
+
+
     }
 
     @Override
@@ -93,7 +99,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer.render();
         girl.render();
         underwear.render();
-
+        yeti.render();
     }
 
     @Override
