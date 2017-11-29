@@ -24,7 +24,7 @@ public class Constants {
     // location of tilemap file for map level 1
     public static final String LEVEL_ONE = "prototype_map_128_15x8_v04.tmx";
     // location of tilemap file for map level 2
-    public static final String LEVEL_TWO = "prototype_map_128_15x8_v04.tmx";
+    public static final String LEVEL_TWO = "snow128_16x10_v02.tmx";
     // location of the sprite sheet for the player without clothes
     public static final String GIRL_NAKED = "pinkGirl_v01a.png";
 }

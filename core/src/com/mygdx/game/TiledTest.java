@@ -15,6 +15,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import static com.mygdx.game.Constants.LEVEL_ONE;
+import static com.mygdx.game.Constants.LEVEL_TWO;
 
 /**
  * This class renders the tile map made with Tiled and shows it on the screen
@@ -63,7 +64,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         camera.setToOrtho(false,width,height);
         camera.update();
         //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load(LEVEL_ONE);
+        tiledMap = new TmxMapLoader().load(LEVEL_TWO);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
