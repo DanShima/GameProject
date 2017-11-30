@@ -43,7 +43,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMapTileLayer terrain;
 
 
-    private Item underwear;
+    private Item underwear,socks,tshirt;
     private Player girl; //animated player
     private Monster yeti;
 
@@ -76,8 +76,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
         girl = new Player();
         girl.create();
-        underwear = new Item("underwear.png", 768, 768);
-
+        underwear = new Item("underwear.png", 256,256);
+        socks=new Item("socks.png",768, 768);
+        tshirt=new Item("tshirt.png",1280, 384);
        //yeti = new Monster();
        yeti = new Monster("gazeti_3.png", 4, 3, 1);
 
@@ -97,6 +98,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMapRenderer.render();
         girl.render();
         underwear.render();
+        socks.render();
+        tshirt.render();
         yeti.render();
 
     }
