@@ -78,8 +78,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl.create();
         underwear = new Item("underwear.png", 768, 768);
 
-        yeti = new Monster();
-        
+       //yeti = new Monster();
+       yeti = new Monster("gazeti_3.png", 4, 3, 1);
 
 
     }
@@ -98,6 +98,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl.render();
         underwear.render();
         yeti.render();
+
     }
 
     @Override
@@ -272,6 +273,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         int oneStepVertically = mapHeight / tileCountH;
         int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
         //TODO complete this
+        Gdx.app.log("move", "." + screenY);
         if (Gdx.input.isTouched(pointer) && screenX>girl.getOldX()+200) {
             girl.move(oneStepHorizontaly, 0); //move right
         } else if (Gdx.input.isTouched(pointer) && screenX<girl.getOldX()-200) {

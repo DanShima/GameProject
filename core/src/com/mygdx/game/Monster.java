@@ -34,8 +34,8 @@ public class Monster implements ApplicationListener {
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / columns,
                 texture.getHeight() / rows);
-        idleFrames = new TextureRegion[rows];
-        for (int i = 0; i < rows; i++) {
+        idleFrames = new TextureRegion[columns];
+        for (int i = 0; i < columns; i++) {
             idleFrames[i] = tmp[specifyRow][i];
         }
         walkAnimation = new Animation<TextureRegion>(fps, idleFrames);
@@ -44,25 +44,17 @@ public class Monster implements ApplicationListener {
 
     }
     public void create(){
-        texture = new Texture(Gdx.files.internal("yeti03.png"));
+        texture = new Texture(Gdx.files.internal("yeti_v01.png"));
 
         // Create a 2D array of TextureRegions by splitting the sheet into separate frames
         TextureRegion[][] tmp = TextureRegion.split(texture,
-                texture.getWidth() / 10,
-                texture.getHeight() / 8); //10 columns and 8 rows
+                texture.getWidth() / 8,
+                texture.getHeight() / 3); //8 columns and 3 rows
         //convert 2D array to normal array
-        //for (int i = 0; i < FRAME_COLS; i++) {
-        // idleFrames[i] = tmp[0][i];}
-        //TODO put the movements in a switch statement.
-        idleFrames = new TextureRegion[2];
-        idleFrames[0] = tmp[1][1];
-        idleFrames[1] = tmp[1][2];
-        //We only want to animate the three images in the first row
-        //GO DOWN & IDLE
-        //for (int i = 0; i < 8; i++) {
-          // idleFrames[i] = tmp[2][i];
-        //}
-
+        idleFrames = new TextureRegion[3];
+        idleFrames[0] = tmp[0][4];
+        idleFrames[1] = tmp[0][5];
+        idleFrames[2] = tmp[0][6];
         walkAnimation = new Animation<TextureRegion>(fps, idleFrames);
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
