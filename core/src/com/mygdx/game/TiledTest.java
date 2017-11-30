@@ -23,18 +23,18 @@ import static com.mygdx.game.Constants.LEVEL_TWO;
  */
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
-    public static final  int tileSize = 128; //tile in pixel
-    private int tileCountW = 15; //numbers of tiles in width
-    private int tileCountH = 8; //numbers of tiles in height
+    public static final  double tileSize = 128; //tile in pixel
+    private double tileCountW = 16; //numbers of tiles in width
+    private double tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
     float tileWidth;
     float tileHeight;
-    float oldX , oldY;
+    double oldX , oldY;
     boolean CollisionX, CollisionY ,CollisionX1;
 
-    private final int mapWidth = tileSize * tileCountW;
-    private final int mapHeight = tileSize * tileCountH;
+    private final double mapWidth = tileSize * tileCountW;
+    private final double mapHeight = tileSize * tileCountH;
     private int NumberOfMovedTiles=2;
 
     private TiledMap tiledMap;
@@ -51,12 +51,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private SpriteBatch batch;
 
 
-    int oneStepHorizontaly ;
-    int twoStepsHorizontally;
-    int oneStepVertically ;
-    int twoStepsvertically ;
-
-
+    double oneStepHorizontaly ;
+    double twoStepsHorizontally;
+    double oneStepVertically ;
+    double twoStepsvertically ;
+    private double playerposition=0;
+    private double Screenposition=0;
+    private double xplayerposition=0;
+    private double xScreenposition=0;
+    private double tempx=1;
+    private double tempy=1;
     @Override
     public void create () {
         float width = Gdx.graphics.getWidth();
@@ -243,29 +247,261 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public boolean keyTyped(char character) {return false;}
 
 
+
+    public void screenPosition(){
+
+
+
+    }
+
     /**
      * Called when the user touches the screen
      *
      * */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        int oneStepHorizontaly = mapWidth / tileCountW;
-        int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
-        int oneStepVertically = mapHeight / tileCountH;
-        int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
-        //TODO complete this
-        if (Gdx.input.isTouched(pointer) && screenX>girl.getOldX()+200) {
-            girl.move(oneStepHorizontaly, 0); //move right
-        } else if (Gdx.input.isTouched(pointer) && screenX<girl.getOldX()-200) {
-            girl.move(-oneStepHorizontaly, 0); //move left
-        } else if(Gdx.input.isTouched(pointer) && screenY>girl.getOldY()){
-            girl.move(0, oneStepVertically); //move up
-        } else if(Gdx.input.isTouched(pointer) ){//&& screenY<girl.getOldY()
-            girl.move(0, -oneStepVertically); //move down
-        } else {
-            return true;
+         oneStepHorizontaly = mapWidth / tileCountW;
+         twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
+         oneStepVertically = mapHeight / tileCountH;
+         twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
+
+
+         // up movment on touch
+
+        if (Gdx.input.isTouched(pointer) ) {
+
+            double diff = 55;
+
+            if ((screenY>=0                          && (screenY <(mapHeight-diff)/tileCountH))){
+                Screenposition=8;
+            }else
+            if (screenY  >= ((mapHeight-diff)/tileCountH)   && (screenY <((mapHeight-diff)/(tileCountH/2)))) {
+                Screenposition=7;
+            }else
+            if (screenY  >= ((mapHeight-diff)/tileCountH/2) && (screenY <((mapHeight-diff)/(tileCountH/3)))){
+                Screenposition=6;
+            }else
+            if (screenY  >= ((mapHeight-diff)/tileCountH/3) && (screenY <((mapHeight-diff)/(tileCountH/4)))){
+
+                Screenposition=5;
+            }else
+            if (screenY  >= ((mapHeight-diff)/tileCountH/4) && (screenY <((mapHeight-diff)/(tileCountH/5)))){
+                Screenposition=4;
+            }else
+            if (screenY  >= ((mapHeight-diff)/tileCountH/5) && (screenY <((mapHeight-diff)/(tileCountH/6)))){
+
+                Screenposition=3;
+            }else
+            if (screenY  >= ((mapHeight-diff)/tileCountH/6) && (screenY <((mapHeight-diff)/(tileCountH/7)))){
+                Gdx.app.log("positino 5 ", String.valueOf((mapHeight-diff)/tileCountH/3) +" + "+ (mapHeight-diff)/(tileCountH/4));
+                Screenposition=2;
+            }else
+            {
+
+                Screenposition=1;
+            }
+
+            if ((girl.getY())>=0 && (girl.getY()) <mapHeight/tileCountH) playerposition=1;
+            if ((girl.getY())>=mapHeight/tileCountH     && ((girl.getY()) <  mapHeight/(tileCountH/2)))    playerposition=2;
+            if ((girl.getY())>=mapHeight/(tileCountH/2) && ((girl.getY()) <mapHeight/(tileCountH/3)))    playerposition=3;
+            if ((girl.getY())>=mapHeight/(tileCountH/3) && ((girl.getY()) <mapHeight/(tileCountH/4)))   playerposition=4;
+            if ((girl.getY())>=mapHeight/(tileCountH/4) && ((girl.getY()) <mapHeight/(tileCountH/5)))   playerposition=5;
+            if ((girl.getY())>=mapHeight/(tileCountH/5) && ((girl.getY()) <mapHeight/(tileCountH/6)))   playerposition=6;
+            if ((girl.getY())>=mapHeight/(tileCountH/6) && ((girl.getY())<mapHeight/(tileCountH/7)))   playerposition=7;
+            if  ((girl.getY())>=mapHeight/(tileCountH/7) && ((girl.getY()) <mapHeight/(tileCountH/8)))   playerposition=8;
+
+
+
+
+
+
+            if (Screenposition > playerposition ) {
+
+                Gdx.app.log(">>>>>player position inside   ", String.valueOf(playerposition));
+                Gdx.app.log(">>>>>  Temp y ", String.valueOf(tempy));
+
+                Gdx.app.log(">>>>>   x  player position    ", String.valueOf(xplayerposition));
+                Gdx.app.log(">>>>>   x temp  position            ", String.valueOf(tempx));
+
+
+                girl.move(0, oneStepVertically);
+
+
+            }
+
         }
+             if (Gdx.input.isTouched(pointer) )
+             {
+            if (Screenposition<playerposition )
+                         {
+                             Gdx.app.log(">>>>>player position inside   ", String.valueOf(playerposition));
+                             Gdx.app.log(">>>>>Screeen positoin  insidde", String.valueOf(Screenposition));
+
+                             Gdx.app.log(">>>>>   x  player position    ", String.valueOf(xplayerposition));
+                             Gdx.app.log(">>>>>   y position            ", String.valueOf(xScreenposition));
+
+                             girl.move(0, -oneStepVertically); //move Down
+
+
+
+                         }
+
+            }
+
+
+            // move right
+          if(Gdx.input.isTouched(pointer) ){ // move right
+
+              if (screenX>=0   && (screenX <(mapWidth-tileSize)/tileCountW)){
+                  xScreenposition=1;
+              }else
+              if (screenX  >= (mapWidth-tileSize)/tileCountW   && (screenX <((mapWidth-tileSize)/(tileCountW/2)))) {
+                  xScreenposition=2;
+              }else
+              if (screenX  >= (mapWidth-tileSize)/(tileCountW/2) && (screenX <((mapWidth-tileSize)/(tileCountW/3)))){
+                  xScreenposition=3;
+              }else
+              if (screenX  >= (mapWidth-tileSize)/(tileCountW/3) && (screenX <((mapWidth-tileSize)/(tileCountW/4)))){
+
+                  xScreenposition=4;
+              }else
+              if (screenX  >= (mapWidth-tileSize)/(tileCountW/4) && (screenX <((mapWidth-tileSize)/(tileCountW/5)))){
+                  xScreenposition=5;
+              }else
+              if (screenX  >= (mapWidth-tileSize)/(tileCountW/5) && (screenX <((mapWidth-tileSize)/(tileCountW/6)))){
+
+                  xScreenposition=6;
+              }else
+              if (screenX  >= (mapWidth-tileSize)/(tileCountW/6) && (screenX <((mapWidth-tileSize)/(tileCountW/7)))){
+
+                  xScreenposition=7;
+
+              } else if (screenX  >= (mapWidth-tileSize)/(tileCountW/7) && (screenX <((mapWidth-tileSize)/(tileCountW/8)))){
+
+                  xScreenposition=8;
+              }else if (screenX  >= (mapWidth-tileSize)/(tileCountW/8) && (screenX <((mapWidth-tileSize)/(tileCountW/9)))){
+
+                  xScreenposition=9;
+              }else if (screenX  >= (mapWidth-tileSize)/(tileCountW/9) && (screenX <((mapWidth-tileSize)/(tileCountW/10)))){
+
+                  xScreenposition=10;
+              } else if (screenX  >= (mapWidth-tileSize)/(tileCountW/10) && (screenX <((mapWidth-tileSize)/(tileCountW/11)))) {
+
+                  xScreenposition =11;
+
+              } else if (screenX  >= (mapWidth-tileSize)/(tileCountW/11) && (screenX <((mapWidth-tileSize)/(tileCountW/12)))){
+
+                  xScreenposition=12;
+              } else if (screenX  >= (mapWidth-tileSize)/(tileCountW/12) && (screenX <((mapWidth-tileSize)/(tileCountW/13)))){
+
+                  xScreenposition=13;
+              } else if (screenX  >= (mapWidth-tileSize)/(tileCountW/14) && (screenX <((mapWidth-tileSize)/(tileCountW/15)))){
+
+                  xScreenposition=14;
+
+              }else
+              {
+
+                  xScreenposition=15;
+              }
+
+
+                double imagecenter = tileSize*0.25;
+
+              if (girl.getX()+imagecenter>=0 && (girl.getX()+imagecenter) <(mapWidth-tileSize)/tileCountW)
+                  xplayerposition=1;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/tileCountW     && ((girl.getX()+imagecenter)   < (mapWidth-tileSize)/(tileCountW/2)))
+                  xplayerposition=2;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/2) && ((girl.getX()+imagecenter)   <(mapWidth-tileSize)/(tileCountW/3)))
+                  xplayerposition=3;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/3) && ((girl.getX()+imagecenter)   <(mapWidth-tileSize/(tileCountW/4))))
+                  xplayerposition=4;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/4) && ((girl.getX()+imagecenter)   <(mapWidth-tileSize/(tileCountW/5))))
+                  xplayerposition=5;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/5) && ((girl.getX()+imagecenter)   <(mapWidth-tileSize/(tileCountW/6))))
+                  xplayerposition=6;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/6) && ((girl.getX()+imagecenter)   <(mapWidth-tileSize/(tileCountW/7))) )
+                  xplayerposition=7;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/7) && ((girl.getX()+imagecenter)  <(mapWidth-tileSize/(tileCountW/8))))
+                  xplayerposition=8;
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/8) && ((girl.getX()+imagecenter)   <(mapWidth-tileSize/(tileCountW/9))) )
+                  xplayerposition=9;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/9) && ((girl.getX()+imagecenter)   <(mapWidth-tileSize/(tileCountW/10))))
+                  xplayerposition=10;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/10) && ((girl.getX()+imagecenter)  <(mapWidth-tileSize/(tileCountW/11))) )
+                  xplayerposition=11;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/11) && ((girl.getX()+imagecenter)  <(mapWidth-tileSize/(tileCountW/12))))
+                  xplayerposition=12;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/12) && ((girl.getX()+imagecenter)  <(mapWidth-tileSize/(tileCountW/13))))
+                  xplayerposition=13;
+
+              if  (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/13) && ((girl.getX()+imagecenter) <(mapWidth-tileSize/(tileCountW/14))))
+                  xplayerposition=14;
+
+              if (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/14) && ((girl.getX()+imagecenter)  <(mapWidth-tileSize/(tileCountW/15))) )
+                  xplayerposition=15;
+              if  (girl.getX()+imagecenter>=(mapWidth-tileSize)/(tileCountW/15) && ((girl.getX()+imagecenter) <(mapWidth-tileSize/(tileCountW/16))) )
+                  xplayerposition=16;
+              }
+
+
+
+              if ( xScreenposition >= xplayerposition  ){
+
+
+
+
+
+
+                  girl.move(oneStepHorizontaly, 0); //move right
+
+
+
+                  Gdx.app.log(">>>>>player position inside   ", String.valueOf(playerposition));
+                  Gdx.app.log(">>>>>  Temp y ", String.valueOf(tempy));
+
+                  Gdx.app.log(">>>>>   x  player position    ", String.valueOf(xplayerposition));
+                  Gdx.app.log(">>>>>   x temp  position            ", String.valueOf(tempx));
+
+
+
+                }
+              if(Gdx.input.isTouched(pointer) ){
+                  if (  xplayerposition -xScreenposition >=0 ){
+
+                      girl.move(-oneStepHorizontaly, 0); //move left
+
+
+
+                      Gdx.app.log(">>>>>player position inside   ", String.valueOf(playerposition));
+                      Gdx.app.log(">>>>>  Temp y ", String.valueOf(tempy));
+
+                      Gdx.app.log(">>>>>   x  player position    ", String.valueOf(xplayerposition));
+                      Gdx.app.log(">>>>>   x temp  position            ", String.valueOf(tempx));
+                  }
+
+              }
+
+
+         else {
+
+            return true;
+
+        }
+
         return false;
+
     }
 
 
@@ -294,19 +530,19 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     return false;
     }
 
-    public int getTileCountW() {
+    public double getTileCountW() {
         return tileCountW;
     }
 
-    public int getTileCountH() {
+    public double getTileCountH() {
         return tileCountH;
     }
 
-    public int getMapWidth() {
+    public double getMapWidth() {
         return mapWidth;
     }
 
-    public int getMapHeight() {
+    public double getMapHeight() {
         return mapHeight;
     }
 
@@ -314,7 +550,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         return NumberOfMovedTiles;
     }
 
-    public static int getTileSize() {
+    public static double getTileSize() {
         return tileSize;
     }
 }
