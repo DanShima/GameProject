@@ -28,8 +28,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private int tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
-    float tileWidth;
-    float tileHeight;
+    int tileWidth;
+    int tileHeight;
     float oldX , oldY;
 
     private final int mapWidth = tileSize * tileCountW;
@@ -228,8 +228,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
          oldX = girl.getOldX () ;
          oldY = girl.getOldY ();
-         tileWidth= Blockedlayer.getTileWidth ();
-         tileHeight= Blockedlayer.getTileHeight ();
+         tileWidth= (int) Blockedlayer.getTileWidth ();
+         tileHeight= (int) Blockedlayer.getTileHeight ();
 
          oneStepHorizontaly = mapWidth / tileCountW;
          twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
