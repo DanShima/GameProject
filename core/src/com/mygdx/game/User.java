@@ -5,7 +5,7 @@ package com.mygdx.game;
  */
 
 /**
- * User detail for Login
+ * User detail for Login with firebase database
  */
 public class User {
     private String userId;
