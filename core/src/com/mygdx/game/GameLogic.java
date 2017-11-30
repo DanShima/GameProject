@@ -33,7 +33,7 @@ public class GameLogic extends InputAdapter {
 
      public void checkCollisions() {
          for(Monster monster: levelController.monsters){
-             float distance = levelController.animator.getX(); //TODO complete calculation
+             double distance = levelController.animator.getX(); //TODO complete calculation
              if(distance < 0.10f){
                  playerCollideWithMonster(monster);
              }

@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -41,10 +40,10 @@ public class Player implements ApplicationListener {
     private TextureRegion[] walkFramesRIGHT;
     private TextureRegion currentFrame;
 
-    private float x; //current x position
-    private float y; //current y position
-    private float oldX = 0; //old X position
-    private float oldY = 0; //old Y position
+    private double x; //current x position
+    private double y; //current y position
+    private double oldX ; //old X position
+    private double oldY ; //old Y position
 
     boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
 
@@ -127,24 +126,26 @@ public class Player implements ApplicationListener {
         }
 
         spriteBatch.begin();
-        spriteBatch.draw(currentFrame, getX(), getY()); // Draw current frame at (0, 0)
+        spriteBatch.draw(currentFrame, (float)getX(), (float)getY()); // Draw current frame at (0, 0)
         spriteBatch.end();
     }
 
-    public float getX() { return x - (float)(TiledTest.tileSize*0.25); } //place the animation in the center of the tile
+    public double getX() { return x - (float)(TiledTest.tileSize*0.25); } //place the animation in the center of the tile
 
-    public float getY() {return y;}
+    public double getY() {return y;}
 
 
-    public void move(float stepX, float stepY){
-        x = stepX + oldX;
-        y = stepY + oldY;
-        oldX = x;
-        oldY = y;
+    public void move(double stepX, double stepY){
+
+        oldX=x ;
+        oldY=y ;
+        x+= stepX;
+        y+= stepY ;
+
     }
 
-    public float getOldX() {return oldX;}
-    public float getOldY() {return oldY;}
+    public double getOldX() {return oldX;}
+    public double getOldY() {return oldY;}
 
     @Override
     public void dispose() {
