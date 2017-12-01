@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +15,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import static com.mygdx.game.Constants.LEVEL_ONE;
 import static com.mygdx.game.Constants.LEVEL_TWO;
 
 /**
@@ -88,6 +88,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl.create();
         underwear = new Item("socks.png", 768, 768);
         //underwear.checkCollision();
+        SoundEffect.instance.create(new AssetManager()); //load audio
+        GameSetting.instance.load(); //load audio settings
+        SoundManager.instance.play(SoundEffect.instance.backgroundMusic.backgroundMusic1); //play background music
+        //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
     }
 
     @Override
