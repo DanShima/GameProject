@@ -24,16 +24,16 @@ import static com.mygdx.game.Constants.LEVEL_TWO;
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public static final  int tileSize = 128; //tile in pixel
-    private int tileCountW = 15; //numbers of tiles in width
-    private int tileCountH = 8; //numbers of tiles in height
+    private static int tileCountW = 15; //numbers of tiles in width
+    private static int tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
     float tileWidth;
     float tileHeight;
     float oldX , oldY;
 
-    private final int mapWidth = tileSize * tileCountW;
-    private final int mapHeight = tileSize * tileCountH;
+    public final static int mapWidth = tileSize * tileCountW;
+    public final static int mapHeight = tileSize * tileCountH;
     private int NumberOfMovedTiles=2;
 
     private TiledMap tiledMap;
@@ -46,6 +46,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private Item underwear;
     private Player girl; //animated player
     private Monster yeti;
+    private HUD hud ;
+    SpriteBatch sp;
 
 
     int oneStepHorizontaly ;
@@ -61,6 +63,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     public void create () {
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
+        sp=new SpriteBatch (  );
+        hud = new HUD ( sp );
 
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
@@ -91,6 +95,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         // pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
@@ -98,6 +103,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         girl.render();
         underwear.render();
         yeti.render();
+        sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
+        hud.stage.draw ();
 
     }
 
