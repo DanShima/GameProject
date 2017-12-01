@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="iceTiles_v01" tilewidth="128" tileheight="128" tilecount="130" columns="13">
- <image source="iceTiles_v01.png" width="1664" height="1280"/>
+ <image source="iceTiles_v02.png" width="1664" height="1280"/>
  <tile id="1">
   <properties>
    <property name="blocked" value=""/>
