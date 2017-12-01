@@ -297,14 +297,18 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
 
 
-    /** Called when the user lifts their finger from the screen
+    /** This method converts screen Y position to simplified Y
     **/
-    public int ScreenPosYtoSimplified(float PositionY){ //convert screen Y position to simplified Y
+    public int ScreenPosYtoSimplified(float PositionY){
         float temporary = (PositionY-(float) marginTop)/(float) tileSize;
         Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + tileSize + "result" + temporary  );
         return (int) Math.floor( Math.max(0.0,temporary));
         //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
+
+    /**
+     * This method converts screen X position to simplified X
+     */
     public int ScreenPosXtoSimplified(float PositionX){ //convert screen X position to simplified X
         return (int) Math.floor( Math.max(0,PositionX/(float) tileSize));
     }
@@ -321,36 +325,40 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         return screenHeight-marginTop-PositionY; //probably slightly wrong in the offset (+-1 or something like that), but works to convert sprite position
     }
 
+    /**
+     *Called when the user lifts their finger from the screen.
+     * We use touchUp instead of touchDown to avoid actions triggered by double clicks
+     *
+     */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        int deltaI=0; //difference between simplified player position and simplified mouse position in X
-        int deltaJ=0; //difference between simplified player position and simplified mouse position in Y
-        int i = ScreenPosXtoSimplified(screenX); //simplified mouse position X
-        int j = ScreenPosYtoSimplified(screenY); //simplified mouse position Y
-        //Gdx.app.log("move", "Clicked pos X: " + i + " Set pos X:" + simplifiedXtoScreenPos(i) );
-        //Gdx.app.log("move", "screenY: " + screenY + " Simplified pos Y: " + j + " Set pos Y:" + simplifiedYtoScreenPos(j) );
+        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
+        int differenceInPositionY = 0; //difference between simplified player position and simplified touch position in Y
+        int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
+        int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
+        //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
+        //Gdx.app.log("move", "screenY: " + screenY + " Simplified pos Y: " + touchPositionY + " Set pos Y:" + simplifiedYtoScreenPos(touchPositionY) );
 
-        int spriteY = invertScreenPos((int) girl.getOldY()); //we need to invert the Y because the sprite is in a different coordinate system
-        int spriteX = (int) girl.getOldX(); //(see spriteY comment) the different coordinate systems have identical X, so we don't manipulate oldX
-        //Gdx.app.log("move", "girl.oldY: " + girl.getOldY() + " inverted: " + spriteY + " Simplified:" + ScreenPosYtoSimplified(spriteY));
-        //Gdx.app.log("move", "girl.oldX: " + girl.getOldX() + " Simplified:" + ScreenPosXtoSimplified(spriteX));
+        int playerPositionY = invertScreenPos((int) girl.getOldY()); //we need to invert the Y because the sprite is in a different coordinate system
+        int playerPositionX = (int) girl.getOldX(); //(see playerPositionY comment) the different coordinate systems have identical X, so we don't manipulate oldX
+        //Gdx.app.log("move", "girl.oldY: " + girl.getOldY() + " inverted: " + playerPositionY + " Simplified:" + ScreenPosYtoSimplified(playerPositionY));
+        //Gdx.app.log("move", "girl.oldX: " + girl.getOldX() + " Simplified:" + ScreenPosXtoSimplified(playerPositionX));
 
-        spriteX = ScreenPosXtoSimplified(spriteX);
-        spriteY = ScreenPosYtoSimplified(spriteY);
+        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
+        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
 
-        deltaI= Math.max(-2,Math.min(2, i-spriteX ));
-        if( deltaI==0 ){ //X movement has priority. This could also be resolved in other ways.
-            deltaJ= Math.max(-2,Math.min(2, spriteY-j ));
+        differenceInPositionX = Math.max(-2, Math.min(2, touchPositionX-playerPositionX)); //makes sure it never goes further than -2 and 2.
+        if(differenceInPositionX==0){ //X movement has priority. This could also be resolved in other ways.
+            differenceInPositionY= Math.max(-2, Math.min(2, playerPositionY-touchPositionY));
         }
-        Gdx.app.log("move", "spriteY: " + spriteY + " spriteX:" + spriteX);
-        Gdx.app.log("move", "deltaI: " + deltaI + " deltaJ:" + deltaJ);
+        Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
+        Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
 
-
-        girl.move(deltaI*tileWidth,deltaJ*tileHeight); // build collision into move method.
+        girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
         //move should first check map collision (blocked) and stop accordingly
         //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
         //all items and monsters should express their position in a simplified way
-
+        //detect blo
         return false;
         }
 
