@@ -7,11 +7,10 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
@@ -33,25 +32,30 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     float tileWidth;
     float tileHeight;
     float oldX , oldY;
-    boolean CollisionX, CollisionY;
 
     private final int mapWidth = tileSize * tileCountW;
     private final int mapHeight = tileSize * tileCountH;
-    private static final int PNGwidth=42;
-    private static final int PNGheight= 48;
     private int NumberOfMovedTiles=2;
 
     private TiledMap tiledMap;
     private OrthographicCamera camera;
     private TiledMapRenderer tiledMapRenderer;
+    private TiledMapTileLayer Blockedlayer;
+    private TiledMapTileLayer terrain;
+
 
     private Item underwear;
-    private float posX, posY;
+    private Player girl; //animated player
+    private Monster yeti;
 
-    private Animator girl; //animated player
-    private SpriteBatch sb;
-    private Texture texture;
-    private Sprite sprite; //static player
+
+    int oneStepHorizontaly ;
+    int twoStepsHorizontally;
+    int oneStepVertically ;
+    int twoStepsvertically ;
+
+    private TiledMapTileLayer.Cell ground;
+    private TiledMapTileLayer.Cell obstacles;
 
 
     @Override
@@ -62,36 +66,29 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
         camera.setToOrtho(false,width,height);
+        camera.translate ( 128 ,128 );
         camera.update();
         //load map and create a renderer passing in our tiled map
+
         tiledMap = new TmxMapLoader().load(LEVEL_TWO);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
         Gdx.input.setInputProcessor(this);
 
-        //set up the static player
-        //TODO static player can be deleted once the animated player is working perfectly
-        sb = new SpriteBatch();
-        //link the sprite image to the sprite
-        texture = new Texture(Gdx.files.internal("general-single.png"));
-        sprite = new Sprite(texture);
-        //set the initial starting position of the player
-        //set the player in the middle of the tile
-        sprite.setPosition((float) ((tileSize*0.5)-(PNGwidth*0.5)), (float) ((tileSize*0.5)-(PNGheight*0.5)));
-        
-
-        //posX = width/2 - underwear.getPositionX()/2;
-       // posY = height/2 - underwear.getPositionY()/2;
-        //underwear.create("socks.png", 768, 768);
-
-        girl = new Animator();
+        girl = new Player();
         girl.create();
+
         underwear = new Item("socks.png", 768, 768);
         //underwear.checkCollision();
         SoundEffect.instance.create(new AssetManager()); //load audio
         GameSetting.instance.load(); //load audio settings
         SoundManager.instance.play(SoundEffect.instance.backgroundMusic.backgroundMusic1); //play background music
         //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
+
+       //yeti = new Monster();
+       yeti = new Monster("gazeti_3.png", 4, 3, 1);
+
+
     }
 
     @Override
@@ -100,25 +97,19 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        //update the camera (move using arrow keys)
+
         // pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-        //draw the sprite on the map
-        sb.begin();
-        sprite.draw(sb);
-        sb.end();
-
-       girl.render();
-       underwear.render();
+        girl.render();
+        underwear.render();
+        yeti.render();
 
     }
 
     @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
+    public boolean keyDown(int keycode) {return false;}
 
     /**
      * Navigating around the map is simply a matter of moving around the camera. Move in 128px per tile size.
@@ -127,38 +118,45 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      * @param keycode
      * @return
      */
-    // testing
-    @Override
-    public boolean keyUp(int keycode) {
-        int oneStepHorizontaly = mapWidth / tileCountW;
-        int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
-        int oneStepVertically = mapHeight / tileCountH;
-        int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
-            if (keycode == Input.Keys.LEFT){    // one step left
-                girl.setWalkAnimation(girl.getWalkAnimationLEFT());
-                girl.move(-oneStepHorizontaly, 0);}
+  
 
+     public boolean keyUp(int keycode) {
+
+            if (keycode == Input.Keys.LEFT){// one step left
+                collisionL();
+               // girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                //girl.move(-oneStepHorizontaly, 0);
+                }
             if (keycode == Input.Keys.A)    {   // 2 steps left
+
                 girl.setWalkAnimation(girl.getWalkAnimationLEFT());
-                girl.move(-twoStepsHorizontally, 0);}
-            if (keycode == Input.Keys.RIGHT)   {      // one step right
-                girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
-                girl.move(oneStepHorizontaly, 0);}
+                girl.move(-twoStepsHorizontally, 0);
+                }
+            if (keycode == Input.Keys.RIGHT)   {// one step right
+                collisionR ();
+                //girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
+                //girl.move(oneStepHorizontaly, 0);
+            }
             if (keycode == Input.Keys.D)  {       // two steps step right
                 girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
                 girl.move(twoStepsHorizontally, 0);}
 
             if (keycode == Input.Keys.UP)    {        // one step up
-                girl.setWalkAnimation(girl.getWalkAnimationUP());
-                girl.move(0, oneStepVertically);}
+                collisionU ();
+                //girl.setWalkAnimation(girl.getWalkAnimationUP());
+                //girl.move(0, oneStepVertically);
+            }
 
             if (keycode == Input.Keys.W)  {          // 2 steps up
                 girl.setWalkAnimation(girl.getWalkAnimationUP());
                 girl.move(0, twoStepsvertically); }
 
             if (keycode == Input.Keys.DOWN)    {     // one step down
-                girl.setWalkAnimation(girl.getWalkAnimationDOWN());
-                girl.move(0, -oneStepVertically); }
+                collisionD ();
+               // girl.setWalkAnimation(girl.getWalkAnimationDOWN());
+                //girl.move(0, -oneStepVertically);
+                //
+                }
 
             if (keycode == Input.Keys.S)    {      // 2 steps down
                 girl.setWalkAnimation(girl.getWalkAnimationDOWN());
@@ -172,8 +170,104 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
             return false;
     }
 
+
+    /**
+      *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
+     */
+    public void collisionL(){
+        GetProperties();
+        girl.resetTimeTillIdle();
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
+        obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
+        if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
+                         girl.move ( 0,0 );
+                             else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                                    girl.move(-oneStepHorizontaly, 0);}
+    }
+
+
+    /**
+     *  collision for the right side
+     */
+    public void collisionR(){
+        GetProperties();
+        girl.resetTimeTillIdle();
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1);
+        obstacles = terrain.getCell((int) (oldX / tileWidth)+2, (int) (oldY / tileHeight) + 1);
+        if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
+            girl.move ( 0,0 );
+        else {girl.setWalkAnimation(girl.getWalkAnimationRIGHT ());
+            girl.move(+oneStepHorizontaly, 0);}
+    }
+
+
+    public void collisionU(){
+        GetProperties();
+        girl.resetTimeTillIdle(); //go back to idle state
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2);
+        obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight) +2);
+        if((checkFirstLayer(ground))||checkSecondLayer(obstacles)){
+            girl.move ( 0,0 );}
+        else {girl.setWalkAnimation(girl.getWalkAnimationUP ());
+            girl.move(0, +oneStepVertically);}
+    }
+    /**
+     *  collision for the downward
+     */
+    public void collisionD(){
+        GetProperties();
+        girl.resetTimeTillIdle();
+        ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight));
+        obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight));
+        if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
+            girl.move ( 0,0 );
+            else {girl.setWalkAnimation(girl.getWalkAnimationDOWN());
+            girl.move(0, -oneStepVertically);}
+    }
+
+    /**
+     * assign the values of the tiles Properties
+     */
+    public void GetProperties(){
+
+         Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("background");
+         terrain = (TiledMapTileLayer)tiledMap.getLayers().get("terrain");
+
+         oldX = girl.getOldX () ;
+         oldY = girl.getOldY ();
+         tileWidth= Blockedlayer.getTileWidth ();
+         tileHeight= Blockedlayer.getTileHeight ();
+
+         oneStepHorizontaly = mapWidth / tileCountW;
+         twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
+         oneStepVertically = mapHeight / tileCountH;
+         twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
+    }
+
+    /**
+     *  This method checks whether a tile for the second layer contains the property "blocked"
+     */
+    public boolean checkSecondLayer(TiledMapTileLayer.Cell obstacle){
+        if(obstacle != null) { //if it is not an empty cell
+            return obstacle.getTile().getProperties().containsKey("blocked");}
+        return false;     //else do nothing
+    }
+
+    /**
+     * This method checks whether a tile from the first layer contains the property "blocked"
+     * @param ground the first tile layer
+     * @return false if it is an empty cell
+     */
+
+    public boolean checkFirstLayer(TiledMapTileLayer.Cell ground){
+        if(ground != null) { //if it is not an empty cell
+            return ground.getTile().getProperties().containsKey("blocked");}
+        return false;     //else do nothing
+    }
+
     @Override
     public boolean keyTyped(char character) {return false;}
+
 
     /**
      * Called when the user touches the screen
@@ -186,6 +280,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         int oneStepVertically = mapHeight / tileCountH;
         int twoStepsvertically = mapHeight / tileCountH * NumberOfMovedTiles;
         //TODO complete this
+        Gdx.app.log("move", "." + screenY);
         if (Gdx.input.isTouched(pointer) && screenX>girl.getOldX()+200) {
             girl.move(oneStepHorizontaly, 0); //move right
         } else if (Gdx.input.isTouched(pointer) && screenX<girl.getOldX()-200) {

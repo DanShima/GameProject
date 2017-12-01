@@ -14,7 +14,7 @@ import static com.mygdx.game.Constants.GIRL_NAKED;
  * Created by Giddy on 23/11/2017.
  */
 
-public class Animator implements ApplicationListener {
+public class Player implements ApplicationListener {
 
     // Constant rows and columns of the sprite sheet
     private static final int FRAME_COLS = 3, FRAME_ROWS = 5;
@@ -23,15 +23,18 @@ public class Animator implements ApplicationListener {
     private SpriteBatch spriteBatch; //to draw on screen
     // A variable for tracking elapsed time for the animation (when the player moves)
     private float stateTime;
+    private float timeTillIdle = 0;
     private float fps = 0.3f; //time between frames in seconds
 
     //movement animation arrays
     private Animation<TextureRegion> walkAnimation;
+    private Animation<TextureRegion> idleAnimation;
     private Animation<TextureRegion> walkAnimationDOWN;
     private Animation<TextureRegion> walkAnimationUP;
     private Animation<TextureRegion> walkAnimationLEFT;
     private Animation<TextureRegion> walkAnimationRIGHT;
-   //arrays for holding the frames
+   
+    private TextureRegion[] idleFrames;
     private TextureRegion[] walkFramesDOWN;
     private TextureRegion[] walkFramesUP;
     private TextureRegion[] walkFramesLEFT;
@@ -45,6 +48,7 @@ public class Animator implements ApplicationListener {
 
     boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
 
+
     @Override
     public void create() {
         // Load the sprite sheet as a Texture
@@ -54,9 +58,12 @@ public class Animator implements ApplicationListener {
                 walkSheet.getWidth() / FRAME_COLS,
                 walkSheet.getHeight() / FRAME_ROWS);
         //convert 2D array to normal array
-        TextureRegion[] walkFrames = new TextureRegion[FRAME_COLS];
-        for (int i = 0; i < FRAME_COLS; i++) {
-          walkFrames[i] = tmp[0][i];}
+        idleFrames = new TextureRegion[2];
+        //IDLE
+        idleFrames[0] = tmp[4][0];
+        idleFrames[1] = tmp[4][2];
+        //for (int i = 0; i < FRAME_COLS; i++) {
+         // idleFrames[i] = tmp[0][i];}
         //TODO put the movements in a switch statement.
         walkFramesDOWN = new TextureRegion[FRAME_COLS];
         walkFramesUP = new TextureRegion[FRAME_COLS];
@@ -80,7 +87,9 @@ public class Animator implements ApplicationListener {
             walkFramesUP[i] = tmp[3][i];
         }
 
-        walkAnimation = new Animation<TextureRegion>(fps, walkFrames);
+
+        walkAnimation = new Animation<TextureRegion>(fps, idleFrames);
+        idleAnimation = new Animation<TextureRegion>(fps, idleFrames);
         walkAnimationDOWN = new Animation<TextureRegion>(fps, walkFramesDOWN);
         walkAnimationUP = new Animation<TextureRegion>(fps, walkFramesUP);
         walkAnimationLEFT = new Animation<TextureRegion>(fps, walkFramesLEFT);
@@ -88,7 +97,6 @@ public class Animator implements ApplicationListener {
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-
     }
 
     public void setWalkAnimation(Animation<TextureRegion> walkAnimation) {
@@ -99,14 +107,24 @@ public class Animator implements ApplicationListener {
         return walkAnimation;
     }
 
+    public void resetTimeTillIdle() {
+        timeTillIdle = 0;
+    }
+
     @Override
     public void render() {
 
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
+        timeTillIdle += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
         // this method takes an elapsed time parameter and returns the appropriate image for that time. it loops through a series of images and do it again
         //TODO put the movements in a separate method
         currentFrame = getWalkAnimation().getKeyFrame(stateTime, true);
+        //go back to idle state after 2 sec
+        if(stateTime > 2){
+            stateTime = 0;
+            setWalkAnimation(getIdleAnimation());
+        }
 
         spriteBatch.begin();
         spriteBatch.draw(currentFrame, getX(), getY()); // Draw current frame at (0, 0)
@@ -116,6 +134,7 @@ public class Animator implements ApplicationListener {
     public float getX() { return x - (float)(TiledTest.tileSize*0.25); } //place the animation in the center of the tile
 
     public float getY() {return y;}
+
 
     public void move(float stepX, float stepY){
         x = stepX + oldX;
@@ -155,19 +174,8 @@ public class Animator implements ApplicationListener {
         return walkAnimationRIGHT;
     }
 
-    public TextureRegion[] getWalkFramesDOWN() {
-        return walkFramesDOWN;
+    public Animation<TextureRegion> getIdleAnimation() {
+        return idleAnimation;
     }
 
-    public TextureRegion[] getWalkFramesUP() {
-        return walkFramesUP;
-    }
-
-    public TextureRegion[] getWalkFramesLEFT() {
-        return walkFramesLEFT;
-    }
-
-    public TextureRegion[] getWalkFramesRIGHT() {
-        return walkFramesRIGHT;
-    }
 }
