@@ -28,8 +28,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private int tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
-    float tileWidth;
-    float tileHeight;
+    int tileWidth = 128;
+    int tileHeight = 128;
     float oldX , oldY;
 
     private final int mapWidth = tileSize * tileCountW;
@@ -56,15 +56,18 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMapTileLayer.Cell ground;
     private TiledMapTileLayer.Cell obstacles;
 
+    int marginTop = 55; //parameterize as: screen height -1 -mapHeight
+    int screenHeight = 1080;
 
     @Override
     public void create () {
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
+        int width = Gdx.graphics.getWidth();
+        screenHeight = Gdx.graphics.getHeight(); //this is here, since it seems it cannot be done at init time
+        marginTop = screenHeight-1-mapHeight; //this depends on screenHeight so it needs to be done after that
 
         //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,width,height);
+        camera.setToOrtho(false,width,screenHeight);
         camera.translate ( 128 ,128 );
         camera.update();
         //load map and create a renderer passing in our tiled map
@@ -228,8 +231,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
          oldX = girl.getOldX () ;
          oldY = girl.getOldY ();
-         tileWidth= Blockedlayer.getTileWidth ();
-         tileHeight= Blockedlayer.getTileHeight ();
+         tileWidth= (int) Blockedlayer.getTileWidth ();
+         tileHeight= (int) Blockedlayer.getTileHeight ();
 
          oneStepHorizontaly = mapWidth / tileCountW;
          twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
@@ -266,8 +269,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      * Called when the user touches the screen
      *
      * */
+
     @Override
+
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        /*
         int oneStepHorizontaly = mapWidth / tileCountW;
         int twoStepsHorizontally = mapWidth / tileCountW * NumberOfMovedTiles;
         int oneStepVertically = mapHeight / tileCountH;
@@ -285,15 +291,76 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         } else {
             return true;
         }
+        */
         return false;
     }
 
 
 
-    /** Called when the user lifts their finger from the screen
+    /** This method converts screen Y position to simplified Y
     **/
+    public int ScreenPosYtoSimplified(float PositionY){
+        float temporary = (PositionY-(float) marginTop)/(float) tileSize;
+        Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + tileSize + "result" + temporary  );
+        return (int) Math.floor( Math.max(0.0,temporary));
+        //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
+    }
+
+    /**
+     * This method converts screen X position to simplified X
+     */
+    public int ScreenPosXtoSimplified(float PositionX){ //convert screen X position to simplified X
+        return (int) Math.floor( Math.max(0,PositionX/(float) tileSize));
+    }
+
+    public int simplifiedXtoScreenPos(int PositionX){ //convert simplified X to screen X position
+        return PositionX*tileWidth;
+    }
+
+    public int simplifiedYtoScreenPos(int PositionY){ //convert simplified Y to screen Y position
+        return PositionY*tileHeight+marginTop+tileHeight;
+    }
+
+    public int invertScreenPos(int PositionY){ //convert sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
+        return screenHeight-marginTop-PositionY; //probably slightly wrong in the offset (+-1 or something like that), but works to convert sprite position
+    }
+
+    /**
+     *Called when the user lifts their finger from the screen.
+     * We use touchUp instead of touchDown to avoid actions triggered by double clicks
+     *
+     */
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {return false;}
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
+        int differenceInPositionY = 0; //difference between simplified player position and simplified touch position in Y
+        int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
+        int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
+        //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
+        //Gdx.app.log("move", "screenY: " + screenY + " Simplified pos Y: " + touchPositionY + " Set pos Y:" + simplifiedYtoScreenPos(touchPositionY) );
+
+        int playerPositionY = invertScreenPos((int) girl.getOldY()); //we need to invert the Y because the sprite is in a different coordinate system
+        int playerPositionX = (int) girl.getOldX(); //(see playerPositionY comment) the different coordinate systems have identical X, so we don't manipulate oldX
+        //Gdx.app.log("move", "girl.oldY: " + girl.getOldY() + " inverted: " + playerPositionY + " Simplified:" + ScreenPosYtoSimplified(playerPositionY));
+        //Gdx.app.log("move", "girl.oldX: " + girl.getOldX() + " Simplified:" + ScreenPosXtoSimplified(playerPositionX));
+
+        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
+        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+
+        differenceInPositionX = Math.max(-2, Math.min(2, touchPositionX-playerPositionX)); //makes sure it never goes further than -2 and 2.
+        if(differenceInPositionX==0){ //X movement has priority. This could also be resolved in other ways.
+            differenceInPositionY= Math.max(-2, Math.min(2, playerPositionY-touchPositionY));
+        }
+        Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
+        Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
+
+        girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
+        //move should first check map collision (blocked) and stop accordingly
+        //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
+        //all items and monsters should express their position in a simplified way
+        //detect blo
+        return false;
+        }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
