@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<<<<<<< HEAD
 <map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="128" tileheight="128" nextobjectid="1">
-=======
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="128" tileheight="128" nextobjectid="3">
->>>>>>> new-test
+
  <tileset firstgid="1" source="prototypegame-desert-128-v04.tsx"/>
  <tileset firstgid="313" source="prototypegame-desert-128-v03.tsx"/>
- <tileset firstgid="589" source="untitled.tsx"/>
+
  <layer name="Layer1" width="15" height="8">
   <data encoding="base64">
    7AAAAO0AAAC5AAAA7wAAAPAAAADxAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAADUAAAA2AAAA+QAAAPoAAAD7AAAA/AAAAP0AAAD+AAAABgAAAAYAAAAGAAAAlwAAAAsAAAAMAAAABgAAAEIAAABDAAAABgEAAAcBAAACAQAAAwEAAAoBAAALAQAABgAAAAYAAAAGAAAAFwAAABgAAAAZAAAABgAAAAYAAAAGAAAABgAAABQBAAAPAQAAEAEAAAYAAAAGAAAABgAAAAYAAAAGAAAAJAAAACUAAAAmAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAAlwAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAABgAAAAYAAAAGAAAA

@@ -7,13 +7,13 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import static com.mygdx.game.Constants.LEVEL_ONE;
 import static com.mygdx.game.Constants.LEVEL_TWO;
 
 /**
@@ -80,9 +80,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
         underwear = new Item("socks.png", 768, 768);
         //underwear.checkCollision();
-        SoundEffect.instance.create(new AssetManager()); //load audio
-        GameSetting.instance.load(); //load audio settings
-        SoundManager.instance.play(SoundEffect.instance.backgroundMusic.backgroundMusic1); //play background music
+        SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
+        GameSetting.newSetting.load(); //load audio settings
+        SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
         //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
 
        //yeti = new Monster();
@@ -107,7 +107,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         yeti.render();
 
     }
-
+    @Override
+    public void dispose() {
+        //free allocated memory by disposing the instance
+        SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
+    }
     @Override
     public boolean keyDown(int keycode) {return false;}
 

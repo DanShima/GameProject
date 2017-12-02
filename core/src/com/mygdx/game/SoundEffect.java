@@ -11,14 +11,18 @@ import com.badlogic.gdx.utils.Disposable;
 /**
  * This class contains audio sound and music files
  */
-
 public class SoundEffect implements Disposable, AssetErrorListener{
-    public static final SoundEffect instance = new SoundEffect();
+
+    public static final SoundEffect newSoundEffect = new SoundEffect();
     private AssetManager manager;
     public GameSound sounds;
     public GameMusic backgroundMusic;
 
     private SoundEffect(){} //singleton pattern. cannot be used to create objects in other classes
+
+    /**
+     * An inner class containing sound effects
+     */
     public class GameSound {
         public final Sound collect; //played when the player picks up an item
         public final Sound loseLife;
@@ -27,36 +31,44 @@ public class SoundEffect implements Disposable, AssetErrorListener{
 
         public GameSound(AssetManager manager) {
             collect = manager.get("cloth-inventory.wav", Sound.class);
-            loseLife = manager.get("wscream_2.wav", Sound.class);
-            monsterGroan = manager.get("mnstr5.wav", Sound.class);
+            loseLife = manager.get("life_lost.wav", Sound.class);
+            monsterGroan = manager.get("monstergroan.wav", Sound.class);
             gainHP = manager.get("bottle.wav", Sound.class);
         }
     }
 
+    /**
+     * An inner class containing background music
+     */
     public class GameMusic{
-            public final Music backgroundMusic1;
+            public final Music musicDesertMap;
+            public final Music musicSnowMap;
+            public final Music musicStartMenu;
             public GameMusic(AssetManager manager){
-                backgroundMusic1 = manager.get("backgroundmusic.mp3", Music.class);
+                musicDesertMap = manager.get("desert.mp3", Music.class);
+                musicSnowMap = manager.get("snowsong.mp3", Music.class);
+                musicStartMenu = manager.get("start_menu_music.mp3", Music.class);
             }
 
         }
+
 
         public void create(AssetManager manager){
             this.manager = manager;
             manager.setErrorListener(this);
 
             manager.load("cloth-inventory.wav", Sound.class);
-            manager.load("wscream_2.wav", Sound.class);
-            manager.load("mnstr5.wav", Sound.class);
+            manager.load("life_lost.wav", Sound.class);
+            manager.load("monstergroan.wav", Sound.class);
             manager.load("bottle.wav", Sound.class);
 
-            manager.load("backgroundmusic.mp3", Music.class);
+            manager.load("desert.mp3", Music.class);
+            manager.load("snowsong.mp3", Music.class);
+            manager.load("start_menu_music.mp3", Music.class);
             manager.finishLoading();
             sounds = new GameSound(manager);
             backgroundMusic = new GameMusic(manager);
         }
-
-
 
     //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
 
@@ -66,8 +78,7 @@ public class SoundEffect implements Disposable, AssetErrorListener{
     public void stop(){}
     @Override
     public void dispose () {
-        manager.dispose();
-
+        manager.dispose(); //free allocated memory by getting rid of the sound manager after it's no longer used
     }
 
     @Override
