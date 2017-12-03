@@ -114,7 +114,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         underwear.render();
         socks.render();
         tshirt.render();
-        yeti.render();
+        yeti.render(); //yeti is not an item
     }
 
     //Player collide with Item
@@ -298,7 +298,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     **/
     public int ScreenPosYtoSimplified(float PositionY){
         float temporary = (PositionY-(float) marginTop)/(float) tileSize;
-        Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + tileSize + "result" + temporary  );
+       // Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + tileSize + "result" + temporary  );
         return (int) Math.floor( Math.max(0.0,temporary));
         //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
@@ -315,7 +315,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     }
 
     public int simplifiedYtoScreenPos(int PositionY){ //convert simplified Y to screen Y position
-        return PositionY*tileHeight+marginTop+tileHeight;
+        return PositionY*tileHeight+marginTop+tileHeight-1;
     }
 
     public int invertScreenPos(int PositionY){ //convert sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
@@ -348,14 +348,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         if(differenceInPositionX==0){ //X movement has priority. This could also be resolved in other ways.
             differenceInPositionY= Math.max(-2, Math.min(2, playerPositionY-touchPositionY));
         }
-        Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
-        Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
+       // Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
+       // Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
 
         girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
         //move should first check map collision (blocked) and stop accordingly
         //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
         //all items and monsters should express their position in a simplified way
-        //detect blo
+
         return false;
         }
 
