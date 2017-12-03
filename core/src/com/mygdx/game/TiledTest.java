@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -41,6 +42,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMapRenderer tiledMapRenderer;
     private TiledMapTileLayer Blockedlayer;
     private TiledMapTileLayer terrain;
+    private InputMultiplexer multiplexer;
 
 
     private Item underwear;
@@ -61,6 +63,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void create () {
+
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
         sp=new SpriteBatch (  );
@@ -76,7 +79,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMap = new TmxMapLoader().load(LEVEL_TWO);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
-        Gdx.input.setInputProcessor(this);
+        //Gdx.input.setInputProcessor(this);
+
 
         girl = new Player();
         girl.create();
@@ -105,6 +109,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         yeti.render();
         sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
         hud.stage.draw ();
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(this);
+        multiplexer.addProcessor(hud.stage);
+        Gdx.input.setInputProcessor(multiplexer);
+        //Gdx.input.setInputProcessor(hud.stage);
+
+
 
     }
 
