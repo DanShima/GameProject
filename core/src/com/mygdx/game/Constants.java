@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Constants {
     // Visible game world TODO Change this
+
     public static final float VIEWPORT_WIDTH = 0f;
     public static final float VIEWPORT_HEIGHT = 0f;
 
@@ -27,4 +28,21 @@ public class Constants {
     public static final String LEVEL_TWO = "snow128_16x10_v02.tmx";
     // location of the sprite sheet for the player without clothes
     public static final String GIRL_NAKED = "pinkGirl_v02.png";
+    // items
+    public static final String UNDERWEAR = "underwear.png";
+    public static final String TSHIRT = "tshirt.png";
+    public static final String SOCKS = "socks.png";
+    //Monster
+    public static final String MONSTER1 = "gazeti_3.png";
+    //Skin
+    public static final String skin=new String("skin/freezing-ui.json");
+    //To Display menu
+    public static final int screenWidth=Gdx.graphics.getWidth();
+    public static final int screenHeight=Gdx.graphics.getHeight();
+    public static final int centerX=screenWidth/2;
+    public static final int centerY=screenHeight/2;
+    public static final int colWidth=screenWidth/8;
+    public static final int rowHeight=screenHeight/8;
+
+
 }

@@ -18,34 +18,48 @@ public class Item {
     private Texture texture;
     private float positionX;
     private float positionY;
-
-
     private boolean collected;
 
-
-    public Item(String pngFile, float x, float y) {
+    /**
+     * Constructor to create ITEM
+     */
+     public Item(String pngFile, float x, float y) {
         create(pngFile, x, y);
     }
 
+    /**
+     *  To create item at specific location
+     */
     public void create(String pngFile, float x, float y) {
         spriteBatch = new SpriteBatch();
         texture = new Texture(Gdx.files.internal(pngFile));
         sprite = new Sprite(texture);
-        //set the initial starting position of the player
-        //set the player in the middle of the tile
         sprite.setPosition(x, y);
         collected = false;
-    }
+        }
 
     /**
-     * render the item to the screen. if the object is collected then it won't be rendered.
+     * Render the item to the screen. If the object is collected then it won't be rendered.
      * */
     public void render() {
-        if(collected) return; //if it is collected by the player then it becomes invisible
-        spriteBatch.begin();
-        sprite.draw(spriteBatch);
-        spriteBatch.end();
+        //if item is collected by the player then it becomes invisible
+        if(!collected) {
+            spriteBatch.begin();
+            sprite.draw(spriteBatch);
+            spriteBatch.end();
+        }
     }
+    /**
+     * Set the boolean collected is true if player grabs item
+     * @param collected
+     */
+    public void setCollected(boolean collected) {
+        this.collected = collected;
+    }
+
+
+
+
 
 
     /**
@@ -61,16 +75,10 @@ public class Item {
         spriteBatch.dispose();
         texture.dispose();
     }
-
-
-
     public boolean isCollected() {
         return collected;
     }
 
-    public void setCollected(boolean collected) {
-        this.collected = collected;
-    }
     public float getPositionX() {
         return positionX;
     }

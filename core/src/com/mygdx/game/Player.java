@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -46,8 +45,7 @@ public class Player implements ApplicationListener {
     private float oldX = 0; //old X position
     private float oldY = 0; //old Y position
 
-    boolean updateAnimationStateTime =false; // keep track of when to update Bob state time
-
+    boolean updateAnimationStateTime =false;
 
     @Override
     public void create() {
@@ -62,29 +60,24 @@ public class Player implements ApplicationListener {
         //IDLE
         idleFrames[0] = tmp[4][0];
         idleFrames[1] = tmp[4][2];
-        //for (int i = 0; i < FRAME_COLS; i++) {
-         // idleFrames[i] = tmp[0][i];}
-        //TODO put the movements in a switch statement.
+
         walkFramesDOWN = new TextureRegion[FRAME_COLS];
         walkFramesUP = new TextureRegion[FRAME_COLS];
         walkFramesLEFT = new TextureRegion[FRAME_COLS];
         walkFramesRIGHT = new TextureRegion[FRAME_COLS];
-        //We only want to animate the three images in the first row
-        //GO DOWN & IDLE
+
+        //putting three frames from a row into an array to form an animation for a walking direction
         for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesDOWN[i] = tmp[0][i];
+            walkFramesDOWN[i] = tmp[0][i]; //animation for walking down
         }
-        //GO LEFT
         for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesLEFT[i] = tmp[1][i];
+            walkFramesLEFT[i] = tmp[1][i]; //animation for walking to the left
         }
-        //GO RIGHT
         for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesRIGHT[i] = tmp[2][i];
+            walkFramesRIGHT[i] = tmp[2][i];//animation for walking to the right
         }
-        //GO UP
         for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesUP[i] = tmp[3][i];
+            walkFramesUP[i] = tmp[3][i];//animation for walking up
         }
 
 
@@ -137,10 +130,13 @@ public class Player implements ApplicationListener {
 
 
     public void move(float stepX, float stepY){
+
+
         x = stepX + oldX;
         y = stepY + oldY;
         oldX = x;
         oldY = y;
+
     }
 
     public float getOldX() {return oldX;}

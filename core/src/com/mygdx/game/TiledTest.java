@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,24 +16,29 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import static com.mygdx.game.Constants.LEVEL_ONE;
 import static com.mygdx.game.Constants.LEVEL_TWO;
+import static com.mygdx.game.Constants.MONSTER1;
+import static com.mygdx.game.Constants.SOCKS;
+import static com.mygdx.game.Constants.TSHIRT;
+import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
  * This class renders the tile map made with Tiled and shows it on the screen
  * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
  */
 
-public class TiledTest extends ApplicationAdapter implements InputProcessor {
+public class TiledTest extends ApplicationAdapter implements InputProcessor{
     public static final  int tileSize = 128; //tile in pixel
-    private int tileCountW = 15; //numbers of tiles in width
-    private int tileCountH = 8; //numbers of tiles in height
-
+    private static int tileCountW = 15; //numbers of tiles in width
+    private static int tileCountH = 8; //numbers of tiles in height
+    private int animatioPlayerYpos;
+    private int animatioPlayerXpos;
     //calculate the game world dimensions
     int tileWidth = 128;
     int tileHeight = 128;
     float oldX , oldY;
 
-    private final int mapWidth = tileSize * tileCountW;
-    private final int mapHeight = tileSize * tileCountH;
+    public final static int mapWidth = tileSize * tileCountW;
+    public final static int mapHeight = tileSize * tileCountH;
     private int NumberOfMovedTiles=2;
 
     private TiledMap tiledMap;
@@ -40,11 +46,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private TiledMapRenderer tiledMapRenderer;
     private TiledMapTileLayer Blockedlayer;
     private TiledMapTileLayer terrain;
+    private InputMultiplexer multiplexer;
 
 
-    private Item underwear;
+    private Item underwear,socks,tshirt;
     private Player girl; //animated player
     private Monster yeti;
+    private HUD hud ;
+    SpriteBatch sp;
 
 
     int oneStepHorizontaly ;
@@ -60,7 +69,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public void create () {
-        int width = Gdx.graphics.getWidth();
+
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        sp=new SpriteBatch (  );
+        hud = new HUD ( sp );
         screenHeight = Gdx.graphics.getHeight(); //this is here, since it seems it cannot be done at init time
         marginTop = screenHeight-1-mapHeight; //this depends on screenHeight so it needs to be done after that
 
@@ -74,10 +87,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         tiledMap = new TmxMapLoader().load(LEVEL_TWO);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
-        Gdx.input.setInputProcessor(this);
+        //Gdx.input.setInputProcessor(this);
 
+
+        //player
         girl = new Player();
         girl.create();
+<<<<<<< HEAD
 
         underwear = new Item("socks.png", 768, 768);
         //underwear.checkCollision();
@@ -85,34 +101,81 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
         //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
+=======
+        //items
+        underwear = new Item(UNDERWEAR, 256,256);
+        socks=new Item(SOCKS,768, 768);
+        tshirt=new Item(TSHIRT,1280, 384);
+>>>>>>> Develop
 
-       //yeti = new Monster();
-       yeti = new Monster("gazeti_3.png", 4, 3, 1);
+       //Monster
+       yeti = new Monster(MONSTER1, 4, 3, 1);
 
 
     }
-
-    @Override
-    public void render () {
+    // Initial render
+    public void initialRender()
+    {
         //set the background color to black
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         // pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+    }
+
+    //Initial Item Render
+    public void initialItemRender()
+    {
         girl.render();
         underwear.render();
+        socks.render();
+        tshirt.render();
         yeti.render();
+        sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
+        hud.stage.draw ();
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(this);
+        multiplexer.addProcessor(hud.stage);
+        Gdx.input.setInputProcessor(multiplexer);}
+        //Gdx.input.setInputProcessor(hud.stage);
 
+
+
+
+    //Player collide with Item
+    private void playerCollideWithItem(Item item){
+        item.setCollected(true);
+        initialItemRender();
     }
     @Override
     public void dispose() {
         //free allocated memory by disposing the instance
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
     }
+    @Override
+    public void render () {
+        //Calling initial render
+        initialRender();
+        initialItemRender();
+        //Grab Item
+        if(girl.getOldX ()>704 && girl.getOldX ()<832  && girl.getOldY()>704&& girl.getOldY()<832) {
+            playerCollideWithItem(socks);
+            }
+        if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
+            playerCollideWithItem(tshirt);
+            }
+            if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
+                playerCollideWithItem(underwear);
+            }
+        }
+
+
+
     @Override
     public boolean keyDown(int keycode) {return false;}
 
@@ -125,7 +188,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
      public boolean keyUp(int keycode) {
 
             if (keycode == Input.Keys.LEFT){// one step left
-                collisionL();
+             //   collisionL(differenceInPositionX * tileWidth, differenceInPositionY * tileHeight);
                 }
             if (keycode == Input.Keys.A)    {   // 2 steps left
 
@@ -159,16 +222,21 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
 
     /**
       *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
+     *
      */
-    public void collisionL(){
+    public void collisionL(int deltaX, int deltaY){
         GetProperties();
         girl.resetTimeTillIdle();
-        ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
-        obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
+
+        ground = Blockedlayer.getCell(simplifiedXtoScreenPos(animatioPlayerXpos),simplifiedXtoScreenPos(animatioPlayerYpos));
+        obstacles = terrain.getCell(simplifiedXtoScreenPos(animatioPlayerXpos),simplifiedXtoScreenPos(animatioPlayerYpos));
+
+        Gdx.app.log("aaaaaaa"+(simplifiedXtoScreenPos(animatioPlayerXpos)),"BBBBBBB"+simplifiedXtoScreenPos(animatioPlayerYpos));
+
         if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
                          girl.move ( 0,0 );
                              else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
-                                    girl.move(-oneStepHorizontaly, 0);}
+                                    girl.move(deltaX, deltaY);}
     }
 
 
@@ -274,6 +342,38 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
 
+
+
+
+    /**
+     *  This method checks whether a tile form the second layer contains property "exit"
+     */
+
+    public boolean isExitSecondLayer(TiledMapTileLayer.Cell obstacle){
+
+        if(obstacle != null) { // not an empty cell
+
+            return obstacle.getTile().getProperties().containsKey("exit");}
+
+        return false;
+    }
+
+    /**
+     * This method checks whether a tile from the first layer contains the property "exit"
+     * @param ground the first tile layer
+     * @return false if it is an empty cell
+     */
+
+    public boolean isExitFirstLayer(TiledMapTileLayer.Cell ground){
+
+        if(ground != null) { // not an empty cell
+
+            return ground.getTile().getProperties().containsKey("exit");}
+
+        return false;
+    }
+
+
     /**
      * This method converts screen X position to simplified X
      */
@@ -322,7 +422,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
         Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
 
-        girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
+                animatioPlayerYpos=playerPositionY;
+               animatioPlayerXpos=playerPositionX;
+        collisionL(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight);
+      //  girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
         //move should first check map collision (blocked) and stop accordingly
         //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
         //all items and monsters should express their position in a simplified way
