@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,16 +28,16 @@ import static com.mygdx.game.Constants.UNDERWEAR;
 
 public class TiledTest extends ApplicationAdapter implements InputProcessor{
     public static final  int tileSize = 128; //tile in pixel
-    private int tileCountW = 15; //numbers of tiles in width
-    private int tileCountH = 8; //numbers of tiles in height
+    private static int tileCountW = 15; //numbers of tiles in width
+    private static int tileCountH = 8; //numbers of tiles in height
 
     //calculate the game world dimensions
     int tileWidth = 128;
     int tileHeight = 128;
     float oldX , oldY;
 
-    private final int mapWidth = tileSize * tileCountW;
-    private final int mapHeight = tileSize * tileCountH;
+    public final static int mapWidth = tileSize * tileCountW;
+    public final static int mapHeight = tileSize * tileCountH;
     private int NumberOfMovedTiles=2;
 
     private TiledMap tiledMap;
@@ -44,11 +45,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     private TiledMapRenderer tiledMapRenderer;
     private TiledMapTileLayer Blockedlayer;
     private TiledMapTileLayer terrain;
+    private InputMultiplexer multiplexer;
 
 
     private Item underwear,socks,tshirt;
     private Player girl; //animated player
     private Monster yeti;
+    private HUD hud ;
+    SpriteBatch sp;
 
 
     int oneStepHorizontaly ;
@@ -64,7 +68,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     @Override
     public void create () {
-        int width = Gdx.graphics.getWidth();
+
+        float width = Gdx.graphics.getWidth();
+        float height = Gdx.graphics.getHeight();
+        sp=new SpriteBatch (  );
+        hud = new HUD ( sp );
         screenHeight = Gdx.graphics.getHeight(); //this is here, since it seems it cannot be done at init time
         marginTop = screenHeight-1-mapHeight; //this depends on screenHeight so it needs to be done after that
 
@@ -78,7 +86,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         tiledMap = new TmxMapLoader().load(LEVEL_TWO);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
-        Gdx.input.setInputProcessor(this);
+        //Gdx.input.setInputProcessor(this);
+
 
         //player
         girl = new Player();
@@ -101,6 +110,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         // pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
@@ -115,7 +125,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         socks.render();
         tshirt.render();
         yeti.render();
-    }
+        sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
+        hud.stage.draw ();
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(this);
+        multiplexer.addProcessor(hud.stage);
+        Gdx.input.setInputProcessor(multiplexer);}
+        //Gdx.input.setInputProcessor(hud.stage);
+
+
+
 
     //Player collide with Item
     private void playerCollideWithItem(Item item){

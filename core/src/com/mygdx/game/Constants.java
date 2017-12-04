@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Constants {
     // Visible game world TODO Change this
+    public static final String skin = new String ( "skin/freezing-ui.json" );
     public static final float VIEWPORT_WIDTH = 0f;
     public static final float VIEWPORT_HEIGHT = 0f;
 
