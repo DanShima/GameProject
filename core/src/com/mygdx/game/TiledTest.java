@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -72,8 +73,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
-        sp=new SpriteBatch (  );
-        hud = new HUD ( sp );
+        sp=new SpriteBatch();
+        hud = new HUD (sp);
         screenHeight = Gdx.graphics.getHeight(); //this is here, since it seems it cannot be done at init time
         marginTop = screenHeight-1-mapHeight; //this depends on screenHeight so it needs to be done after that
 
@@ -93,20 +94,18 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         //player
         girl = new Player();
         girl.create();
-<<<<<<< HEAD
 
-        underwear = new Item("socks.png", 768, 768);
         //underwear.checkCollision();
         SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
         //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
-=======
+
         //items
         underwear = new Item(UNDERWEAR, 256,256);
         socks=new Item(SOCKS,768, 768);
         tshirt=new Item(TSHIRT,1280, 384);
->>>>>>> Develop
+
 
        //Monster
        yeti = new Monster(MONSTER1, 4, 3, 1);
