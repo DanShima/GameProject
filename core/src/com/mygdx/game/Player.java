@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import static com.mygdx.game.Constants.GIRL_NAKED;
 import static com.mygdx.game.Constants.UNDERWEAR;
@@ -214,13 +215,12 @@ public class Player implements ApplicationListener {
 
     public float getY() {return y;}
 
-    public void updateSpriteBatch(Item item, Animation<TextureRegion> animation){
+    public void updateSpriteBatch(Item item){
         stateTime += Gdx.graphics.getDeltaTime();
-        currentFrameUnderwear = animation.getKeyFrame(stateTime, true);
+        currentFrameUnderwear = getWalkAnimationUnderwear().getKeyFrame(stateTime, true);
         //spriteBatch.dispose();
         spriteBatch.begin();
         if(item.isCollected() == true){
-
             spriteBatch.draw(currentFrame, getX(), getY());
             spriteBatch.draw(currentFrameUnderwear, getX(), getY());}
         spriteBatch.end();
@@ -293,6 +293,15 @@ public class Player implements ApplicationListener {
     public void setWalkAnimationUnderwear(Animation<TextureRegion> walkAnimationUnderwear) {
         this.walkAnimationUnderwear = walkAnimationUnderwear;
     }
+
+    public void animation(){
+        ObjectMap<String, Player> animationsByNames = new ObjectMap<String, Player>();
+       // animationsByNames.put(
+              //  "heroWithoutClothes",
+                //new Player(getX(), getY(), stateTime, currentFrame);
+    }
+
+
 
 
 }

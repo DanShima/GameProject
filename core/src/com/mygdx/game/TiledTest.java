@@ -111,6 +111,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     public void initialItemRender()
     {
         girl.render();
+        girl.updateSpriteBatch(underwear);
         underwear.render();
         socks.render();
         tshirt.render();
@@ -121,7 +122,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     private void playerCollideWithItem(Item item){
         item.setCollected(true);
         initialItemRender();
-        girl.updateSpriteBatch(underwear, girl.getWalkAnimationUnderwear());
+
     }
 
     @Override
@@ -198,7 +199,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
                          girl.move ( 0,0 );
                              else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
-                                    girl.move(-oneStepHorizontaly, 0);}
+                                    girl.move(-oneStepHorizontaly, 0);
+            }
     }
 
 
