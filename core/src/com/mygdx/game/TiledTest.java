@@ -6,14 +6,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import static com.badlogic.gdx.utils.Pools.free;
 import static com.mygdx.game.Constants.LEVEL_TWO;
 import static com.mygdx.game.Constants.MONSTER1;
 import static com.mygdx.game.Constants.SOCKS;
@@ -160,14 +158,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
                 }
             if (keycode == Input.Keys.A)    {   // 2 steps left
 
-                girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
                 girl.move(-twoStepsHorizontally, 0);
                 }
             if (keycode == Input.Keys.RIGHT)   {// one step right
                 collisionR ();
             }
             if (keycode == Input.Keys.D)  {       // two steps step right
-                girl.setWalkAnimation(girl.getWalkAnimationRIGHT());
+                girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
                 girl.move(twoStepsHorizontally, 0);}
 
             if (keycode == Input.Keys.UP)    {        // one step up
@@ -175,14 +173,14 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             }
 
             if (keycode == Input.Keys.W)  {          // 2 steps up
-                girl.setWalkAnimation(girl.getWalkAnimationUP());
+                girl.setCurrentAnimation(girl.getWalkAnimationUP());
                 girl.move(0, twoStepsvertically); }
 
             if (keycode == Input.Keys.DOWN)    {     // one step down
                 collisionD ();
                }
             if (keycode == Input.Keys.S)    {      // 2 steps down
-                girl.setWalkAnimation(girl.getWalkAnimationDOWN());
+                girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
                 girl.move(0, -twoStepsvertically);}
             return false;
     }
@@ -195,10 +193,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         GetProperties();
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
+
+
         obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
         if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
                          girl.move ( 0,0 );
-                             else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
+                             else {girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
                                     girl.move(-oneStepHorizontaly, 0);
             }
     }
@@ -214,7 +214,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         obstacles = terrain.getCell((int) (oldX / tileWidth)+2, (int) (oldY / tileHeight) + 1);
         if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
             girl.move ( 0,0 );
-        else {girl.setWalkAnimation(girl.getWalkAnimationRIGHT ());
+        else {girl.setCurrentAnimation(girl.getWalkAnimationRIGHT ());
             girl.move(+oneStepHorizontaly, 0);}
     }
 
@@ -226,7 +226,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight) +2);
         if((checkFirstLayer(ground))||checkSecondLayer(obstacles)){
             girl.move ( 0,0 );}
-        else {girl.setWalkAnimation(girl.getWalkAnimationUP ());
+        else {girl.setCurrentAnimation(girl.getWalkAnimationUP ());
             girl.move(0, +oneStepVertically);}
     }
     /**
@@ -239,7 +239,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight));
         if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
             girl.move ( 0,0 );
-            else {girl.setWalkAnimation(girl.getWalkAnimationDOWN());
+            else {girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
             girl.move(0, -oneStepVertically);}
     }
 

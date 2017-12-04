@@ -2,13 +2,13 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import static com.mygdx.game.Constants.FPS;
 import static com.mygdx.game.Constants.GIRL_NAKED;
 import static com.mygdx.game.Constants.UNDERWEAR;
 
@@ -18,6 +18,7 @@ import static com.mygdx.game.Constants.UNDERWEAR;
 
 public class Player implements ApplicationListener {
 
+
     // Constant rows and columns of the sprite sheet
     private static final int FRAME_COLS = 3, FRAME_ROWS = 5;
 
@@ -26,10 +27,10 @@ public class Player implements ApplicationListener {
     // A variable for tracking elapsed time for the animation (when the player moves)
     private float stateTime;
     private float timeTillIdle = 0;
-    private float fps = 0.3f; //time between frames in seconds
+   // private float fps = 0.3f; //time between frames in seconds
 
     //movement animation arrays
-    private Animation<TextureRegion> walkAnimation;
+    private Animation<TextureRegion> currentAnimation;
     private Animation<TextureRegion> idleAnimation;
     private Animation<TextureRegion> walkAnimationDOWN;
     private Animation<TextureRegion> walkAnimationUP;
@@ -60,22 +61,28 @@ public class Player implements ApplicationListener {
     TiledTest tiledTest;
 
     //movement animation arrays
-    private Animation<TextureRegion> walkAnimationUnderwear;
+    private Animation<TextureRegion> currentAnimationUnderwear;
     private Animation<TextureRegion> idleAnimationUnderwear;
     private Animation<TextureRegion> walkAnimationDOWNUnderwear;
     private Animation<TextureRegion> walkAnimationUPUnderwear;
     private Animation<TextureRegion> walkAnimationLEFTUnderwear;
     private Animation<TextureRegion> walkAnimationRIGHTUnderwear;
-
-    private TextureRegion[] idleFramesUnderwear;
-    private TextureRegion[] walkFramesDOWNUnderwear;
-
-
-    private TextureRegion[] walkFramesUPUnderwear;
-    private TextureRegion[] walkFramesLEFTUnderwear;
-    private TextureRegion[] walkFramesRIGHTUnderwear;
     private TextureRegion currentFrameUnderwear;
-    TextureRegion[][] underwearRegion;
+
+
+    public enum DIRECTION{
+        UP, DOWN, LEFT, RIGHT, IDLE
+    }
+
+    public enum PLAYERSTATE{
+        UNDERWEAR, PANTS, SHIRT, SOCKS
+    }
+
+    public DIRECTION direction;
+    public PLAYERSTATE playerstate;
+
+
+    AnimationUtil animationUtil;
 
 
     @Override
@@ -86,88 +93,22 @@ public class Player implements ApplicationListener {
         socksSheet = new Texture(Gdx.files.internal("pinkGirl_v02_socks.png"));
         tshirtSheet = new Texture(Gdx.files.internal("pinkGirl_v02_shirt.png"));
         pantsSheet = new Texture(Gdx.files.internal("pinkGirl_v02_pants.png"));
-        // Create a 2D array of TextureRegions by splitting the sheet into separate frames
-        TextureRegion[][] tmp = TextureRegion.split(walkSheet,
-                walkSheet.getWidth() / FRAME_COLS,
-                walkSheet.getHeight() / FRAME_ROWS);
 
-        /*
-        underwearRegion = TextureRegion.split(underwearSheet,
-                walkSheet.getWidth() / FRAME_COLS,
-                walkSheet.getHeight() / FRAME_ROWS);
-        */
+        animationUtil = new AnimationUtil();
 
+        currentAnimation = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        idleAnimation = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        walkAnimationDOWN = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 0 );
+        walkAnimationUP = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 3 );
+        walkAnimationLEFT = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 1 );
+        walkAnimationRIGHT = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 2 );
 
-        //convert 2D array to normal array
-        idleFrames = new TextureRegion[2];
-        //IDLE
-        idleFrames[0] = tmp[4][0];
-        idleFrames[1] = tmp[4][2];
-
-        walkFramesDOWN = new TextureRegion[FRAME_COLS];
-        walkFramesUP = new TextureRegion[FRAME_COLS];
-        walkFramesLEFT = new TextureRegion[FRAME_COLS];
-        walkFramesRIGHT = new TextureRegion[FRAME_COLS];
-
-        //putting three frames from a row into an array to form an animation for a walking direction
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesDOWN[i] = tmp[0][i]; //animation for walking down
-        }
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesLEFT[i] = tmp[1][i]; //animation for walking to the left
-        }
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesRIGHT[i] = tmp[2][i];//animation for walking to the right
-        }
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesUP[i] = tmp[3][i];//animation for walking up
-        }
-
-
-
-        walkAnimation = new Animation<TextureRegion>(fps, idleFrames);
-        idleAnimation = new Animation<TextureRegion>(fps, idleFrames);
-        walkAnimationDOWN = new Animation<TextureRegion>(fps, walkFramesDOWN);
-        walkAnimationUP = new Animation<TextureRegion>(fps, walkFramesUP);
-        walkAnimationLEFT = new Animation<TextureRegion>(fps, walkFramesLEFT);
-        walkAnimationRIGHT = new Animation<TextureRegion>(fps, walkFramesRIGHT);
-
-
-//underwear
-        TextureRegion[][] tmpUnderwear = TextureRegion.split(underwearSheet,
-                underwearSheet.getWidth() / FRAME_COLS,
-                underwearSheet.getHeight() / FRAME_ROWS);
-        idleFramesUnderwear = new TextureRegion[2];
-        //IDLE
-        idleFramesUnderwear[0] = tmpUnderwear[4][0];
-        idleFramesUnderwear[1] = tmpUnderwear[4][2];
-
-        walkFramesDOWNUnderwear = new TextureRegion[FRAME_COLS];
-        walkFramesUPUnderwear = new TextureRegion[FRAME_COLS];
-        walkFramesLEFTUnderwear = new TextureRegion[FRAME_COLS];
-        walkFramesRIGHTUnderwear = new TextureRegion[FRAME_COLS];
-
-        //putting three frames from a row into an array to form an animation for a walking direction
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesDOWNUnderwear[i] = tmpUnderwear[0][i]; //animation for walking down
-        }
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesLEFTUnderwear[i] = tmpUnderwear[1][i]; //animation for walking to the left
-        }
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesRIGHTUnderwear[i] = tmpUnderwear[2][i];//animation for walking to the right
-        }
-        for (int i = 0; i < FRAME_COLS; i++) {
-            walkFramesUPUnderwear[i] = tmpUnderwear[3][i];//animation for walking up
-        }
-
-
-        walkAnimationUnderwear = new Animation<TextureRegion>(fps, idleFramesUnderwear);
-        idleAnimationUnderwear = new Animation<TextureRegion>(fps, idleFramesUnderwear);
-        walkAnimationDOWNUnderwear = new Animation<TextureRegion>(fps, walkFramesDOWNUnderwear);
-        walkAnimationUPUnderwear = new Animation<TextureRegion>(fps, walkFramesUPUnderwear);
-        walkAnimationLEFTUnderwear = new Animation<TextureRegion>(fps, walkFramesLEFTUnderwear);
-        walkAnimationRIGHTUnderwear = new Animation<TextureRegion>(fps, walkFramesRIGHTUnderwear);
+        currentAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 4, new int[]{0,2} );
+        idleAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 4, new int[]{0,2} );
+        walkAnimationDOWNUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 0 );
+        walkAnimationUPUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 3 );
+        walkAnimationLEFTUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 1 );
+        walkAnimationRIGHTUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 2 );
 
 
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
@@ -177,16 +118,20 @@ public class Player implements ApplicationListener {
 
     }
 
-    public void setWalkAnimation(Animation<TextureRegion> walkAnimation) {
-        this.walkAnimation = walkAnimation;
+    public void setCurrentAnimation(Animation<TextureRegion> currentAnimation) {
+        this.currentAnimation = currentAnimation;
     }
 
-    public Animation<TextureRegion> getWalkAnimation() {
-        return walkAnimation;
+    public Animation<TextureRegion> getCurrentAnimation() {
+        return currentAnimation;
     }
 
     public void resetTimeTillIdle() {
         timeTillIdle = 0;
+    }
+
+    public TextureRegion getCurrentFrameUnderwear() {
+        return currentFrameUnderwear;
     }
 
     @Override
@@ -196,14 +141,13 @@ public class Player implements ApplicationListener {
         timeTillIdle += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
         // this method takes an elapsed time parameter and returns the appropriate image for that time. it loops through a series of images and do it again
-        //TODO put the movements in a separate method
-        currentFrame = getWalkAnimation().getKeyFrame(stateTime, true);
-        currentFrameUnderwear = getWalkAnimationUnderwear().getKeyFrame(stateTime, true);
+        currentFrame = getCurrentAnimation().getKeyFrame(stateTime, true);
+        currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
         //go back to idle state after 2 sec
         if(stateTime > 2){
             stateTime = 0;
-            setWalkAnimation(getIdleAnimation());
-            setWalkAnimationUnderwear(getIdleAnimationUnderwear());
+            setCurrentAnimation(getIdleAnimation());
+            setCurrentAnimationUnderwear(getIdleAnimationUnderwear());
         }
         //updateSpriteBatch();
         spriteBatch.begin();
@@ -215,16 +159,36 @@ public class Player implements ApplicationListener {
 
     public float getY() {return y;}
 
+    /**
+     * Update girl with clothes on
+     * @param item
+     */
     public void updateSpriteBatch(Item item){
         stateTime += Gdx.graphics.getDeltaTime();
-        currentFrameUnderwear = getWalkAnimationUnderwear().getKeyFrame(stateTime, true);
-        //spriteBatch.dispose();
+        currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
+
         spriteBatch.begin();
+        //spriteBatch.flush();
         if(item.isCollected() == true){
-            spriteBatch.draw(currentFrame, getX(), getY());
+            // spriteBatch.draw(currentFrame, getX(), getY());
             spriteBatch.draw(currentFrameUnderwear, getX(), getY());}
         spriteBatch.end();
     }
+
+    /**
+     * update girl with clothes on
+     * @param textureRegion
+     */
+    public void updateSpriteBatch(TextureRegion textureRegion){
+        //stateTime += Gdx.graphics.getDeltaTime();
+        //currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
+
+        spriteBatch.begin();
+         // spriteBatch.draw(currentFrame, getX(), getY());
+            spriteBatch.draw(textureRegion, getX(), getY());
+        spriteBatch.end();
+    }
+
 
     public void move(float stepX, float stepY){
         x = stepX + oldX;
@@ -267,8 +231,8 @@ public class Player implements ApplicationListener {
     public Animation<TextureRegion> getIdleAnimation() {
         return idleAnimation;
     }
-    public Animation<TextureRegion> getWalkAnimationUnderwear() {
-        return walkAnimationUnderwear;
+    public Animation<TextureRegion> getCurrentAnimationUnderwear() {
+        return currentAnimationUnderwear;
     }
 
     public Animation<TextureRegion> getIdleAnimationUnderwear() {
@@ -290,16 +254,11 @@ public class Player implements ApplicationListener {
     public Animation<TextureRegion> getWalkAnimationRIGHTUnderwear() {
         return walkAnimationRIGHTUnderwear;
     }
-    public void setWalkAnimationUnderwear(Animation<TextureRegion> walkAnimationUnderwear) {
-        this.walkAnimationUnderwear = walkAnimationUnderwear;
+    public void setCurrentAnimationUnderwear(Animation<TextureRegion> currentAnimationUnderwear) {
+        this.currentAnimationUnderwear = currentAnimationUnderwear;
     }
 
-    public void animation(){
-        ObjectMap<String, Player> animationsByNames = new ObjectMap<String, Player>();
-       // animationsByNames.put(
-              //  "heroWithoutClothes",
-                //new Player(getX(), getY(), stateTime, currentFrame);
-    }
+
 
 
 

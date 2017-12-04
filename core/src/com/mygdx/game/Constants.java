@@ -34,4 +34,7 @@ public class Constants {
     //Monster
     public static final String MONSTER1 = "gazeti_3.png";
 
+    public static final float FPS = 0.3f; //time between frames in seconds
+
+
 }
