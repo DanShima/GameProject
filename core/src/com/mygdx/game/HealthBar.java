@@ -28,7 +28,7 @@ public class HealthBar extends ProgressBar {
         setHeight(height);
 
         setAnimateDuration(0.0f);
-        setValue(1f);
+        setValue(0.5f);
 
         setAnimateDuration(0.25f);
     }
@@ -44,4 +44,14 @@ public class HealthBar extends ProgressBar {
 
         return drawable;
     }
+
+    public void setHealth(float value)
+    {
+        setValue(value);
+    }
+    public  float getHelath()
+    {
+        return getValue();
+    }
+
 }

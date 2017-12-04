@@ -30,12 +30,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class HUD implements Disposable  {
 
+    private int level = 1;
     public Stage stage;
     private Viewport viewport;
-    private static Integer score;
-    private static Label scorelabel;
-    private Label levellabel;
-    private Label scorename;
+    private  int score = 100;
+    private  Label ScoreLabel;
+    private Label LevelLabel;
     private Table table;
     private TextButton button ;
     private Skin myskin ;
@@ -50,53 +50,54 @@ public class HUD implements Disposable  {
         table = new Table();
         table.top();//table at top of our stage
         table.setFillParent(true);//table is now fill all the stage
-        //label for gdx
-        Label skinlabel = new Label ("my new skin" ,myskin, "default");
-        scorelabel=new Label(String.format("%02d",10),myskin, "default");//label for gdx
-        button = new TextButton ( "cool",myskin,"default" );
+        ScoreLabel=new Label("Score" + score ,myskin,"default");//label for gdx
+        ScoreLabel.setFontScale(2,2);
+        button = new TextButton ( "Menu",myskin,"default" );
 
         button.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 dialog.show(stage);
                 return true;}});
 
-        levellabel=new Label("1-1",myskin, "default");//label for gdx
-         scorename=new Label("Score",myskin,"default");//label for gdx
-        healthBar = new HealthBar(100, 10);
-        healthBar.setPosition(10, Gdx.graphics.getHeight() - 20);
+        LevelLabel =new Label("Level :" + level ,myskin, "default");//label for gdx
+        LevelLabel.setFontScale(2,2);
+        healthBar = new HealthBar(90, 30);
         table.add (healthBar);
-
-        table.add(scorename).expandX().padTop(10);
-        table.add(levellabel).expandX().padTop(10);
-        table.add(skinlabel).expandX().padTop(10);
+        table.add(ScoreLabel).expandX().padTop(10);
+        table.add(LevelLabel).expandX().padTop(10);
         table.add (button);
 
-
-
         table.row();
-        table.add(scorelabel).expandX();
-        //table.background ( "blue.png" );
-       // table.add(health).width(50).height(10);
-
-
 
         stage.addActor(table);
 
     }
 
 
-    public static void addScore(int value)
-    {
-        score +=value;
-        scorelabel.setText(String.format("%02d",score));
+    public  void setScore(int value) {
+        score = value;
+        ScoreLabel.setText(String.format("Score :" + score));
     }
-    public static int getScore()
+    public  int getScore()
     {
         return score;
     }
+
+
+    public void setLevel(int value) {
+        level =value;
+        LevelLabel.setText(String.format("Level :" + level));
+    }
+    public  int getLevel()
+    {
+        return level;
+    }
+
+
+
+
     @Override
     public void dispose() {
         stage.dispose();
     }
-    //loading.setDrawable(new TextureRegionDrawable(new TextureRegion(new Texture("90.png")));
 }
