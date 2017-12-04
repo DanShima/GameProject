@@ -199,8 +199,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
 
-        debugMe();
-
+        //debugMe();
         obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
         if ( checkFirstLayer(ground) || checkSecondLayer(obstacles)){
             girl.move ( 0,0 );}
@@ -219,8 +218,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+2, (int) (oldY / tileHeight) + 1);
 
-        debugMe();
-
+        //debugMe();
         if (checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
             girl.move ( 0,0 );}
         else
@@ -235,8 +233,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight) +2);
 
-        debugMe();
-
+        //debugMe();
         if(checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
             girl.move ( 0,0 );}
         else
@@ -251,15 +248,38 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight));
 
-        debugMe();
-        //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
-
+        //debugMe();
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight));
         if ( checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
             girl.move ( 0,0 );}
         else {
             girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
             girl.move(0, -oneStepVertically);}
+    }
+
+    public boolean collisionCheck(int stepsX, int stepsY){
+        //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
+        //debugMe();
+        boolean blocked = false;
+        if(stepsY == 0 ){//horizontal movement
+            int directionSign = Integer.signum(stepsX); //-1 for left, otherwise 1
+
+            for( int i = 0; i < Math.abs( stepsX ); i++ ){
+                ground = Blockedlayer.getCell((int)(oldX / tileWidth) + 1 + directionSign*i , (int)(oldY / tileHeight) +1 );
+                obstacles = terrain.getCell((int)(oldX / tileWidth) + 1 + directionSign*i , (int)(oldY / tileHeight) +1 );
+                blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
+            }
+        }
+        else if(stepsX == 0){//vertical movement
+            int directionSign = Integer.signum(stepsY); //-1 for left, otherwise 1
+
+            for( int i = 0; i < Math.abs(stepsY); i++ ){
+                ground = Blockedlayer.getCell((int) (oldX / tileWidth) + 1 , (int) (oldY / tileHeight) +1 + directionSign*i );
+                obstacles = terrain.getCell((int) (oldX / tileWidth) + 1 , (int) (oldY / tileHeight) +1 +  directionSign*i );
+                blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
+            }
+        }
+        return !blocked;
     }
 
     /**
@@ -373,19 +393,30 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         differenceInPositionX = touchPositionX - playerPositionX;
         differenceInPositionY = playerPositionY - touchPositionY;
 
-        switch(differenceInPositionX , differenceInPositionY){
-            
+        //We cannot use a switch statement, because it is not the right way to use that. We have to use an "else if" chains
+        if( differenceInPositionX == 0 && differenceInPositionY==0 ) {
+            //probably best to give some kind of feedback. Probably best to draw where the player can go.
         }
-        if( ( Math.abs(differenceInPositionX)<=2 && differenceInPositionY==0 ) ||  Math.abs(differenceInPositionY)<=2 ) {
-            differenceInPositionX = Math.max(-2, Math.min(2, touchPositionX - playerPositionX)); //makes sure it never goes further than -2 and 2.
-            if (differenceInPositionX == 0) { //X movement has priority. This could also be resolved in other ways.
-                differenceInPositionY = Math.max(-2, Math.min(2, playerPositionY - touchPositionY));
+        else if( ( Math.abs(differenceInPositionX)<=2 && differenceInPositionY==0 ) ) {
+            //attempt at horizontal movement - may be still blocked by collision, so let's check for that
+            if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
+                girl.move(differenceInPositionX*tileWidth,0);
             }
+        }
+        else if( ( Math.abs(differenceInPositionY)<=2 && differenceInPositionX==0 ) ) {
+            //attempt at vertical movement - may be still blocked by collision, so let's check for that
+            if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
+                girl.move(0,differenceInPositionY*tileHeight);
+            }
+        }
+        //additional interaction types go in between here.
+        else{
+            //fail-press nothing happens. Maybe we give some feedback, like a sound, that a press occured.
         }
        // Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
        // Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
 
-        girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
+        //girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
         //move should first check map collision (blocked) and stop accordingly
         //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
         //all items and monsters should express their position in a simplified way

@@ -155,6 +155,8 @@ public class Player implements ApplicationListener {
         spriteBatch.end();
     }
 
+    public float getPlainX() { return x; }
+
     public float getX() { return x - (float)(TiledTest.tileSize*0.25); } //place the animation in the center of the tile
 
     public float getY() {return y;}
