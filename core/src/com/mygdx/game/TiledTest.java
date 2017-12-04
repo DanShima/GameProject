@@ -121,6 +121,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     private void playerCollideWithItem(Item item){
         item.setCollected(true);
         initialItemRender();
+        girl.updateSpriteBatch(underwear, girl.getWalkAnimationUnderwear());
     }
 
     @Override

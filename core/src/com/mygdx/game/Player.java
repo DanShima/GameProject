@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static com.mygdx.game.Constants.GIRL_NAKED;
+import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
  * Created by Giddy on 23/11/2017.
@@ -171,7 +172,7 @@ public class Player implements ApplicationListener {
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-
+        item = new Item(UNDERWEAR, 256,256);
 
     }
 
@@ -205,9 +206,7 @@ public class Player implements ApplicationListener {
         }
         //updateSpriteBatch();
         spriteBatch.begin();
-        spriteBatch.draw(currentFrame, getX(), getY());
-        spriteBatch.draw(currentFrameUnderwear, getX(), getY());
-
+        spriteBatch.draw(currentFrame, getX(), getY()); //naked girl rendering
         spriteBatch.end();
     }
 
@@ -215,12 +214,15 @@ public class Player implements ApplicationListener {
 
     public float getY() {return y;}
 
-    public void updateSpriteBatch(){
-        spriteBatch.dispose();
+    public void updateSpriteBatch(Item item, Animation<TextureRegion> animation){
+        stateTime += Gdx.graphics.getDeltaTime();
+        currentFrameUnderwear = animation.getKeyFrame(stateTime, true);
+        //spriteBatch.dispose();
         spriteBatch.begin();
-        spriteBatch.draw(currentFrame, getX(), getY());
-        if(item.isCollected())
-            spriteBatch.draw(currentFrameUnderwear, getX(), getY());
+        if(item.isCollected() == true){
+
+            spriteBatch.draw(currentFrame, getX(), getY());
+            spriteBatch.draw(currentFrameUnderwear, getX(), getY());}
         spriteBatch.end();
     }
 

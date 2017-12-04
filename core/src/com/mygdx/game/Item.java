@@ -62,7 +62,8 @@ public class Item {
     }
 
     public boolean isCollected(){
-        return collected = true;
+
+        return collected ;
     }
 
 
