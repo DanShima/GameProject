@@ -327,6 +327,38 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
 
+
+
+
+    /**
+     *  This method checks whether a tile form the second layer contains property "exit"
+     */
+
+    public boolean isExitSecondLayer(TiledMapTileLayer.Cell obstacle){
+
+        if(obstacle != null) { // not an empty cell
+
+            return obstacle.getTile().getProperties().containsKey("exit");}
+
+        return false;
+    }
+
+    /**
+     * This method checks whether a tile from the first layer contains the property "exit"
+     * @param ground the first tile layer
+     * @return false if it is an empty cell
+     */
+
+    public boolean isExitFirstLayer(TiledMapTileLayer.Cell ground){
+
+        if(ground != null) { // not an empty cell
+
+            return ground.getTile().getProperties().containsKey("exit");}
+
+        return false;
+    }
+
+
     /**
      * This method converts screen X position to simplified X
      */
