@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Constants {
     // Visible game world TODO Change this
-    public static final String skin = new String ( "skin/freezing-ui.json" );
+
     public static final float VIEWPORT_WIDTH = 0f;
     public static final float VIEWPORT_HEIGHT = 0f;
 
@@ -34,5 +34,15 @@ public class Constants {
     public static final String SOCKS = "socks.png";
     //Monster
     public static final String MONSTER1 = "gazeti_3.png";
+    //Skin
+    public static final String skin=new String("skin/freezing-ui.json");
+    //To Display menu
+    public static final int screenWidth=Gdx.graphics.getWidth();
+    public static final int screenHeight=Gdx.graphics.getHeight();
+    public static final int centerX=screenWidth/2;
+    public static final int centerY=screenHeight/2;
+    public static final int colWidth=screenWidth/8;
+    public static final int rowHeight=screenHeight/8;
+
 
 }
