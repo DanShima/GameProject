@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -131,10 +130,12 @@ public class Player implements ApplicationListener {
 
 
     public void move(float stepX, float stepY){
-        x = stepX + oldX;
-        y = stepY + oldY;
+
         oldX = x;
         oldY = y;
+        x = stepX + oldX;
+        y = stepY + oldY;
+
     }
 
     public float getOldX() {return oldX;}
