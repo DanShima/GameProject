@@ -131,10 +131,11 @@ public class Player implements ApplicationListener {
 
     public void move(float stepX, float stepY){
 
-        oldX = x;
-        oldY = y;
+
         x = stepX + oldX;
         y = stepY + oldY;
+        oldX = x;
+        oldY = y;
 
     }
 

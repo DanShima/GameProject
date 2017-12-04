@@ -29,7 +29,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     public static final  int tileSize = 128; //tile in pixel
     private static int tileCountW = 15; //numbers of tiles in width
     private static int tileCountH = 8; //numbers of tiles in height
-
+    private int animatioPlayerYpos;
+    private int animatioPlayerXpos;
     //calculate the game world dimensions
     int tileWidth = 128;
     int tileHeight = 128;
@@ -212,10 +213,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         GetProperties();
         girl.resetTimeTillIdle();
 
-        ground = Blockedlayer.getCell(deltaX+1, deltaY);
-        obstacles = terrain.getCell(deltaX+1, deltaY);
+        ground = Blockedlayer.getCell(simplifiedXtoScreenPos(animatioPlayerXpos),simplifiedXtoScreenPos(animatioPlayerYpos));
+        obstacles = terrain.getCell(simplifiedXtoScreenPos(animatioPlayerXpos),simplifiedXtoScreenPos(animatioPlayerYpos));
 
-        Gdx.app.log("aaaaaaa"+(oldX / tileWidth),"BBBBBBB"+(oldY / tileHeight) + 1);
+        Gdx.app.log("aaaaaaa"+(simplifiedXtoScreenPos(animatioPlayerXpos)),"BBBBBBB"+simplifiedXtoScreenPos(animatioPlayerYpos));
 
         if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
                          girl.move ( 0,0 );
@@ -373,6 +374,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         }
         Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
         Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
+
+                animatioPlayerYpos=playerPositionY;
+               animatioPlayerXpos=playerPositionX;
         collisionL(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight);
       //  girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
         //move should first check map collision (blocked) and stop accordingly
