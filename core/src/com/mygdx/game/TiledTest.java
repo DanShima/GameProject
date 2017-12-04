@@ -14,14 +14,19 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import static com.badlogic.gdx.utils.Pools.free;
 import static com.mygdx.game.Constants.LEVEL_TWO;
+import static com.mygdx.game.Constants.MONSTER1;
+import static com.mygdx.game.Constants.SOCKS;
+import static com.mygdx.game.Constants.TSHIRT;
+import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
  * This class renders the tile map made with Tiled and shows it on the screen
  * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
  */
 
-public class TiledTest extends ApplicationAdapter implements InputProcessor {
+public class TiledTest extends ApplicationAdapter implements InputProcessor{
     public static final  int tileSize = 128; //tile in pixel
     private static int tileCountW = 15; //numbers of tiles in width
     private static int tileCountH = 8; //numbers of tiles in height
@@ -43,7 +48,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
     private InputMultiplexer multiplexer;
 
 
-    private Item underwear;
+    private Item underwear,socks,tshirt;
     private Player girl; //animated player
     private Monster yeti;
     private HUD hud ;
@@ -84,18 +89,22 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         //Gdx.input.setInputProcessor(this);
 
 
+        //player
         girl = new Player();
         girl.create();
-        underwear = new Item("underwear.png", 768, 768);
+        //items
+        underwear = new Item(UNDERWEAR, 256,256);
+        socks=new Item(SOCKS,768, 768);
+        tshirt=new Item(TSHIRT,1280, 384);
 
-       //yeti = new Monster();
-       yeti = new Monster("gazeti_3.png", 4, 3, 1);
+       //Monster
+       yeti = new Monster(MONSTER1, 4, 3, 1);
 
 
     }
-
-    @Override
-    public void render () {
+    // Initial render
+    public void initialRender()
+    {
         //set the background color to black
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -106,20 +115,51 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor {
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+    }
+
+    //Initial Item Render
+    public void initialItemRender()
+    {
         girl.render();
         underwear.render();
+        socks.render();
+        tshirt.render();
         yeti.render();
         sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
         hud.stage.draw ();
         multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(this);
         multiplexer.addProcessor(hud.stage);
-        Gdx.input.setInputProcessor(multiplexer);
+        Gdx.input.setInputProcessor(multiplexer);}
         //Gdx.input.setInputProcessor(hud.stage);
 
 
 
+
+    //Player collide with Item
+    private void playerCollideWithItem(Item item){
+        item.setCollected(true);
+        initialItemRender();
     }
+
+    @Override
+    public void render () {
+        //Calling initial render
+        initialRender();
+        initialItemRender();
+        //Grab Item
+        if(girl.getOldX ()>704 && girl.getOldX ()<832  && girl.getOldY()>704&& girl.getOldY()<832) {
+            playerCollideWithItem(socks);
+            }
+        if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
+            playerCollideWithItem(tshirt);
+            }
+            if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
+                playerCollideWithItem(underwear);
+            }
+        }
+
+
 
     @Override
     public boolean keyDown(int keycode) {return false;}

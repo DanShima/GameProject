@@ -28,4 +28,11 @@ public class Constants {
     public static final String LEVEL_TWO = "snow128_16x10_v02.tmx";
     // location of the sprite sheet for the player without clothes
     public static final String GIRL_NAKED = "pinkGirl_v02.png";
+    // items
+    public static final String UNDERWEAR = "underwear.png";
+    public static final String TSHIRT = "tshirt.png";
+    public static final String SOCKS = "socks.png";
+    //Monster
+    public static final String MONSTER1 = "gazeti_3.png";
+
 }
