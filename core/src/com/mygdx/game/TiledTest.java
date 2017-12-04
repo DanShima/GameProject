@@ -186,6 +186,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     }
 
 
+    public void debugMe(){
+        //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
+        Gdx.app.log("movement","oldX: " + (oldX / tileWidth) + " oldY: " + (oldY / tileHeight) );
+    }
+
     /**
       *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
      */
@@ -194,15 +199,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
 
+        debugMe();
 
         obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
-        if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
-                         girl.move ( 0,0 );
-                             else {girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
-                                    girl.move(-oneStepHorizontaly, 0);
-            }
+        if ( checkFirstLayer(ground) || checkSecondLayer(obstacles)){
+            girl.move ( 0,0 );}
+        else {
+            girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
+            girl.move(-oneStepHorizontaly, 0);
+        }
     }
-
 
     /**
      *  collision for the right side
@@ -212,9 +218,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+2, (int) (oldY / tileHeight) + 1);
-        if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
-            girl.move ( 0,0 );
-        else {girl.setCurrentAnimation(girl.getWalkAnimationRIGHT ());
+
+        debugMe();
+
+        if (checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
+            girl.move ( 0,0 );}
+        else
+            {girl.setCurrentAnimation(girl.getWalkAnimationRIGHT ());
             girl.move(+oneStepHorizontaly, 0);}
     }
 
@@ -224,9 +234,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         girl.resetTimeTillIdle(); //go back to idle state
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight) +2);
-        if((checkFirstLayer(ground))||checkSecondLayer(obstacles)){
+
+        debugMe();
+
+        if(checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
             girl.move ( 0,0 );}
-        else {girl.setCurrentAnimation(girl.getWalkAnimationUP ());
+        else
+            {girl.setCurrentAnimation(girl.getWalkAnimationUP ());
             girl.move(0, +oneStepVertically);}
     }
     /**
@@ -236,10 +250,15 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         GetProperties();
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight));
+
+        debugMe();
+        //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
+
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight));
-        if ((checkFirstLayer(ground))||checkSecondLayer(obstacles))
-            girl.move ( 0,0 );
-            else {girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
+        if ( checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
+            girl.move ( 0,0 );}
+        else {
+            girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
             girl.move(0, -oneStepVertically);}
     }
 
@@ -325,6 +344,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         return screenHeight-marginTop-PositionY; //probably slightly wrong in the offset (+-1 or something like that), but works to convert sprite position
     }
 
+    public int invertSimplifiedHeight(int simplified){
+        return tileCountH-1-simplified;
+    }
+
     /**
      *Called when the user lifts their finger from the screen.
      * We use touchUp instead of touchDown to avoid actions triggered by double clicks
@@ -347,9 +370,17 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         playerPositionX = ScreenPosXtoSimplified(playerPositionX);
         playerPositionY = ScreenPosYtoSimplified(playerPositionY);
 
-        differenceInPositionX = Math.max(-2, Math.min(2, touchPositionX-playerPositionX)); //makes sure it never goes further than -2 and 2.
-        if(differenceInPositionX==0){ //X movement has priority. This could also be resolved in other ways.
-            differenceInPositionY= Math.max(-2, Math.min(2, playerPositionY-touchPositionY));
+        differenceInPositionX = touchPositionX - playerPositionX;
+        differenceInPositionY = playerPositionY - touchPositionY;
+
+        switch(differenceInPositionX , differenceInPositionY){
+            
+        }
+        if( ( Math.abs(differenceInPositionX)<=2 && differenceInPositionY==0 ) ||  Math.abs(differenceInPositionY)<=2 ) {
+            differenceInPositionX = Math.max(-2, Math.min(2, touchPositionX - playerPositionX)); //makes sure it never goes further than -2 and 2.
+            if (differenceInPositionX == 0) { //X movement has priority. This could also be resolved in other ways.
+                differenceInPositionY = Math.max(-2, Math.min(2, playerPositionY - touchPositionY));
+            }
         }
        // Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
        // Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
