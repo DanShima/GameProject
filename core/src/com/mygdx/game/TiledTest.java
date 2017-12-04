@@ -14,7 +14,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import static com.badlogic.gdx.utils.Pools.free;
 import static com.mygdx.game.Constants.LEVEL_TWO;
 import static com.mygdx.game.Constants.MONSTER1;
 import static com.mygdx.game.Constants.SOCKS;
@@ -173,7 +172,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      public boolean keyUp(int keycode) {
 
             if (keycode == Input.Keys.LEFT){// one step left
-                collisionL();
+             //   collisionL(differenceInPositionX * tileWidth, differenceInPositionY * tileHeight);
                 }
             if (keycode == Input.Keys.A)    {   // 2 steps left
 
@@ -207,16 +206,21 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     /**
       *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
+     *
      */
-    public void collisionL(){
+    public void collisionL(int deltaX, int deltaY){
         GetProperties();
         girl.resetTimeTillIdle();
-        ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
-        obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
+
+        ground = Blockedlayer.getCell(deltaX+1, deltaY);
+        obstacles = terrain.getCell(deltaX+1, deltaY);
+
+        Gdx.app.log("aaaaaaa"+(oldX / tileWidth),"BBBBBBB"+(oldY / tileHeight) + 1);
+
         if((checkFirstLayer(ground))||checkSecondLayer(obstacles))
                          girl.move ( 0,0 );
                              else {girl.setWalkAnimation(girl.getWalkAnimationLEFT());
-                                    girl.move(-oneStepHorizontaly, 0);}
+                                    girl.move(deltaX, deltaY);}
     }
 
 
@@ -369,8 +373,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         }
         Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
         Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
-
-        girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
+        collisionL(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight);
+      //  girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
         //move should first check map collision (blocked) and stop accordingly
         //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
         //all items and monsters should express their position in a simplified way
