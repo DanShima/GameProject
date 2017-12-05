@@ -480,7 +480,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             //attempt at horizontal movement - may be still blocked by collision, so let's check for that
             if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
 
-                // set the animation for horizontal movment
+                // set the animation for horizontal movment with clothes
                 if (Math.signum((float)differenceInPositionX*tileWidth)==-1){
 
 
@@ -507,7 +507,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
             if(collisionCheck(differenceInPositionX , differenceInPositionY) ){
 
-                // set the animation for vertical movment
+                // set the animation for vertical movment with clothes
               if(Math.signum((float)differenceInPositionY)==-1){
                   girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
                   girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
