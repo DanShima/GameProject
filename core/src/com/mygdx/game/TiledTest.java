@@ -14,7 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import static com.mygdx.game.Constants.LEVEL_ONE;
+
 import static com.mygdx.game.Constants.LEVEL_TWO;
 import static com.mygdx.game.Constants.MONSTER1;
 import static com.mygdx.game.Constants.SOCKS;
@@ -479,13 +479,45 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         else if( ( Math.abs(differenceInPositionX)<3 && differenceInPositionY==0 ) ) {
             //attempt at horizontal movement - may be still blocked by collision, so let's check for that
             if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
-                girl.move(differenceInPositionX*tileWidth,0);
+
+                // set the animation for horizontal movment
+                if (Math.signum((float)differenceInPositionX*tileWidth)==-1){
+
+
+                    girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
+                    girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
+                    girl.move(differenceInPositionX*tileWidth,0);
+
+                }else
+                    if(Math.signum((int)differenceInPositionX*tileWidth)==1){
+
+                        girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
+                        girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
+                        girl.move(differenceInPositionX*tileWidth,0);
+                    }
+
+
+
+
+
             }
         }
         else if( ( Math.abs(differenceInPositionY)<3 && differenceInPositionX==0 ) ) {
             //attempt at vertical movement - may be still blocked by collision, so let's check for that
-            if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
-                girl.move(0,differenceInPositionY*tileHeight);
+
+            if(collisionCheck(differenceInPositionX , differenceInPositionY) ){
+
+                // set the animation for vertical movment
+              if(Math.signum((float)differenceInPositionY)==-1){
+                  girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
+                  girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
+                  girl.move(0,differenceInPositionY*tileHeight);
+              }else if(Math.signum((float)differenceInPositionY)==1) {
+                  girl.setCurrentAnimation(girl.getWalkAnimationUP());
+                  girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
+                  girl.move(0,differenceInPositionY*tileHeight);
+
+              }
             }
         }
         //additional interaction types go in between here.
