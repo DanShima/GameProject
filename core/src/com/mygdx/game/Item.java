@@ -57,7 +57,14 @@ public class Item {
         this.collected = collected;
     }
 
+    public boolean getCollected(){
+        return collected;
+    }
 
+    public boolean isCollected(){
+
+        return collected ;
+    }
 
 
 
@@ -74,9 +81,6 @@ public class Item {
     public void dispose() {
         spriteBatch.dispose();
         texture.dispose();
-    }
-    public boolean isCollected() {
-        return collected;
     }
 
     public float getPositionX() {

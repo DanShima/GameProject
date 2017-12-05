@@ -32,7 +32,7 @@ public class Constants {
     public static final String UNDERWEAR = "underwear.png";
     public static final String TSHIRT = "tshirt.png";
     public static final String SOCKS = "socks.png";
-    //Monster
+    //Monster Gazeti
     public static final String MONSTER1 = "gazeti_3.png";
     //Skin
     public static final String skin=new String("skin/freezing-ui.json");
@@ -43,6 +43,9 @@ public class Constants {
     public static final int centerY=screenHeight/2;
     public static final int colWidth=screenWidth/8;
     public static final int rowHeight=screenHeight/8;
+
+
+    public static final float FPS = 0.3f; //time between frames in seconds
 
 
 }
