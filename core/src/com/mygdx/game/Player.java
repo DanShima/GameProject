@@ -27,7 +27,6 @@ public class Player implements ApplicationListener {
     // A variable for tracking elapsed time for the animation (when the player moves)
     private float stateTime;
     private float timeTillIdle = 0;
-   // private float fps = 0.3f; //time between frames in seconds
 
     //movement animation arrays
     private Animation<TextureRegion> currentAnimation;
@@ -36,12 +35,7 @@ public class Player implements ApplicationListener {
     private Animation<TextureRegion> walkAnimationUP;
     private Animation<TextureRegion> walkAnimationLEFT;
     private Animation<TextureRegion> walkAnimationRIGHT;
-   
-    private TextureRegion[] idleFrames;
-    private TextureRegion[] walkFramesDOWN;
-    private TextureRegion[] walkFramesUP;
-    private TextureRegion[] walkFramesLEFT;
-    private TextureRegion[] walkFramesRIGHT;
+
     private TextureRegion currentFrame;
 
     private float x = 0; //current x position
@@ -58,7 +52,7 @@ public class Player implements ApplicationListener {
     private Texture pantsSheet;
 
     private Item item;
-    TiledTest tiledTest;
+
 
     //movement animation arrays
     private Animation<TextureRegion> currentAnimationUnderwear;
@@ -82,6 +76,7 @@ public class Player implements ApplicationListener {
     public PLAYERSTATE playerstate;
 
     private AnimationUtil animationUtil;
+
 
     @Override
     public void create() {
