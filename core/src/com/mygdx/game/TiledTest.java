@@ -199,7 +199,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
 
-        //debugMe();
+        debugMe();
         obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
         if ( checkFirstLayer(ground) || checkSecondLayer(obstacles)){
             girl.move ( 0,0 );}
@@ -218,7 +218,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+2, (int) (oldY / tileHeight) + 1);
 
-        //debugMe();
+        debugMe();
         if (checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
             girl.move ( 0,0 );}
         else
@@ -233,7 +233,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight) +2);
 
-        //debugMe();
+        debugMe();
         if(checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
             girl.move ( 0,0 );}
         else
@@ -248,7 +248,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight));
 
-        //debugMe();
+        debugMe();
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight));
         if ( checkFirstLayer(ground) || checkSecondLayer(obstacles) ){
             girl.move ( 0,0 );}
@@ -258,27 +258,50 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     }
 
     public boolean collisionCheck(int stepsX, int stepsY){
+        GetProperties();
+        girl.resetTimeTillIdle(); //go back to idle state
         //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
-        //debugMe();
+        debugMe();
         boolean blocked = false;
+        //int posX = (int) girl.getPlainX();
+        //int posY = (int) girl.getY();
+        int posX = (int) (girl.getOldX () / tileWidth) + 1;
+        int posY = (int) (girl.getOldY () / tileHeight) + 1;
+        Gdx.app.log("movement","before move: X: " + posX + " Y: " + posY  );
         if(stepsY == 0 ){//horizontal movement
             int directionSign = Integer.signum(stepsX); //-1 for left, otherwise 1
-
-            for( int i = 0; i < Math.abs( stepsX ); i++ ){
-                ground = Blockedlayer.getCell((int)(oldX / tileWidth) + 1 + directionSign*i , (int)(oldY / tileHeight) +1 );
-                obstacles = terrain.getCell((int)(oldX / tileWidth) + 1 + directionSign*i , (int)(oldY / tileHeight) +1 );
+            int limit = Math.abs( stepsX );
+                ground = Blockedlayer.getCell(posX + directionSign , posY );
+                obstacles = terrain.getCell(posX + directionSign , posY );
                 blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
+            if(limit==2){
+                //Gdx.app.log("movement","horizontal: oldX: " + (posX + directionSign) + " oldY: " +  posY  );
+                ground = Blockedlayer.getCell(posX + directionSign*2 , posY );
+                obstacles = terrain.getCell(posX + directionSign*2 , posY );
+                blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
+
+
             }
         }
         else if(stepsX == 0){//vertical movement
             int directionSign = Integer.signum(stepsY); //-1 for left, otherwise 1
-
-            for( int i = 0; i < Math.abs(stepsY); i++ ){
-                ground = Blockedlayer.getCell((int) (oldX / tileWidth) + 1 , (int) (oldY / tileHeight) +1 + directionSign*i );
-                obstacles = terrain.getCell((int) (oldX / tileWidth) + 1 , (int) (oldY / tileHeight) +1 +  directionSign*i );
+            int limit = Math.abs( stepsY );
+                //Gdx.app.log("movement","directionSign: " + directionSign + " limit: " +  limit  );
+                ground = Blockedlayer.getCell(posX , posY + directionSign );
+                obstacles = terrain.getCell(posX , posY +  directionSign );
+                blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
+            if(limit==2){
+                //Gdx.app.log("movement","vertical: oldX: " + posX + " oldY: " +  (posY + directionSign) );
+                ground = Blockedlayer.getCell(posX , posY + directionSign*2 );
+                obstacles = terrain.getCell(posX , posY +  directionSign*2 );
                 blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
             }
+
         }
+        else{
+            blocked = true;
+        }
+        //Gdx.app.log("movement","horizontal: oldX: " + (posX + directionSign*i) + " oldY: " +  posY  );
         return !blocked;
     }
 
@@ -397,13 +420,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         if( differenceInPositionX == 0 && differenceInPositionY==0 ) {
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
         }
-        else if( ( Math.abs(differenceInPositionX)<=2 && differenceInPositionY==0 ) ) {
+        else if( ( Math.abs(differenceInPositionX)<3 && differenceInPositionY==0 ) ) {
             //attempt at horizontal movement - may be still blocked by collision, so let's check for that
             if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
                 girl.move(differenceInPositionX*tileWidth,0);
             }
         }
-        else if( ( Math.abs(differenceInPositionY)<=2 && differenceInPositionX==0 ) ) {
+        else if( ( Math.abs(differenceInPositionY)<3 && differenceInPositionX==0 ) ) {
             //attempt at vertical movement - may be still blocked by collision, so let's check for that
             if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
                 girl.move(0,differenceInPositionY*tileHeight);

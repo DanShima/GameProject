@@ -44,8 +44,8 @@ public class Player implements ApplicationListener {
     private TextureRegion[] walkFramesRIGHT;
     private TextureRegion currentFrame;
 
-    private float x; //current x position
-    private float y; //current y position
+    private float x = 0; //current x position
+    private float y = 0; //current y position
     private float oldX = 0; //old X position
     private float oldY = 0; //old Y position
 
@@ -95,14 +95,14 @@ public class Player implements ApplicationListener {
         pantsSheet = new Texture(Gdx.files.internal("pinkGirl_v02_pants.png"));
 
         animationUtil = new AnimationUtil();
-
+        //animation for the girl without clothes
         currentAnimation = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
         idleAnimation = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
         walkAnimationDOWN = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 0 );
         walkAnimationUP = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 3 );
         walkAnimationLEFT = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 1 );
         walkAnimationRIGHT = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 2 );
-
+        //animation for the girl with underwear
         currentAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 4, new int[]{0,2} );
         idleAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 4, new int[]{0,2} );
         walkAnimationDOWNUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 0 );
@@ -197,6 +197,9 @@ public class Player implements ApplicationListener {
         y = stepY + oldY;
         oldX = x;
         oldY = y;
+        //x = stepX + x;
+        //y = stepY + y;
+
     }
 
     public float getOldX() {return oldX;}
