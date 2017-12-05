@@ -46,7 +46,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     private Item underwear,socks,tshirt;
     private Player girl; //animated player
-    private Monster yeti;
+    private Monster gazeti;
 
 
     int oneStepHorizontaly ;
@@ -86,8 +86,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         socks=new Item(SOCKS,768, 768);
         tshirt=new Item(TSHIRT,1280, 384);
 
-       //Monster
-       yeti = new Monster(MONSTER1, 4, 3, 1);
+       //Monster Gazeti
+       gazeti = new Monster(MONSTER1, 4, 3, 1);
 
 
     }
@@ -113,7 +113,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         underwear.render();
         socks.render();
         tshirt.render();
-        yeti.render(); //yeti is not an item
+        gazeti.render(); //gazeti is not an item
     }
 
     //Player collide with Item
@@ -152,12 +152,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      * @return true if a key is pressed.
      */
      public boolean keyUp(int keycode) {
-
             if (keycode == Input.Keys.LEFT){// one step left
                 collisionL();
                 }
-            if (keycode == Input.Keys.A)    {   // 2 steps left
-
+            if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
                 girl.move(-twoStepsHorizontally, 0);
                 }
@@ -167,18 +165,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             if (keycode == Input.Keys.D)  {       // two steps step right
                 girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
                 girl.move(twoStepsHorizontally, 0);}
-
             if (keycode == Input.Keys.UP)    {        // one step up
-                collisionU ();
-            }
-
+                collisionU ();            }
             if (keycode == Input.Keys.W)  {          // 2 steps up
                 girl.setCurrentAnimation(girl.getWalkAnimationUP());
                 girl.move(0, twoStepsvertically); }
-
             if (keycode == Input.Keys.DOWN)    {     // one step down
-                collisionD ();
-               }
+                collisionD ();               }
             if (keycode == Input.Keys.S)    {      // 2 steps down
                 girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
                 girl.move(0, -twoStepsvertically);}
@@ -195,7 +188,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
       *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
      */
     public void collisionL(){
-        GetProperties();
+        getProperties();
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
 
@@ -213,7 +206,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      *  collision for the right side
      */
     public void collisionR(){
-        GetProperties();
+        getProperties();
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+2 , (int) (oldY / tileHeight)+1);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+2, (int) (oldY / tileHeight) + 1);
@@ -228,7 +221,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
 
     public void collisionU(){
-        GetProperties();
+        getProperties();
         girl.resetTimeTillIdle(); //go back to idle state
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight)+2);
         obstacles = terrain.getCell((int) (oldX / tileWidth)+1, (int) (oldY / tileHeight) +2);
@@ -244,7 +237,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      *  collision for the downward
      */
     public void collisionD(){
-        GetProperties();
+        getProperties();
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth)+1 , (int) (oldY / tileHeight));
 
@@ -258,13 +251,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     }
 
     public boolean collisionCheck(int stepsX, int stepsY){
-        GetProperties();
+        getProperties();
         girl.resetTimeTillIdle(); //go back to idle state
         //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
         debugMe();
         boolean blocked = false;
-        //int posX = (int) girl.getPlainX();
-        //int posY = (int) girl.getY();
         int posX = (int) (girl.getOldX () / tileWidth) + 1;
         int posY = (int) (girl.getOldY () / tileHeight) + 1;
         Gdx.app.log("movement","before move: X: " + posX + " Y: " + posY  );
@@ -274,13 +265,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
                 ground = Blockedlayer.getCell(posX + directionSign , posY );
                 obstacles = terrain.getCell(posX + directionSign , posY );
                 blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
-            if(limit==2){
+            if(limit == 2){
                 //Gdx.app.log("movement","horizontal: oldX: " + (posX + directionSign) + " oldY: " +  posY  );
                 ground = Blockedlayer.getCell(posX + directionSign*2 , posY );
                 obstacles = terrain.getCell(posX + directionSign*2 , posY );
                 blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
-
-
             }
         }
         else if(stepsX == 0){//vertical movement
@@ -296,11 +285,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
                 obstacles = terrain.getCell(posX , posY +  directionSign*2 );
                 blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
             }
-
         }
-        else{
-            blocked = true;
-        }
+        else{ blocked = true;}
         //Gdx.app.log("movement","horizontal: oldX: " + (posX + directionSign*i) + " oldY: " +  posY  );
         return !blocked;
     }
@@ -308,8 +294,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     /**
      * assign the values of the tiles Properties
      */
-    public void GetProperties(){
-
+    public void getProperties(){
          Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("background");
          terrain = (TiledMapTileLayer)tiledMap.getLayers().get("terrain");
 
@@ -347,7 +332,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     @Override
     public boolean keyTyped(char character) {return false;}
-
 
     /**
      * Called when the user touches the screen
@@ -399,7 +383,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         int differenceInPositionX; //difference between simplified player position and simplified touch position in X
-        int differenceInPositionY = 0; //difference between simplified player position and simplified touch position in Y
+        int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
         int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
         int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
         //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
@@ -439,11 +423,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
        // Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
        // Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
 
-        //girl.move(differenceInPositionX*tileWidth,differenceInPositionY*tileHeight); // build collision into move method.
-        //move should first check map collision (blocked) and stop accordingly
         //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
         //all items and monsters should express their position in a simplified way
-
         return false;
         }
 

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import static com.mygdx.game.Constants.FPS;
 
 /**
+ * This class contains methods that can be used to animate game objects
  * Created by Giddy on 04/12/2017.
  */
 

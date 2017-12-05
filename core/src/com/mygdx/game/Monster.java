@@ -23,7 +23,8 @@ public class Monster implements ApplicationListener {
     private float timeTillIdle = 0;
     private float fps = 0.3f; //time between frames in seconds
 
-    //yeti monster
+    private AnimationUtil animationUtil;
+    //mummy monster
     public Monster(){
         create();
     }
@@ -59,6 +60,10 @@ public class Monster implements ApplicationListener {
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
+
+        animationUtil = new AnimationUtil();
+
+        //TODO refactor to use animationUtil
     }
 
     public void render() {

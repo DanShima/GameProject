@@ -81,9 +81,7 @@ public class Player implements ApplicationListener {
     public DIRECTION direction;
     public PLAYERSTATE playerstate;
 
-
-    AnimationUtil animationUtil;
-
+    private AnimationUtil animationUtil;
 
     @Override
     public void create() {
@@ -149,7 +147,6 @@ public class Player implements ApplicationListener {
             setCurrentAnimation(getIdleAnimation());
             setCurrentAnimationUnderwear(getIdleAnimationUnderwear());
         }
-        //updateSpriteBatch();
         spriteBatch.begin();
         spriteBatch.draw(currentFrame, getX(), getY()); //naked girl rendering
         spriteBatch.end();
@@ -197,9 +194,6 @@ public class Player implements ApplicationListener {
         y = stepY + oldY;
         oldX = x;
         oldY = y;
-        //x = stepX + x;
-        //y = stepY + y;
-
     }
 
     public float getOldX() {return oldX;}
@@ -209,6 +203,7 @@ public class Player implements ApplicationListener {
     public void dispose() {
         spriteBatch.dispose();
         walkSheet.dispose();
+        underwearSheet.dispose();
     }
     @Override
     public void resume(){updateAnimationStateTime = true;}

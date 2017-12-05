@@ -31,7 +31,7 @@ public class Constants {
     public static final String UNDERWEAR = "underwear.png";
     public static final String TSHIRT = "tshirt.png";
     public static final String SOCKS = "socks.png";
-    //Monster
+    //Monster Gazeti
     public static final String MONSTER1 = "gazeti_3.png";
 
     public static final float FPS = 0.3f; //time between frames in seconds
