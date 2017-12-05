@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -54,9 +55,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     private Monster gazeti;
     private Monster yeti;
-
+     BitmapFont font;//=new BitmapFont(Gdx.files.internal(Gdx.files.internal("myfont.fnt")));
+    private String message;
     private HUD hud ;
-    SpriteBatch sp;
+    private SpriteBatch sp;
 
 
 
@@ -91,6 +93,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         tiledMap = new TmxMapLoader().load(LEVEL_TWO);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
+        font=new BitmapFont(Gdx.files.internal("CustomFont.fnt"));
         //Gdx.input.setInputProcessor(this);
 
 
@@ -139,6 +142,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     //Initial Item Render
     public void initialItemRender()
     {
+        // add message GameOver
+        sp.begin();
+        font.draw(sp,message,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+        sp.end();
         girl.render();
         girl.updateSpriteBatch(underwear);
 
