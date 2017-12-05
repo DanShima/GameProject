@@ -21,11 +21,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
+/*
+The Hud class is responsible for displaying the current level, score and health status on top of the screen.
+The constructor takes "SpriteBatch" in order to be able to draw the "stage" which is a box that contain
+ the widgets such as labels, buttons and progress bar.
+ */
 
 
 public class HUD implements Disposable  {
@@ -38,33 +43,47 @@ public class HUD implements Disposable  {
     private Label LevelLabel;
     private Table table;
     private TextButton button ;
-    private Skin myskin ;
-    private HealthBar healthBar;
+    private Skin myskin ;// skin for better UI
+    final ProgressBar progressBar;
     public HUD(SpriteBatch sb)
 
     {
-        viewport=new StretchViewport (TiledTest.mapWidth,TiledTest.mapHeight,new OrthographicCamera ());//2
+        viewport=new StretchViewport (TiledTest.mapWidth,TiledTest.mapHeight,new OrthographicCamera ());//
         stage=new Stage(viewport,sb);//stage is as box and try to put widget and organize things inside that table
         myskin = new Skin ( Gdx.files.internal ( Constants.skin ) );
         final Dialog dialog = new Dialog ( "click me",myskin,"default" );
         table = new Table();
-        table.top();//table at top of our stage
         table.setFillParent(true);//table is now fill all the stage
+        table.top();//table at top of the stage
         ScoreLabel=new Label("Score" + score ,myskin,"default");//label for gdx
-        ScoreLabel.setFontScale(2,2);
+        ScoreLabel.setFontScale(3,2);
         button = new TextButton ( "Menu",myskin,"default" );
 
         button.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                dialog.show(stage);
+               // dialog.show(stage);
                 return true;}});
 
         LevelLabel =new Label("Level :" + level ,myskin, "default");//label for gdx
-        LevelLabel.setFontScale(2,2);
-        healthBar = new HealthBar(90, 30);
-        table.add (healthBar);
-        table.add(ScoreLabel).expandX().padTop(10);
-        table.add(LevelLabel).expandX().padTop(10);
+        LevelLabel.setFontScale(3,2);
+
+        ProgressBar.ProgressBarStyle progressBarStyle = myskin.get("fancy", ProgressBar.ProgressBarStyle.class);
+        TiledDrawable tiledDrawable = myskin.getTiledDrawable("progress-bar");// take the skin and put it inside TiledDrawable
+        tiledDrawable.setMinWidth(0.0f);
+        progressBarStyle.background = tiledDrawable;// background of the health bar( when the bar is empty).
+
+        tiledDrawable = myskin.getTiledDrawable("progress-bar-knob");
+        tiledDrawable.setMinWidth(0.0f);
+        progressBarStyle.knobBefore = tiledDrawable;
+
+        progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, myskin, "fancy");
+        progressBar.setValue(75.0f);//initializing the bar
+
+
+        // add the widgets to a table
+        table.add(progressBar).width(335.0f);
+        table.add(ScoreLabel).expandX();
+        table.add(LevelLabel).expandX();
         table.add (button);
 
         table.row();
@@ -73,7 +92,7 @@ public class HUD implements Disposable  {
 
     }
 
-
+   // getters and setters
     public  void setScore(int value) {
         score = value;
         ScoreLabel.setText(String.format("Score :" + score));
@@ -92,6 +111,15 @@ public class HUD implements Disposable  {
     {
         return level;
     }
+
+    public void setHealth(float value) {
+        progressBar.setValue(value);
+    }
+    public  float getHealth()
+    {
+        return progressBar.getValue();
+    }
+
 
 
 
