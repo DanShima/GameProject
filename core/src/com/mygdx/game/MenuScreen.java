@@ -3,7 +3,9 @@ package com.mygdx.game;
  * Created by tmp-sda-1124 on 12/4/17.
  */
         import com.badlogic.gdx.ApplicationListener;
+        import com.badlogic.gdx.Game;
         import com.badlogic.gdx.Gdx;
+        import com.badlogic.gdx.Screen;
         import com.badlogic.gdx.graphics.GL20;
         import com.badlogic.gdx.graphics.Texture;
         import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -18,16 +20,20 @@ package com.mygdx.game;
 
 
 
-    public class MenuScreen implements ApplicationListener {
+    public class MenuScreen implements Screen {
     private SpriteBatch batch;
     private Skin skin;
     private Stage stage;
 
-    //private Texture backgroundTexture;
+    private Texture backgroundTexture;
     //private Sprite sprite;
-    //private TextureRegion region;
+    private TextureRegion region;
 
-    @Override
+        public MenuScreen() {
+            create();
+        }
+
+
     public void create() {
         //backgroundTexture = new Texture(Gdx.files.internal("bakgroundmenu.png"));
         //sprite =new Sprite(backgroundTexture,20,20,50,50);
@@ -39,13 +45,17 @@ package com.mygdx.game;
         skin = new Skin(Gdx.files.internal(Constants.skin));
         stage = new Stage();
 
+        backgroundTexture = new Texture(Gdx.files.internal("bakgroundmenu.jpg"));
+        region = new TextureRegion(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         final TextButton playButton = new TextButton("PLAY", skin, "default");
         playButton.setSize(Constants.colWidth ,Constants.rowHeight);
         playButton.setPosition(Constants.centerX,Constants.centerY+200);
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                playButton.setText("You clicked the button");
+                //playButton.setText("You clicked the button");
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new TiledTest());
             }
         });
         final TextButton settingsButton = new TextButton("SETTINGS", skin, "default");
@@ -54,7 +64,7 @@ package com.mygdx.game;
         settingsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                settingsButton.setText("You clicked the button");
+                settingsButton.setText("You clicked the settings button");
             }
         });
 
@@ -64,7 +74,7 @@ package com.mygdx.game;
         scoreButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                scoreButton.setText("You clicked the button");
+                scoreButton.setText("You clicked the score button");
             }
         });
         final TextButton exitButton = new TextButton("EXIT", skin, "default");
@@ -73,7 +83,7 @@ package com.mygdx.game;
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                exitButton.setText("You clicked the button");
+                Gdx.app.exit();
             }
         });
         stage.addActor(playButton);
@@ -91,19 +101,24 @@ package com.mygdx.game;
     public void dispose() {
         batch.dispose();
     }
-    @Override
-    public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        batch.begin();
-        //batch.disableBlending();
-       // batch.draw(backgroundTexture,100,100);
-        //renderBackground();
-        stage.draw();
-       // batch.enableBlending();
-        batch.end();
-    }
-    @Override
+
+        @Override
+        public void show() {
+
+        }
+
+        @Override
+        public void render(float delta) {
+            Gdx.gl.glClearColor(1, 1, 1, 1);
+            Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+            batch.begin();
+            batch.draw(backgroundTexture, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
+            stage.draw();
+            batch.end();
+        }
+
+        @Override
     public void resize(int width, int height) {
     }
     @Override
@@ -113,6 +128,11 @@ package com.mygdx.game;
     public void resume() {
     }
 
+        @Override
+        public void hide() {
 
-}
+        }
+
+
+    }
 
