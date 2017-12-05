@@ -130,10 +130,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
         sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
         hud.stage.draw ();
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(this);
-        multiplexer.addProcessor(hud.stage);
-        Gdx.input.setInputProcessor(multiplexer);
+
     }
 
     //Initial Item Render
@@ -180,6 +177,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
                 playerCollideWithItem(underwear);
             }
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(hud.stage);
+        multiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
