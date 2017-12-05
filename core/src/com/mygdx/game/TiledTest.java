@@ -53,6 +53,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     private Player girl; //animated player
 
     private Monster gazeti;
+    private Monster yeti;
 
     private HUD hud ;
     SpriteBatch sp;
@@ -109,8 +110,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
 
        //Monster Gazeti
-       gazeti = new Monster(MONSTER1, 4, 3, 1);
-
+      gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
+       yeti = new Monster();
 
     }
     // Initial render
@@ -137,7 +138,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         socks.render();
         tshirt.render();
 
-        gazeti.render(); //gazeti is not an item
+        gazeti.render(782, 512); //spawn gazeti at the given position in the map
+        yeti.render(128, 252); //spawn yeti at the given position in the map
 
         sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
         hud.stage.draw ();

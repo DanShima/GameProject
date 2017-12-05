@@ -28,7 +28,7 @@ public class LevelController {
             item.render();
         }
         for(Monster monster: monsters){
-            monster.render();
+            //monster.render();
         }
 
         //map should be rendered here too

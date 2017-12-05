@@ -8,29 +8,32 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import static com.mygdx.game.Constants.FPS;
+
 /**
  * just a placeholder class for monster. feel free to modify or change completely
  */
 
-public class Monster implements ApplicationListener {
+public class Monster  {
     private Texture texture; //The texture that will hold the sprite sheet.
+    private Texture mummySheet;
     private SpriteBatch spriteBatch;
     private TextureRegion[] regions = new TextureRegion[4]; //if 4 monsters in one sheet
     private Animation<TextureRegion> walkAnimation;
     private TextureRegion[] idleFrames;
     private TextureRegion currentFrame;
     private float stateTime;
-    private float timeTillIdle = 0;
-    private float fps = 0.3f; //time between frames in seconds
-    private Sprite sprite;
 
     private AnimationUtil animationUtil;
-    //mummy monster
+    private int turnOrder;
+
+    //Yeti monster
     public Monster(){
-        create();
+        createYeti();
     }
+
     //customize a monster
-    public Monster(String pngFile, int rows, int columns, int specifyRow){
+    public Monster(String pngFile, int rows, int columns, int specifyRow, int turnOrder){
         texture = new Texture(Gdx.files.internal(pngFile));
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / columns,
@@ -39,40 +42,29 @@ public class Monster implements ApplicationListener {
         for (int i = 0; i < columns; i++) {
             idleFrames[i] = tmp[specifyRow][i];
         }
-        walkAnimation = new Animation<TextureRegion>(fps, idleFrames);
+        walkAnimation = new Animation<TextureRegion>(FPS, idleFrames);
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-
+        this.turnOrder = turnOrder;
     }
-    public void create(){
-        texture = new Texture(Gdx.files.internal("yeti_v01.png"));
 
-        // Create a 2D array of TextureRegions by splitting the sheet into separate frames
-        TextureRegion[][] tmp = TextureRegion.split(texture,
-                texture.getWidth() / 8,
-                texture.getHeight() / 3); //8 columns and 3 rows
-        //convert 2D array to normal array
-        idleFrames = new TextureRegion[3];
-        idleFrames[0] = tmp[0][4];
-        idleFrames[1] = tmp[0][5];
-        idleFrames[2] = tmp[0][6];
-        walkAnimation = new Animation<TextureRegion>(fps, idleFrames);
+    public void createYeti(){
+        texture = new Texture(Gdx.files.internal("yeti_v01.png"));
+        animationUtil = new AnimationUtil();
+        walkAnimation = animationUtil.makeAnimation(texture, 8, 3, 0, new int[]{4, 5, 6});
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-
-        animationUtil = new AnimationUtil();
-
-        //TODO refactor to use animationUtil
+        turnOrder = 1;
     }
 
-    public void render() {
+    public void render(float positionX, float positionY) {
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
         currentFrame = walkAnimation.getKeyFrame(stateTime, true);
         //go back to idle state after 2 sec
         spriteBatch.begin();
-        spriteBatch.draw(currentFrame, 782, 512); // Draw current frame at (0, 0)
+        spriteBatch.draw(currentFrame, positionX, positionY); // Draw current frame at (0, 0)
         spriteBatch.end();
     }
 
@@ -80,17 +72,10 @@ public class Monster implements ApplicationListener {
     public void move(float stepX, float stepY){
 
     }
-    @Override
+
     public void dispose() {
         spriteBatch.dispose();
         texture.dispose();
     }
-
-    @Override
-    public void resume(){}
-    @Override
-    public void pause(){}
-    @Override
-    public void resize(int x, int y){}
 
 }
