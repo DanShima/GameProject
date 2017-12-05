@@ -22,6 +22,7 @@ public class Monster implements ApplicationListener {
     private float stateTime;
     private float timeTillIdle = 0;
     private float fps = 0.3f; //time between frames in seconds
+    private Sprite sprite;
 
     private AnimationUtil animationUtil;
     //mummy monster
@@ -30,7 +31,6 @@ public class Monster implements ApplicationListener {
     }
     //customize a monster
     public Monster(String pngFile, int rows, int columns, int specifyRow){
-
         texture = new Texture(Gdx.files.internal(pngFile));
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / columns,

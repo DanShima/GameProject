@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Constants {
     // Visible game world TODO Change this
+
     public static final float VIEWPORT_WIDTH = 0f;
     public static final float VIEWPORT_HEIGHT = 0f;
 
@@ -22,7 +23,7 @@ public class Constants {
     // number of lives at the start of the game
     public static final int LIVES = 4;
     // location of tilemap file for map level 1 desert
-    public static final String LEVEL_ONE = "prototype_map_128_15x8_v04.tmx";
+    public static final String LEVEL_ONE = "blocking_v1.tmx";
     // location of tilemap file for map level 2 snow
     public static final String LEVEL_TWO = "snow128_16x10_v02.tmx";
     // location of the sprite sheet for the player without clothes
@@ -33,6 +34,16 @@ public class Constants {
     public static final String SOCKS = "socks.png";
     //Monster Gazeti
     public static final String MONSTER1 = "gazeti_3.png";
+    //Skin
+    public static final String skin=new String("skin/freezing-ui.json");
+    //To Display menu
+    public static final int screenWidth=Gdx.graphics.getWidth();
+    public static final int screenHeight=Gdx.graphics.getHeight();
+    public static final int centerX=screenWidth/2;
+    public static final int centerY=screenHeight/2;
+    public static final int colWidth=screenWidth/8;
+    public static final int rowHeight=screenHeight/8;
+
 
     public static final float FPS = 0.3f; //time between frames in seconds
 

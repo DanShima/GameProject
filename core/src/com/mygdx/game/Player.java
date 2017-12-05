@@ -190,10 +190,13 @@ public class Player implements ApplicationListener {
 
 
     public void move(float stepX, float stepY){
+
+
         x = stepX + oldX;
         y = stepY + oldY;
         oldX = x;
         oldY = y;
+
     }
 
     public float getOldX() {return oldX;}
