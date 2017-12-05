@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ObjectMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.mygdx.game.Constants.FPS;
 import static com.mygdx.game.Constants.GIRL_NAKED;
 import static com.mygdx.game.Constants.UNDERWEAR;
@@ -53,8 +56,16 @@ public class Player implements ApplicationListener {
 
     private Item item;
 
+    //movement animation arrays for socks
+    private Animation<TextureRegion> currentAnimationSocks;
+    private Animation<TextureRegion> idleAnimationSocks;
+    private Animation<TextureRegion> walkAnimationDOWNSocks;
+    private Animation<TextureRegion> walkAnimationUPSocks;
+    private Animation<TextureRegion> walkAnimationLEFTSocks;
+    private Animation<TextureRegion> walkAnimationRIGHTSocks;
+    private TextureRegion currentFrameSocks;
 
-    //movement animation arrays
+    //movement animation arrays for underwear
     private Animation<TextureRegion> currentAnimationUnderwear;
     private Animation<TextureRegion> idleAnimationUnderwear;
     private Animation<TextureRegion> walkAnimationDOWNUnderwear;
@@ -62,6 +73,25 @@ public class Player implements ApplicationListener {
     private Animation<TextureRegion> walkAnimationLEFTUnderwear;
     private Animation<TextureRegion> walkAnimationRIGHTUnderwear;
     private TextureRegion currentFrameUnderwear;
+
+    //movement animation arrays for shirt
+    private Animation<TextureRegion> currentAnimationShirt;
+
+    private Animation<TextureRegion> idleAnimationShirt;
+    private Animation<TextureRegion> walkAnimationDOWNShirt;
+    private Animation<TextureRegion> walkAnimationUPShirt;
+    private Animation<TextureRegion> walkAnimationLEFTShirt;
+    private Animation<TextureRegion> walkAnimationRIGHTShirt;
+    private TextureRegion currentFrameShirt;
+
+    //movement animation arrays for pants
+    private Animation<TextureRegion> currentAnimationPants;
+    private Animation<TextureRegion> idleAnimationPants;
+    private Animation<TextureRegion> walkAnimationDOWNPants;
+    private Animation<TextureRegion> walkAnimationUPPants;
+    private Animation<TextureRegion> walkAnimationLEFTPants;
+    private Animation<TextureRegion> walkAnimationRIGHTPants;
+    private TextureRegion currentFramePants;
 
 
     public enum DIRECTION{
@@ -91,28 +121,55 @@ public class Player implements ApplicationListener {
         //animation for the girl without clothes
         currentAnimation = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
         idleAnimation = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
-        walkAnimationDOWN = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 0 );
-        walkAnimationUP = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 3 );
-        walkAnimationLEFT = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 1 );
-        walkAnimationRIGHT = animationUtil.makeAnimation(walkSheet, FRAME_COLS, FRAME_ROWS, 2 );
+        walkAnimationDOWN = animationUtil.makeAnimation(walkSheet, 0 );
+        walkAnimationUP = animationUtil.makeAnimation(walkSheet,  3 );
+        walkAnimationLEFT = animationUtil.makeAnimation(walkSheet, 1 );
+        walkAnimationRIGHT = animationUtil.makeAnimation(walkSheet, 2 );
+
+
         //animation for the girl with underwear
-        currentAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 4, new int[]{0,2} );
-        idleAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 4, new int[]{0,2} );
-        walkAnimationDOWNUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 0 );
-        walkAnimationUPUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 3 );
-        walkAnimationLEFTUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 1 );
-        walkAnimationRIGHTUnderwear = animationUtil.makeAnimation(underwearSheet, 3, 5, 2 );
+        currentAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        idleAnimationUnderwear = animationUtil.makeAnimation(underwearSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        walkAnimationDOWNUnderwear = animationUtil.makeAnimation(underwearSheet, 0 );
+        walkAnimationUPUnderwear = animationUtil.makeAnimation(underwearSheet, 3 );
+        walkAnimationLEFTUnderwear = animationUtil.makeAnimation(underwearSheet, 1 );
+        walkAnimationRIGHTUnderwear = animationUtil.makeAnimation(underwearSheet, 2 );
+        //animation for the girl with socks
+        currentAnimationSocks = animationUtil.makeAnimation(socksSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        idleAnimationSocks = animationUtil.makeAnimation(socksSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        walkAnimationDOWNSocks = animationUtil.makeAnimation(socksSheet,  0 );
+        walkAnimationUPSocks = animationUtil.makeAnimation(socksSheet,  3 );
+        walkAnimationLEFTSocks = animationUtil.makeAnimation(socksSheet,  1 );
+        walkAnimationRIGHTSocks = animationUtil.makeAnimation(socksSheet,  2 );
+        //animation for the girl with shirt
+        currentAnimationShirt= animationUtil.makeAnimation(tshirtSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        idleAnimationShirt = animationUtil.makeAnimation(tshirtSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        walkAnimationDOWNShirt = animationUtil.makeAnimation(tshirtSheet,  0 );
+        walkAnimationUPShirt = animationUtil.makeAnimation(tshirtSheet,  3 );
+        walkAnimationLEFTShirt = animationUtil.makeAnimation(tshirtSheet,  1 );
+        walkAnimationRIGHTShirt = animationUtil.makeAnimation(tshirtSheet,  2 );
+        //animation for the girl with pants
+        currentAnimationPants= animationUtil.makeAnimation(pantsSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        idleAnimationPants = animationUtil.makeAnimation(pantsSheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        walkAnimationDOWNPants = animationUtil.makeAnimation(pantsSheet,  0 );
+        walkAnimationUPPants = animationUtil.makeAnimation(pantsSheet,  3 );
+        walkAnimationLEFTPants = animationUtil.makeAnimation(pantsSheet,  1 );
+        walkAnimationRIGHTPants = animationUtil.makeAnimation(pantsSheet,  2 );
 
 
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-        item = new Item(UNDERWEAR, 256,256);
+       // item = new Item(UNDERWEAR, 256,256);
 
     }
 
     public void setCurrentAnimation(Animation<TextureRegion> currentAnimation) {
         this.currentAnimation = currentAnimation;
+    }
+
+    public void setCurrentAnimationSocks(Animation<TextureRegion> currentAnimation) {
+        this.currentAnimationSocks = currentAnimation;
     }
 
     public Animation<TextureRegion> getCurrentAnimation() {
@@ -136,11 +193,17 @@ public class Player implements ApplicationListener {
         // this method takes an elapsed time parameter and returns the appropriate image for that time. it loops through a series of images and do it again
         currentFrame = getCurrentAnimation().getKeyFrame(stateTime, true);
         currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
+        currentFrameSocks = getCurrentAnimationSocks().getKeyFrame(stateTime, true);
+        currentFrameShirt = getCurrentAnimationShirt().getKeyFrame(stateTime, true);
+        currentFramePants = getCurrentAnimationPants().getKeyFrame(stateTime, true);
         //go back to idle state after 2 sec
-        if(stateTime > 2){
+        if(stateTime > 3){
             stateTime = 0;
             setCurrentAnimation(getIdleAnimation());
             setCurrentAnimationUnderwear(getIdleAnimationUnderwear());
+            setCurrentAnimationSocks(getIdleAnimationSocks());
+            setCurrentAnimationShirt(getIdleAnimationShirt());
+            setCurrentAnimationPants(getIdleAnimationPants());
         }
         spriteBatch.begin();
         spriteBatch.draw(currentFrame, getX(), getY()); //naked girl rendering
@@ -158,14 +221,22 @@ public class Player implements ApplicationListener {
      * @param item
      */
     public void updateSpriteBatch(Item item){
-        stateTime += Gdx.graphics.getDeltaTime();
-        currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
+       // stateTime += Gdx.graphics.getDeltaTime();
+      //  currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
 
         spriteBatch.begin();
-        //spriteBatch.flush();
-        if(item.isCollected() == true){
+        //TODO fix this code...
+        if(item.isCollected() == true && item.getName().equals("underwear")) {
             // spriteBatch.draw(currentFrame, getX(), getY());
-            spriteBatch.draw(currentFrameUnderwear, getX(), getY());}
+            spriteBatch.draw(currentFrameUnderwear, getX(), getY());
+        }
+        if(item.isCollected() == true && item.getName().equals("socks")){
+            spriteBatch.draw(currentFrameSocks, getX(), getY());}
+        if(item.isCollected() == true && item.getName().equals("tshirt")){
+            spriteBatch.draw(currentFrameShirt, getX(), getY());}
+        if(item.isCollected() == true && item.getName().equals("pants")){
+            spriteBatch.draw(currentFramePants, getX(), getY());
+        }
         spriteBatch.end();
     }
 
@@ -233,6 +304,10 @@ public class Player implements ApplicationListener {
         return currentAnimationUnderwear;
     }
 
+    public Animation<TextureRegion> getCurrentAnimationSocks() {
+        return currentAnimationSocks;
+    }
+
     public Animation<TextureRegion> getIdleAnimationUnderwear() {
         return idleAnimationUnderwear;
     }
@@ -256,8 +331,109 @@ public class Player implements ApplicationListener {
         this.currentAnimationUnderwear = currentAnimationUnderwear;
     }
 
+    public void setCurrentAnimationShirt(Animation<TextureRegion> currentAnimationShirt) {
+        this.currentAnimationShirt = currentAnimationShirt;
+    }
+    public void setCurrentAnimationPants(Animation<TextureRegion> currentAnimationPants) {
+        this.currentAnimationPants= currentAnimationPants;
+    }
 
 
+    public Animation<TextureRegion> getIdleAnimationSocks() {
+        return idleAnimationSocks;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationDOWNSocks() {
+        return walkAnimationDOWNSocks;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationUPSocks() {
+        return walkAnimationUPSocks;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationLEFTSocks() {
+        return walkAnimationLEFTSocks;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationRIGHTSocks() {
+        return walkAnimationRIGHTSocks;
+    }
+
+
+    public Animation<TextureRegion> getIdleAnimationShirt() {
+        return idleAnimationShirt;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationDOWNShirt() {
+        return walkAnimationDOWNShirt;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationUPShirt() {
+        return walkAnimationUPShirt;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationLEFTShirt() {
+        return walkAnimationLEFTShirt;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationRIGHTShirt() {
+        return walkAnimationRIGHTShirt;
+    }
+
+    public TextureRegion getCurrentFrameShirt() {
+        return currentFrameShirt;
+    }
+
+
+    public TextureRegion getCurrentFrameSocks() {
+        return currentFrameSocks;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationUPPants() {
+        return walkAnimationUPPants;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationLEFTPants() {
+        return walkAnimationLEFTPants;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationRIGHTPants() {
+        return walkAnimationRIGHTPants;
+    }
+
+    public TextureRegion getCurrentFramePants() {
+        return currentFramePants;
+    }
+
+
+    public Animation<TextureRegion> getCurrentAnimationShirt() {
+        return currentAnimationShirt;
+    }
+
+    public Animation<TextureRegion> getCurrentAnimationPants() {
+        return currentAnimationPants;
+    }
+
+    public Animation<TextureRegion> getIdleAnimationPants() {
+        return idleAnimationPants;
+    }
+
+    public Animation<TextureRegion> getWalkAnimationDOWNPants() {
+        return walkAnimationDOWNPants;
+    }
+
+
+    public void makeAnimationList(Texture sheet){
+        List<Animation<TextureRegion>> list = new ArrayList<Animation<TextureRegion>>();
+        list.add(animationUtil.makeAnimation(sheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} ));
+
+        currentAnimation = animationUtil.makeAnimation(sheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        idleAnimation = animationUtil.makeAnimation(sheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
+        walkAnimationDOWN = animationUtil.makeAnimation(sheet, 0 );
+        walkAnimationUP = animationUtil.makeAnimation(sheet,  3 );
+        walkAnimationLEFT = animationUtil.makeAnimation(sheet, 1 );
+        walkAnimationRIGHT = animationUtil.makeAnimation(sheet, 2 );
+    }
 
 
 

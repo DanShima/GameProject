@@ -19,12 +19,18 @@ public class Item {
     private float positionX;
     private float positionY;
     private boolean collected;
+    private String name;
 
     /**
      * Constructor to create ITEM
      */
-     public Item(String pngFile, float x, float y) {
-        create(pngFile, x, y);
+     public Item(String name, String pngFile, float x, float y) {
+         this.name = name;
+         create(pngFile, x, y);
+    }
+
+    public String getName(){
+         return name;
     }
 
     /**

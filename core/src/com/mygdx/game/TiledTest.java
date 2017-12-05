@@ -94,6 +94,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         //Gdx.input.setInputProcessor(this);
 
 
+
+
         //player
         girl = new Player();
         girl.create();
@@ -101,12 +103,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
-        //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
+
 
         //items
-        underwear = new Item(UNDERWEAR, 256,256);
-        socks=new Item(SOCKS,768, 768);
-        tshirt=new Item(TSHIRT,1280, 384);
+        underwear = new Item("underwear", UNDERWEAR, 256,256);
+        socks=new Item("socks", SOCKS,768, 768);
+        tshirt=new Item("tshirt", TSHIRT,1280, 384);
 
 
        //Monster Gazeti
@@ -121,12 +123,17 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
-        // pass it in to the TiledMapRenderer with setView() and finally render() the map.
+        //pass it in to the TiledMapRenderer with setView() and finally render() the map.
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
+
+        sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
+        hud.stage.draw ();
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(this);
+        multiplexer.addProcessor(hud.stage);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     //Initial Item Render
@@ -134,19 +141,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     {
         girl.render();
         girl.updateSpriteBatch(underwear);
+
         underwear.render();
         socks.render();
         tshirt.render();
 
+
         gazeti.render(782, 512); //spawn gazeti at the given position in the map
         yeti.render(128, 252); //spawn yeti at the given position in the map
 
-        sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
-        hud.stage.draw ();
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(this);
-        multiplexer.addProcessor(hud.stage);
-        Gdx.input.setInputProcessor(multiplexer);}
+        }
         //Gdx.input.setInputProcessor(hud.stage);
 
 
@@ -176,13 +180,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
                 playerCollideWithItem(underwear);
             }
-        }
-
-
+    }
 
     @Override
     public boolean keyDown(int keycode) {return false;}
-
     /**
      * Navigating around the map is simply a matter of moving around the camera. Move in 128px per tile size.
      * move left/right/up/down by one tile each time an arrow key is pressed. A/D/W/S for moving two tiles(no collision tho)

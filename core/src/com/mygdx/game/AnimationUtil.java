@@ -60,6 +60,20 @@ public class AnimationUtil {
         return new Animation<TextureRegion>(FPS, animatedFrames);
     }
 
+    //animation method specifically for the player girl
+    public Animation<TextureRegion> makeAnimation(Texture texture, int row){
+        TextureRegion[][] textureReg = TextureRegion.split(texture,
+                texture.getWidth() / 3,
+                texture.getHeight() / 5);
+        //make 1d collection of regions based on specified row and columns (assumes that all animation frames are in one row)
+        TextureRegion[] animatedFrames = new TextureRegion[3];
+        for (int i = 0; i < 3; i++) {
+            animatedFrames[i] = textureReg[row][i];
+        }
+        //returns animation based on 1d texture region
+        return new Animation<TextureRegion>(FPS, animatedFrames);
+    }
+
 
 
 
