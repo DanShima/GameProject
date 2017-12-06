@@ -8,13 +8,14 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-
+import static com.mygdx.game.Constants.LEVEL_TWO;
 import static com.mygdx.game.Constants.MONSTER1;
 import static com.mygdx.game.Constants.SOCKS;
 import static com.mygdx.game.Constants.TSHIRT;
@@ -53,9 +54,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     private Monster gazeti;
     private Monster yeti;
-
+     BitmapFont font;//=new BitmapFont(Gdx.files.internal(Gdx.files.internal("myfont.fnt")));
+    private String message;
     private HUD hud ;
-    SpriteBatch sp;
+    private SpriteBatch sp;
 
     static int currentLevel = 0;
 
@@ -95,6 +97,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
+        font=new BitmapFont(Gdx.files.internal("CustomFont.fnt"));
         //Gdx.input.setInputProcessor(this);
 
         girl = new Player();
@@ -132,15 +135,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
         sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
         hud.stage.draw ();
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(this);
-        multiplexer.addProcessor(hud.stage);
-        Gdx.input.setInputProcessor(multiplexer);
+
     }
 
     //Initial Item Render
     public void initialItemRender()
     {
+        // add message GameOver
+        sp.begin();
+        font.draw(sp,message,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
+        sp.end();
         girl.render();
         girl.updateSpriteBatch(underwear);
 
@@ -182,6 +186,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
                 playerCollideWithItem(underwear);
             }
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(hud.stage);
+        multiplexer.addProcessor(this);
+        Gdx.input.setInputProcessor(multiplexer);
     }
 
     @Override
@@ -468,28 +476,46 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
         }
         else if( ( Math.abs(differenceInPositionX)<3 && differenceInPositionY==0 ) ) {
-            //attempt at horizontal movement - may be still blocked by collision, so let's check for that
-            if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
+
+            // set the animation for the horizontal movment with clothes
+            if (Math.signum((float)differenceInPositionX*tileWidth)==-1){
+
+
+                girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
+                girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
+                girl.move(differenceInPositionX*tileWidth,0);
+
+            }else
+            if(Math.signum((int)differenceInPositionX*tileWidth)==1){
+
+                girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
+                girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
                 girl.move(differenceInPositionX*tileWidth,0);
                 exitLevel(13 , 7);
             }
+
         }
-        else if( ( Math.abs(differenceInPositionY)<3 && differenceInPositionX==0 ) ) {
-            //attempt at vertical movement - may be still blocked by collision, so let's check for that
-            if( collisionCheck(differenceInPositionX , differenceInPositionY) ){
+
+         else if( ( Math.abs(differenceInPositionY)<3 && differenceInPositionX==0 ) ) {
+               //attempt at vertical movement - may be still blocked by collision, so let's check for that
+
+        if(collisionCheck(differenceInPositionX , differenceInPositionY) ){
+
+            // set the animation for the vertical movment with clothes
+
+            if(Math.signum((float)differenceInPositionY)==-1){
+                girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
+                girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
                 girl.move(0,differenceInPositionY*tileHeight);
-                exitLevel(13 , 7);
+            }else if(Math.signum((float)differenceInPositionY)==1) {
+                girl.setCurrentAnimation(girl.getWalkAnimationUP());
+                girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
+                girl.move(0,differenceInPositionY*tileHeight);
+                exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
             }
         }
-        //additional interaction types go in between here.
-        else{
-            //fail-press nothing happens. Maybe we give some feedback, like a sound, that a press occured.
-        }
-       // Gdx.app.log("move", "playerPositionY: " + playerPositionY + " playerPositionX:" + playerPositionX);
-       // Gdx.app.log("move", "differenceInPositionX: " + differenceInPositionX + " differenceInPositionY:" + differenceInPositionY);
+    }
 
-        //move should then use the various simplified position methods to check the simplified positions of items and monsters against simplified position of player
-        //all items and monsters should express their position in a simplified way
         return false;
         }
 
