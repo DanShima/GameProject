@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -62,6 +63,7 @@ public class HUD implements Disposable  {
         button.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                // dialog.show(stage);
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                 return true;}});
 
         LevelLabel =new Label("Level :" + level ,myskin, "default");//label for gdx
