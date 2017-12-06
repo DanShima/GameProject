@@ -21,7 +21,7 @@ public class GazetiMonster extends Monster {
 
     public void move(){
 
-
+        monsterPositionY+=1;
 
 
 

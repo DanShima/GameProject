@@ -71,6 +71,11 @@
    <property name="blocked" value=""/>
   </properties>
  </tile>
+ <tile id="63">
+  <properties>
+   <property name="blocked" value=""/>
+  </properties>
+ </tile>
  <tile id="65">
   <properties>
    <property name="blocked" value=""/>
@@ -117,6 +122,11 @@
   </properties>
  </tile>
  <tile id="114">
+  <properties>
+   <property name="blocked" value=""/>
+  </properties>
+ </tile>
+ <tile id="135">
   <properties>
    <property name="blocked" value=""/>
   </properties>
@@ -268,12 +278,12 @@
  </tile>
  <tile id="257">
   <properties>
-   <property name="blocked" value=""/>
+   <property name="exit" value=""/>
   </properties>
  </tile>
  <tile id="258">
   <properties>
-   <property name="blocked" value=""/>
+   <property name="exit" value=""/>
   </properties>
  </tile>
  <tile id="262">

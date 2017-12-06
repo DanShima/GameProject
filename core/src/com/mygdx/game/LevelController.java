@@ -35,9 +35,10 @@ public class LevelController {
     }
 
     public void addItem() {
-        //items.add(new Item("underwear.png", 256, 256));
-        //items.add(new Item("tshirt.png", 512, 1024));
-        //items.add(new Item("socks.png", 512, 512));
+        items.add(new Item("underwear","underwear.png", 256, 256));
+        items.add(new Item("tshirt", "tshirt.png", 512, 1024));
+        items.add(new Item("socks", "socks.png", 512, 512));
+        items.add(new Item("pants", "pants.png", 896, 128));
     }
 
     public void addMonster(){

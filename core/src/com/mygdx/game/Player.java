@@ -93,18 +93,6 @@ public class Player implements ApplicationListener {
     private Animation<TextureRegion> walkAnimationRIGHTPants;
     private TextureRegion currentFramePants;
 
-
-    public enum DIRECTION{
-        UP, DOWN, LEFT, RIGHT, IDLE
-    }
-
-    public enum PLAYERSTATE{
-        UNDERWEAR, PANTS, SHIRT, SOCKS
-    }
-
-    public DIRECTION direction;
-    public PLAYERSTATE playerstate;
-
     private AnimationUtil animationUtil;
 
 
@@ -160,7 +148,6 @@ public class Player implements ApplicationListener {
         // Instantiate a SpriteBatch for drawing and reset the elapsed animation time to 0
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-       // item = new Item(UNDERWEAR, 256,256);
 
     }
 
