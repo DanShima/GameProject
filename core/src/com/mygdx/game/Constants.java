@@ -46,6 +46,6 @@ public class Constants {
 
 
     public static final float FPS = 0.3f; //time between frames in seconds
-
-
+    //an array of all the levels
+    public static final String[] levels = {"blocking_v1.tmx", "snow128_16x10_v02.tmx"};
 }
