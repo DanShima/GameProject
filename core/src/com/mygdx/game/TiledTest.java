@@ -1,10 +1,12 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -26,7 +28,7 @@ import static com.mygdx.game.Constants.UNDERWEAR;
  * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
  */
 
-public class TiledTest extends ApplicationAdapter implements InputProcessor{
+public class TiledTest implements InputProcessor,Screen,ApplicationListener{
     public static final  int tileSize = 128; //tile in pixel
     private static int tileCountW = 15; //numbers of tiles in width
     private static int tileCountH = 8; //numbers of tiles in height
@@ -54,7 +56,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     private Monster gazeti;
     private Monster yeti;
-     BitmapFont font;//=new BitmapFont(Gdx.files.internal(Gdx.files.internal("myfont.fnt")));
+   
     private String message;
     private HUD hud ;
     private SpriteBatch sp;
@@ -77,6 +79,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     int playerPositionY;
     int playerPositionX;
 
+    public TiledTest()
+    {
+        create();
+    }
+
     @Override
     public void create () {
 
@@ -97,6 +104,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
 
+
         girl = new Player();
         girl.create();
 
@@ -112,6 +120,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
        //Monster Gazeti
         gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
         yeti = new Monster();
+
 
     }
     // Initial render
@@ -133,6 +142,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     //Initial Item Render
     public void initialItemRender()
     {
+
         girl.render();
         girl.updateSpriteBatch(underwear);
         girl.updateSpriteBatch(tshirt);
@@ -152,31 +162,66 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         initialItemRender();
 
     }
+
+    @Override
+    public void show() {
+
+    }
+
+
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
     @Override
     public void dispose() {
         //free allocated memory by disposing the instance
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
     }
+
     @Override
-    public void render () {
-        //Calling initial render
+    public void render(float delta) {
+//Calling initial render
         initialRender();
         initialItemRender();
        // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
         //Grab Item
+
         if(girl.getOldX ()>1152 && girl.getOldX ()<1408  && girl.getOldY()>768&& girl.getOldY()<1024) {
             playerCollideWithItem(socks); //1280, 896
             }
+
         if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
             playerCollideWithItem(tshirt);
-            }
-            if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
-                playerCollideWithItem(underwear);
-            }
+        }
+        if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
+            playerCollideWithItem(underwear);
+        }
         multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(hud.stage);
         multiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(multiplexer);
+    }
+    @Override
+    public void render () {
+
     }
 
     @Override
