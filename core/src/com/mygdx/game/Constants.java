@@ -1,8 +1,6 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
  * This class holds game (meta) info that is the same throughout the game.
@@ -34,6 +32,7 @@ public class Constants {
     public static final String SOCKS = "socks.png";
     //Monster Gazeti
     public static final String MONSTER1 = "gazeti_3.png";
+    public static final String MONSTER2 = "hydra_3.png";
     //Skin
     public static final String skin=new String("skin/freezing-ui.json");
     //To Display menu

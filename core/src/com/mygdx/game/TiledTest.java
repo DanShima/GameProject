@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,15 +9,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import static com.mygdx.game.Constants.LEVEL_TWO;
-import static com.mygdx.game.Constants.MONSTER1;
+
 import static com.mygdx.game.Constants.SOCKS;
 import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
@@ -54,10 +51,14 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
     private Item underwear,socks,tshirt;
     private Player girl; //animated player
 
-    private Monster gazeti;
-    private Monster yeti;
+
+    private GazetiMonster gazeti;
+    private YetiMonster yeti;
+
+
    
     private String message;
+
     private HUD hud ;
     private SpriteBatch sp;
 
@@ -118,8 +119,9 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
         tshirt=new Item("tshirt", TSHIRT,1280, 384);
 
        //Monster Gazeti
-        gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
-        yeti = new Monster();
+
+      gazeti = new GazetiMonster();
+       yeti = new YetiMonster();
 
 
     }
@@ -234,7 +236,10 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
      */
      public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.LEFT){// one step left
+
+
                  collisionL();
+
                 }
             if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
@@ -466,6 +471,15 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
+
+
+
+
+        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
+        int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
+
+
         int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
         int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
         //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
