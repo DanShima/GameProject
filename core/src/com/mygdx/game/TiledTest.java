@@ -15,7 +15,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-
 import static com.mygdx.game.Constants.LEVEL_TWO;
 import static com.mygdx.game.Constants.MONSTER1;
 import static com.mygdx.game.Constants.SOCKS;
@@ -42,9 +41,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     public final static int mapHeight = tileSize * tileCountH;
     private int NumberOfMovedTiles=2;
 
-    private TiledMap tiledMap;
-    private OrthographicCamera camera;
-    private TiledMapRenderer tiledMapRenderer;
+    public static TiledMap tiledMap;
+    public static OrthographicCamera camera;
+    public static TiledMapRenderer tiledMapRenderer;
     private TiledMapTileLayer Blockedlayer;
     private TiledMapTileLayer terrain;
     private InputMultiplexer multiplexer;
@@ -60,7 +59,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     private HUD hud ;
     private SpriteBatch sp;
 
-
+    static int currentLevel = 0;
 
     int oneStepHorizontaly ;
     int twoStepsHorizontally;
@@ -72,6 +71,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     int marginTop = 55; //parameterize as: screen height -1 -mapHeight
     int screenHeight = 1080;
+
+    int differenceInPositionX; //difference between simplified player position and simplified touch position in X
+    int differenceInPositionY;
+    int playerPositionY;
+    int playerPositionX;
 
     @Override
     public void create () {
@@ -90,16 +94,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         camera.update();
         //load map and create a renderer passing in our tiled map
 
-        tiledMap = new TmxMapLoader().load(LEVEL_TWO);
+        tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
         font=new BitmapFont(Gdx.files.internal("CustomFont.fnt"));
         //Gdx.input.setInputProcessor(this);
 
-
-
-
-        //player
         girl = new Player();
         girl.create();
 
@@ -107,16 +107,18 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
 
-
         //items
         underwear = new Item("underwear", UNDERWEAR, 256,256);
         socks=new Item("socks", SOCKS,768, 768);
         tshirt=new Item("tshirt", TSHIRT,1280, 384);
 
-
        //Monster Gazeti
-      gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
-       yeti = new Monster();
+        gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
+        yeti = new Monster();
+
+
+       //exitLevel(0, 0);
+
 
     }
     // Initial render
@@ -162,7 +164,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     private void playerCollideWithItem(Item item){
         item.setCollected(true);
         initialItemRender();
-
+        //updateLevel();
     }
     @Override
     public void dispose() {
@@ -463,25 +465,13 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
-        int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
         int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
         int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
         //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
         //Gdx.app.log("move", "screenY: " + screenY + " Simplified pos Y: " + touchPositionY + " Set pos Y:" + simplifiedYtoScreenPos(touchPositionY) );
-
-        int playerPositionY = invertScreenPos((int) girl.getOldY()); //we need to invert the Y because the sprite is in a different coordinate system
-        int playerPositionX = (int) girl.getOldX(); //(see playerPositionY comment) the different coordinate systems have identical X, so we don't manipulate oldX
-        //Gdx.app.log("move", "girl.oldY: " + girl.getOldY() + " inverted: " + playerPositionY + " Simplified:" + ScreenPosYtoSimplified(playerPositionY));
-        //Gdx.app.log("move", "girl.oldX: " + girl.getOldX() + " Simplified:" + ScreenPosXtoSimplified(playerPositionX));
-
-        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
-        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
-
+        convertPlayerPositionToSimplified();
         differenceInPositionX = touchPositionX - playerPositionX;
         differenceInPositionY = playerPositionY - touchPositionY;
-
-        //We cannot use a switch statement, because it is not the right way to use that. We have to use an "else if" chains
         if( differenceInPositionX == 0 && differenceInPositionY==0 ) {
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
         }
@@ -501,6 +491,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
                 girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
                 girl.move(differenceInPositionX*tileWidth,0);
+                exitLevel(13 , 7);
             }
 
         }
@@ -520,7 +511,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
                 girl.setCurrentAnimation(girl.getWalkAnimationUP());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
                 girl.move(0,differenceInPositionY*tileHeight);
-
+                exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
             }
         }
     }
@@ -543,4 +534,45 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         return false;
     }
 
+    public void convertPlayerPositionToSimplified() {
+        //get player positions
+        //we need to invert the Y because the sprite is in a different coordinate system
+        playerPositionY = invertScreenPos((int) girl.getOldY());
+        playerPositionX = (int) girl.getOldX();
+        //convert player positions to the simplified version
+        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
+        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+    }
+
+    /**
+     * This method checks player position against a position that we specify as the exit (Danning)
+     * We want to have the exit as parameter because each level might have its exit in a different place.
+     * @param tileX exit tile position in X
+     * @param tileY exit tile position in Y
+     */
+    public void exitLevel(int tileX, int tileY) {
+        convertPlayerPositionToSimplified();
+        //if player position is the same as the tile position marked as "exit", then call the next level loader method
+        if( playerPositionX == tileX && playerPositionY==tileY ) {
+            updateLevel();}
+    }
+
+
+    /**
+     * Load the next level map
+     * @return false after loading once. otherwise it will keep loading for some reason
+     */
+    public boolean updateLevel(){
+        boolean notMovedYet = true;
+        if(notMovedYet) {
+            currentLevel++;
+            tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
+            tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+            tiledMapRenderer.setView(camera);
+            tiledMapRenderer.render();
+            getProperties();
+            //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
+        }
+        return false;
+    }
 }
