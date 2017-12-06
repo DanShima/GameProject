@@ -18,23 +18,16 @@ public class MenuScreen implements Screen {
     private SpriteBatch batch;
     private Skin skin;
     private Stage stage;
-    private Texture backgroundTexture;
-    //private Sprite sprite;
-    private TextureRegion region;
+
     public MenuScreen() {
         create();
     }
     public void create() {
-        //backgroundTexture = new Texture(Gdx.files.internal("bakgroundmenu.png"));
-        //sprite =new Sprite(backgroundTexture,20,20,50,50);
-        //region=new TextureRegion(backgroundTexture,0,0,800,420);
-        //sprite=new Sprite(region);
-        //sprite.setSize(1,1);
+
         batch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal(Constants.skin));
         stage = new Stage();
-        backgroundTexture = new Texture(Gdx.files.internal("bakgroundmenu.jpg"));
-        region = new TextureRegion(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
         final TextButton playButton = new TextButton("PLAY", skin, "default");
         playButton.setSize(Constants.colWidth ,Constants.rowHeight);
         playButton.setPosition(Constants.centerX,Constants.centerY+200);
@@ -78,10 +71,7 @@ public class MenuScreen implements Screen {
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
     }
-    /*public void renderBackground()
-    {
-        sprite.draw(batch);
-    }*/
+
     @Override
     public void dispose() {
         batch.dispose();
@@ -94,7 +84,6 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(backgroundTexture, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() );
         stage.draw();
         batch.end();
     }
