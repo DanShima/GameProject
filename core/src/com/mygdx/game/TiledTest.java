@@ -16,7 +16,6 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import static com.mygdx.game.Constants.LEVEL_TWO;
-import static com.mygdx.game.Constants.MONSTER1;
 import static com.mygdx.game.Constants.SOCKS;
 import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
@@ -52,8 +51,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     private Item underwear,socks,tshirt;
     private Player girl; //animated player
 
-    private Monster gazeti;
-    private Monster yeti;
+    private GazetiMonster gazeti;
+    private YetiMonster yeti;
 
     private HUD hud ;
     SpriteBatch sp;
@@ -112,8 +111,8 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
 
        //Monster Gazeti
-      gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
-       yeti = new Monster();
+      gazeti = new GazetiMonster();
+       yeti = new YetiMonster();
 
     }
     // Initial render
@@ -192,7 +191,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      */
      public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.LEFT){// one step left
-             //   collisionL(differenceInPositionX * tileWidth, differenceInPositionY * tileHeight);
+                collisionL();
                 }
             if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
@@ -455,6 +454,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
+
+
+
         int differenceInPositionX; //difference between simplified player position and simplified touch position in X
         int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
         int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
