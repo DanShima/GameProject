@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -35,7 +36,7 @@ The constructor takes "SpriteBatch" in order to be able to draw the "stage" whic
 
 public class HUD implements Disposable  {
 
-    private int level = 1;
+    private int level = 0;
     public Stage stage;
     private Viewport viewport;
     private  int score = 100;
@@ -62,6 +63,7 @@ public class HUD implements Disposable  {
         button.addListener(new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                // dialog.show(stage);
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
                 return true;}});
 
         LevelLabel =new Label("Level :" + level ,myskin, "default");//label for gdx
@@ -79,19 +81,14 @@ public class HUD implements Disposable  {
         progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, myskin, "fancy");
         progressBar.setValue(75.0f);//initializing the bar
 
-
         // add the widgets to a table
         table.add(progressBar).width(335.0f);
         table.add(ScoreLabel).expandX();
         table.add(LevelLabel).expandX();
         table.add (button);
-
         table.row();
-
         stage.addActor(table);
-
     }
-
    // getters and setters
     public  void setScore(int value) {
         score = value;
@@ -101,8 +98,6 @@ public class HUD implements Disposable  {
     {
         return score;
     }
-
-
     public void setLevel(int value) {
         level =value;
         LevelLabel.setText(String.format("Level :" + level));
@@ -111,7 +106,6 @@ public class HUD implements Disposable  {
     {
         return level;
     }
-
     public void setHealth(float value) {
         progressBar.setValue(value);
     }
@@ -119,11 +113,6 @@ public class HUD implements Disposable  {
     {
         return progressBar.getValue();
     }
-
-
-
-
-
     @Override
     public void dispose() {
         stage.dispose();

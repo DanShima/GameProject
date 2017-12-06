@@ -1,10 +1,12 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +17,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-
 import static com.mygdx.game.Constants.LEVEL_TWO;
 import static com.mygdx.game.Constants.MONSTER1;
 import static com.mygdx.game.Constants.SOCKS;
@@ -27,7 +28,7 @@ import static com.mygdx.game.Constants.UNDERWEAR;
  * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
  */
 
-public class TiledTest extends ApplicationAdapter implements InputProcessor{
+public class TiledTest implements InputProcessor,Screen,ApplicationListener{
     public static final  int tileSize = 128; //tile in pixel
     private static int tileCountW = 15; //numbers of tiles in width
     private static int tileCountH = 8; //numbers of tiles in height
@@ -42,9 +43,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     public final static int mapHeight = tileSize * tileCountH;
     private int NumberOfMovedTiles=2;
 
-    private TiledMap tiledMap;
-    private OrthographicCamera camera;
-    private TiledMapRenderer tiledMapRenderer;
+    public static TiledMap tiledMap;
+    public static OrthographicCamera camera;
+    public static TiledMapRenderer tiledMapRenderer;
     private TiledMapTileLayer Blockedlayer;
     private TiledMapTileLayer terrain;
     private InputMultiplexer multiplexer;
@@ -55,12 +56,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     private Monster gazeti;
     private Monster yeti;
-     BitmapFont font;//=new BitmapFont(Gdx.files.internal(Gdx.files.internal("myfont.fnt")));
+   
     private String message;
     private HUD hud ;
     private SpriteBatch sp;
 
-
+    static int currentLevel = 0;
 
     int oneStepHorizontaly ;
     int twoStepsHorizontally;
@@ -72,6 +73,16 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
     int marginTop = 55; //parameterize as: screen height -1 -mapHeight
     int screenHeight = 1080;
+
+    int differenceInPositionX; //difference between simplified player position and simplified touch position in X
+    int differenceInPositionY;
+    int playerPositionY;
+    int playerPositionX;
+
+    public TiledTest()
+    {
+        create();
+    }
 
     @Override
     public void create () {
@@ -89,17 +100,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         camera.translate ( 128 ,128 );
         camera.update();
         //load map and create a renderer passing in our tiled map
-
-        tiledMap = new TmxMapLoader().load(LEVEL_TWO);
+        tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
-        font=new BitmapFont(Gdx.files.internal("CustomFont.fnt"));
-        //Gdx.input.setInputProcessor(this);
 
 
-
-
-        //player
         girl = new Player();
         girl.create();
 
@@ -107,16 +112,15 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
 
-
         //items
         underwear = new Item("underwear", UNDERWEAR, 256,256);
-        socks=new Item("socks", SOCKS,768, 768);
+        socks=new Item("socks", SOCKS,1280, 896);
         tshirt=new Item("tshirt", TSHIRT,1280, 384);
 
-
        //Monster Gazeti
-      gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
-       yeti = new Monster();
+        gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
+        yeti = new Monster();
+
 
     }
     // Initial render
@@ -133,30 +137,24 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
         sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
         hud.stage.draw ();
-
     }
 
     //Initial Item Render
     public void initialItemRender()
     {
-        // add message GameOver
-        sp.begin();
-        font.draw(sp,message,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
-        sp.end();
+
         girl.render();
         girl.updateSpriteBatch(underwear);
-
+        girl.updateSpriteBatch(tshirt);
+        girl.updateSpriteBatch(socks);
         underwear.render();
         socks.render();
         tshirt.render();
 
-
         gazeti.render(782, 512); //spawn gazeti at the given position in the map
         yeti.render(128, 252); //spawn yeti at the given position in the map
 
-        }
-        //Gdx.input.setInputProcessor(hud.stage);
-
+    }
 
     //Player collide with Item
     private void playerCollideWithItem(Item item){
@@ -164,30 +162,66 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         initialItemRender();
 
     }
+
+    @Override
+    public void show() {
+
+    }
+
+
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
     @Override
     public void dispose() {
         //free allocated memory by disposing the instance
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
     }
+
     @Override
-    public void render () {
-        //Calling initial render
+    public void render(float delta) {
+//Calling initial render
         initialRender();
         initialItemRender();
+       // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
         //Grab Item
-        if(girl.getOldX ()>704 && girl.getOldX ()<832  && girl.getOldY()>704&& girl.getOldY()<832) {
-            playerCollideWithItem(socks);
+
+        if(girl.getOldX ()>1152 && girl.getOldX ()<1408  && girl.getOldY()>768&& girl.getOldY()<1024) {
+            playerCollideWithItem(socks); //1280, 896
             }
+
         if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
             playerCollideWithItem(tshirt);
-            }
-            if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
-                playerCollideWithItem(underwear);
-            }
+        }
+        if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
+            playerCollideWithItem(underwear);
+        }
         multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(hud.stage);
         multiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(multiplexer);
+    }
+    @Override
+    public void render () {
+
     }
 
     @Override
@@ -200,7 +234,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      */
      public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.LEFT){// one step left
-             //   collisionL(differenceInPositionX * tileWidth, differenceInPositionY * tileHeight);
+                 collisionL();
                 }
             if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
@@ -402,37 +436,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     }
 
 
-
-
-    /**
-     *  This method checks whether a tile form the second layer contains property "exit"
-     */
-
-    public boolean isExitSecondLayer(TiledMapTileLayer.Cell obstacle){
-
-        if(obstacle != null) { // not an empty cell
-
-            return obstacle.getTile().getProperties().containsKey("exit");}
-
-        return false;
-    }
-
-    /**
-     * This method checks whether a tile from the first layer contains the property "exit"
-     * @param ground the first tile layer
-     * @return false if it is an empty cell
-     */
-
-    public boolean isExitFirstLayer(TiledMapTileLayer.Cell ground){
-
-        if(ground != null) { // not an empty cell
-
-            return ground.getTile().getProperties().containsKey("exit");}
-
-        return false;
-    }
-
-
     /**
      * This method converts screen X position to simplified X
      */
@@ -463,64 +466,54 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
-        int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
         int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
         int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
         //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
         //Gdx.app.log("move", "screenY: " + screenY + " Simplified pos Y: " + touchPositionY + " Set pos Y:" + simplifiedYtoScreenPos(touchPositionY) );
-
-        int playerPositionY = invertScreenPos((int) girl.getOldY()); //we need to invert the Y because the sprite is in a different coordinate system
-        int playerPositionX = (int) girl.getOldX(); //(see playerPositionY comment) the different coordinate systems have identical X, so we don't manipulate oldX
-        //Gdx.app.log("move", "girl.oldY: " + girl.getOldY() + " inverted: " + playerPositionY + " Simplified:" + ScreenPosYtoSimplified(playerPositionY));
-        //Gdx.app.log("move", "girl.oldX: " + girl.getOldX() + " Simplified:" + ScreenPosXtoSimplified(playerPositionX));
-
-        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
-        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
-
+        convertPlayerPositionToSimplified();
         differenceInPositionX = touchPositionX - playerPositionX;
         differenceInPositionY = playerPositionY - touchPositionY;
-
-        //We cannot use a switch statement, because it is not the right way to use that. We have to use an "else if" chains
         if( differenceInPositionX == 0 && differenceInPositionY==0 ) {
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
         }
         else if( ( Math.abs(differenceInPositionX)<3 && differenceInPositionY==0 ) ) {
-
-            // set the animation for the horizontal movment with clothes
+            // set the animation for the horizontal movement with clothes
             if (Math.signum((float)differenceInPositionX*tileWidth)==-1){
-
-
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationLEFTSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationLEFTShirt());
                 girl.move(differenceInPositionX*tileWidth,0);
-
             }else
-            if(Math.signum((int)differenceInPositionX*tileWidth)==1){
-
+            if(Math.signum((int) differenceInPositionX*tileWidth)==1){
                 girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationRIGHTSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
                 girl.move(differenceInPositionX*tileWidth,0);
+                exitLevel(13 , 7);
             }
 
         }
 
          else if( ( Math.abs(differenceInPositionY)<3 && differenceInPositionX==0 ) ) {
                //attempt at vertical movement - may be still blocked by collision, so let's check for that
-
         if(collisionCheck(differenceInPositionX , differenceInPositionY) ){
-
             // set the animation for the vertical movment with clothes
-
             if(Math.signum((float)differenceInPositionY)==-1){
                 girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationDOWNSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationDOWNShirt());
+
                 girl.move(0,differenceInPositionY*tileHeight);
             }else if(Math.signum((float)differenceInPositionY)==1) {
                 girl.setCurrentAnimation(girl.getWalkAnimationUP());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationUPSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
                 girl.move(0,differenceInPositionY*tileHeight);
-
+                exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
             }
         }
     }
@@ -543,4 +536,47 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         return false;
     }
 
+    public void convertPlayerPositionToSimplified() {
+        //get player positions
+        //we need to invert the Y because the sprite is in a different coordinate system
+        playerPositionY = invertScreenPos((int) girl.getOldY());
+        playerPositionX = (int) girl.getOldX();
+        //convert player positions to the simplified version
+        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
+        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+    }
+
+    /**
+     * This method checks player position against a position that we specify as the exit (Danning)
+     * We want to have the exit as parameter because each level might have its exit in a different place.
+     * @param tileX exit tile position in X
+     * @param tileY exit tile position in Y
+     */
+    public void exitLevel(int tileX, int tileY) {
+        convertPlayerPositionToSimplified();
+        //if player position is the same as the tile position marked as "exit", then call the next level loader method
+        if( playerPositionX == tileX && playerPositionY==tileY ) {
+            updateLevel();}
+    }
+
+
+    /**
+     * Load the next level map
+     * @return false after loading once. otherwise it will keep loading for some reason
+     */
+    public boolean updateLevel(){
+        boolean notMovedYet = true;
+        if(notMovedYet) {
+            currentLevel++;
+            tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
+            tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
+            //getProperties();
+            //clear monster from the previous level
+            yeti.dispose();
+            gazeti.dispose();
+            hud.setLevel(currentLevel);
+            //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
+        }
+        return false;
+    }
 }
