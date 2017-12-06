@@ -93,12 +93,9 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         camera.translate ( 128 ,128 );
         camera.update();
         //load map and create a renderer passing in our tiled map
-
         tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
-        font=new BitmapFont(Gdx.files.internal("CustomFont.fnt"));
-        //Gdx.input.setInputProcessor(this);
 
         girl = new Player();
         girl.create();
@@ -109,16 +106,12 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
         //items
         underwear = new Item("underwear", UNDERWEAR, 256,256);
-        socks=new Item("socks", SOCKS,768, 768);
+        socks=new Item("socks", SOCKS,1280, 896);
         tshirt=new Item("tshirt", TSHIRT,1280, 384);
 
        //Monster Gazeti
         gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
         yeti = new Monster();
-
-
-       //exitLevel(0, 0);
-
 
     }
     // Initial render
@@ -135,36 +128,29 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
         sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
         hud.stage.draw ();
-
     }
 
     //Initial Item Render
     public void initialItemRender()
     {
-        // add message GameOver
-        sp.begin();
-        font.draw(sp,message,Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
-        sp.end();
         girl.render();
         girl.updateSpriteBatch(underwear);
-
+        girl.updateSpriteBatch(tshirt);
+        girl.updateSpriteBatch(socks);
         underwear.render();
         socks.render();
         tshirt.render();
 
-
         gazeti.render(782, 512); //spawn gazeti at the given position in the map
         yeti.render(128, 252); //spawn yeti at the given position in the map
 
-        }
-        //Gdx.input.setInputProcessor(hud.stage);
-
+    }
 
     //Player collide with Item
     private void playerCollideWithItem(Item item){
         item.setCollected(true);
         initialItemRender();
-        //updateLevel();
+
     }
     @Override
     public void dispose() {
@@ -176,9 +162,10 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
         //Calling initial render
         initialRender();
         initialItemRender();
+       // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
         //Grab Item
-        if(girl.getOldX ()>704 && girl.getOldX ()<832  && girl.getOldY()>704&& girl.getOldY()<832) {
-            playerCollideWithItem(socks);
+        if(girl.getOldX ()>1152 && girl.getOldX ()<1408  && girl.getOldY()>768&& girl.getOldY()<1024) {
+            playerCollideWithItem(socks); //1280, 896
             }
         if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
             playerCollideWithItem(tshirt);
@@ -202,7 +189,7 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
      */
      public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.LEFT){// one step left
-             //   collisionL(differenceInPositionX * tileWidth, differenceInPositionY * tileHeight);
+                 collisionL();
                 }
             if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
@@ -404,37 +391,6 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
     }
 
 
-
-
-    /**
-     *  This method checks whether a tile form the second layer contains property "exit"
-     */
-
-    public boolean isExitSecondLayer(TiledMapTileLayer.Cell obstacle){
-
-        if(obstacle != null) { // not an empty cell
-
-            return obstacle.getTile().getProperties().containsKey("exit");}
-
-        return false;
-    }
-
-    /**
-     * This method checks whether a tile from the first layer contains the property "exit"
-     * @param ground the first tile layer
-     * @return false if it is an empty cell
-     */
-
-    public boolean isExitFirstLayer(TiledMapTileLayer.Cell ground){
-
-        if(ground != null) { // not an empty cell
-
-            return ground.getTile().getProperties().containsKey("exit");}
-
-        return false;
-    }
-
-
     /**
      * This method converts screen X position to simplified X
      */
@@ -476,20 +432,19 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
         }
         else if( ( Math.abs(differenceInPositionX)<3 && differenceInPositionY==0 ) ) {
-
-            // set the animation for the horizontal movment with clothes
+            // set the animation for the horizontal movement with clothes
             if (Math.signum((float)differenceInPositionX*tileWidth)==-1){
-
-
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationLEFTSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationLEFTShirt());
                 girl.move(differenceInPositionX*tileWidth,0);
-
             }else
-            if(Math.signum((int)differenceInPositionX*tileWidth)==1){
-
+            if(Math.signum((int) differenceInPositionX*tileWidth)==1){
                 girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationRIGHTSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
                 girl.move(differenceInPositionX*tileWidth,0);
                 exitLevel(13 , 7);
             }
@@ -498,18 +453,20 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
 
          else if( ( Math.abs(differenceInPositionY)<3 && differenceInPositionX==0 ) ) {
                //attempt at vertical movement - may be still blocked by collision, so let's check for that
-
         if(collisionCheck(differenceInPositionX , differenceInPositionY) ){
-
             // set the animation for the vertical movment with clothes
-
             if(Math.signum((float)differenceInPositionY)==-1){
                 girl.setCurrentAnimation(girl.getWalkAnimationDOWN());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationDOWNSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationDOWNShirt());
+
                 girl.move(0,differenceInPositionY*tileHeight);
             }else if(Math.signum((float)differenceInPositionY)==1) {
                 girl.setCurrentAnimation(girl.getWalkAnimationUP());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
+                girl.setCurrentAnimationSocks(girl.getWalkAnimationUPSocks());
+                girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
                 girl.move(0,differenceInPositionY*tileHeight);
                 exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
             }
@@ -568,9 +525,11 @@ public class TiledTest extends ApplicationAdapter implements InputProcessor{
             currentLevel++;
             tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
             tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-            tiledMapRenderer.setView(camera);
-            tiledMapRenderer.render();
-            getProperties();
+            //getProperties();
+            //clear monster from the previous level
+            yeti.dispose();
+            gazeti.dispose();
+            hud.setLevel(currentLevel);
             //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
         }
         return false;
