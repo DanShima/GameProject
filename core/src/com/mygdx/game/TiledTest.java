@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -10,15 +9,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import static com.mygdx.game.Constants.LEVEL_TWO;
-import static com.mygdx.game.Constants.MONSTER1;
+
 import static com.mygdx.game.Constants.SOCKS;
 import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
@@ -51,13 +48,17 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
     private InputMultiplexer multiplexer;
 
 
-    private Item underwear,socks,tshirt;
+    private Item underwear,socks,tshirt, pants, apple;
     private Player girl; //animated player
 
-    private Monster gazeti;
-    private Monster yeti;
+
+    private GazetiMonster gazeti;
+    private YetiMonster yeti;
+
+
    
     private String message;
+
     private HUD hud ;
     private SpriteBatch sp;
 
@@ -116,10 +117,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
         underwear = new Item("underwear", UNDERWEAR, 256,256);
         socks=new Item("socks", SOCKS,1280, 896);
         tshirt=new Item("tshirt", TSHIRT,1280, 384);
+        pants = new Item("pants", "pants.png", 637, 256);
+        apple = new Item("apple", "apple.png", 384, 512);
 
-       //Monster Gazeti
-        gazeti = new Monster(MONSTER1, 4, 3, 1, 1);
-        yeti = new Monster();
+        //monsters
+        gazeti = new GazetiMonster();
+        yeti = new YetiMonster();
 
 
     }
@@ -147,9 +150,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
         girl.updateSpriteBatch(underwear);
         girl.updateSpriteBatch(tshirt);
         girl.updateSpriteBatch(socks);
+        girl.updateSpriteBatch(pants);
         underwear.render();
         socks.render();
         tshirt.render();
+        pants.render();
+        apple.render();
 
         gazeti.render(782, 512); //spawn gazeti at the given position in the map
         yeti.render(128, 252); //spawn yeti at the given position in the map
@@ -167,6 +173,8 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
     public void show() {
 
     }
+
+
 
 
 
@@ -214,6 +222,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
         if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
             playerCollideWithItem(underwear);
         }
+        if(girl.getOldX ()>509 && girl.getOldX ()<765  && girl.getOldY()>192&& girl.getOldY()<320) {
+            playerCollideWithItem(pants); //637, 1021
+        }
+        if(girl.getOldX ()>256 && girl.getOldX ()<512  && girl.getOldY()>384&& girl.getOldY()<640) {
+            playerCollideWithItem(apple); //384, 512
+        }
         multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(hud.stage);
         multiplexer.addProcessor(this);
@@ -234,7 +248,10 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
      */
      public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.LEFT){// one step left
+
+
                  collisionL();
+
                 }
             if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
@@ -466,6 +483,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
+        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
+        int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
+
+
         int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
         int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
         //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
@@ -483,6 +505,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationLEFTSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationLEFTShirt());
+                girl.setCurrentAnimationPants(girl.getWalkAnimationLEFTPants());
                 girl.move(differenceInPositionX*tileWidth,0);
             }else
             if(Math.signum((int) differenceInPositionX*tileWidth)==1){
@@ -490,8 +513,9 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationRIGHTSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
+                girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                 girl.move(differenceInPositionX*tileWidth,0);
-                exitLevel(13 , 7);
+
             }
 
         }
@@ -505,19 +529,20 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationDOWNSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationDOWNShirt());
-
+                girl.setCurrentAnimationPants(girl.getWalkAnimationDOWNPants());
                 girl.move(0,differenceInPositionY*tileHeight);
             }else if(Math.signum((float)differenceInPositionY)==1) {
                 girl.setCurrentAnimation(girl.getWalkAnimationUP());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationUPSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
+                girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                 girl.move(0,differenceInPositionY*tileHeight);
-                exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
+                //exitLevel(13 , 7);
             }
         }
     }
-
+        exitLevel(13 , 7);//if the player moves to tile(13,7), he can go to the next level
         return false;
         }
 

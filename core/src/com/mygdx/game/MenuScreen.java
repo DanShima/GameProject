@@ -6,18 +6,33 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class MenuScreen implements Screen {
     private SpriteBatch batch;
     private Skin skin;
     private Stage stage;
+
+    // options
+    private Window popUpSettings;
+    private TextButton saveButton;
+    private TextButton cancelButton;
+    private CheckBox checkBoxSound;
+    private CheckBox checkBoxMusic;
+    private Slider sliderSound;
+    private Slider sliderMusic;
+
 
     public MenuScreen() {
         create();
@@ -44,7 +59,10 @@ public class MenuScreen implements Screen {
         settingsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                settingsButton.setText("You clicked the settings button");
+               // createSettingsWindow();
+                //setUpAudioSettings();
+                onSettingsClicked();
+               // settingsButton.setText("You clicked the settings button");
             }
         });
         final TextButton scoreButton = new TextButton("SCORE", skin, "default");
@@ -53,6 +71,7 @@ public class MenuScreen implements Screen {
         scoreButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
+
                 scoreButton.setText("You clicked the score button");
             }
         });
@@ -65,8 +84,10 @@ public class MenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+        Table settingsWindow = createSettingsWindow(); //the settings pop-up window
         stage.addActor(playButton);
         stage.addActor(settingsButton);
+        stage.addActor(settingsWindow);
         stage.addActor(scoreButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
@@ -74,6 +95,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        stage.dispose();
         batch.dispose();
     }
     @Override
@@ -86,6 +108,128 @@ public class MenuScreen implements Screen {
         batch.begin();
         stage.draw();
         batch.end();
+    }
+
+    /**
+     * Creating a pop up window that shows the audio settings
+     * @return
+     */
+    private Table createSettingsWindow() {
+        popUpSettings = new Window("Options", skin);
+        // fill the window with content: Sound/Music checkBoxes and volume sliders
+        popUpSettings.add(setUpAudioSettings()).row();
+        // include save and cancel buttons
+        popUpSettings.add(createSettingsButtons()).pad(10, 0, 10, 0);
+        // hide options window by default
+        popUpSettings.setVisible(false);
+        // set size and position
+        popUpSettings.pack();
+        popUpSettings.setPosition(500, 500);
+        return popUpSettings;
+    }
+
+    /**
+     * Filling the settings window with a table with checkboxes and sliders for audio
+     * @return the table that contains the audio options
+     */
+    private Table setUpAudioSettings() {
+        Table table = new Table();
+        //checkbox for turning on and off sound and setting volume
+        checkBoxSound = new CheckBox("", skin);
+        table.add(checkBoxSound);
+        Label soundLabel = new Label("Sound", skin);
+        soundLabel.setFontScale(3f,3f);
+        table.add(soundLabel);
+        sliderSound = new Slider(0, 100, 10, false, skin);
+        table.add(sliderSound).padLeft(10);
+        table.row();
+        //checkbox for turning on and off music and setting volume
+        checkBoxMusic = new CheckBox("", skin);
+        table.add(checkBoxMusic);
+        Label musicLabel = new Label("Music", skin);
+        musicLabel.setFontScale(3f,3f);
+        table.add(musicLabel).padLeft(10);
+        sliderMusic = new Slider(0, 100, 10, false, skin);
+        table.add(sliderMusic);
+        table.row();
+        return table;
+    }
+
+    /**
+     * Adding save and cancel buttons to the settings window
+     * @return the table that contains the save and cancel buttons
+     */
+    private Table createSettingsButtons() {
+        Table table = new Table();
+        table.row();
+
+        saveButton = new TextButton("Save", skin);
+        table.add(saveButton).padRight(30).padLeft(30);
+        saveButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                onSaveClicked();
+            }
+        });
+
+        cancelButton = new TextButton("Cancel", skin);
+        table.add(cancelButton).padRight(30);
+        cancelButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                onCancelClicked();
+            }
+        });
+        return table;
+    }
+
+    /**
+     * Load sound preferences from GameSetting class
+     */
+    private void loadSettings() {
+        GameSetting prefs = GameSetting.newSetting;
+        prefs.load();
+        checkBoxSound.setChecked(prefs.hasSoundOn);
+        sliderSound.setValue(prefs.soundVolume);
+        checkBoxMusic.setChecked(prefs.hasMusicOn);
+        sliderMusic.setValue(prefs.musicVolume);
+    }
+
+    /**
+     * Define what happens when the player clicks on Settings in the menu
+     */
+    private void onSettingsClicked() {
+          loadSettings();
+          popUpSettings.setVisible(true); //make the pop-up visible
+    }
+
+    /**
+     * Define what happens when the player clicks on "Save" button in the settings
+     */
+    private void onSaveClicked() {
+        saveSettings();
+        onCancelClicked(); //close the pop-up window
+        SoundManager.newSoundManager.onSettingsUpdated(); //update soundmanager with the new settings
+    }
+
+    /**
+     * Define what happens when the player clicks on "Cancel" button in the settings
+     */
+    private void onCancelClicked() {
+        popUpSettings.setVisible(false);
+        SoundManager.newSoundManager.onSettingsUpdated();
+    }
+
+    /**
+     * Save the new audio preferences. for instance, if the checkbox is unchecked. it stays unchecked
+     */
+    private void saveSettings() {
+        GameSetting prefs = GameSetting.newSetting;
+        prefs.hasSoundOn = checkBoxSound.isChecked();
+        prefs.soundVolume = (int) sliderSound.getValue();
+        prefs.hasMusicOn = checkBoxMusic.isChecked();
+        prefs.musicVolume = (int) sliderMusic.getValue();
+        prefs.save();
     }
     @Override
     public void resize(int width, int height) {
