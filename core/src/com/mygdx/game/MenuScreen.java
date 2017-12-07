@@ -2,10 +2,12 @@ package com.mygdx.game;
 /**
  * Created by tmp-sda-1124 on 12/4/17.
  */
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -19,10 +21,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+
+/**
+ * MenuScreen class displays the Game menu for the player
+ */
 public class MenuScreen implements Screen {
     private SpriteBatch batch;
+    private SpriteBatch bgbatch;
     private Skin skin;
     private Stage stage;
+    private Texture background;
 
     // options
     private Window popUpSettings;
@@ -42,6 +50,8 @@ public class MenuScreen implements Screen {
         batch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal(Constants.skin));
         stage = new Stage();
+        bgbatch =new SpriteBatch();
+        background = new Texture("snowbackground2.jpg");
 
         final TextButton playButton = new TextButton("PLAY", skin, "default");
         playButton.setSize(Constants.colWidth ,Constants.rowHeight);
@@ -49,8 +59,10 @@ public class MenuScreen implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
+
                 //playButton.setText("You clicked the button");
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new TiledTest());
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
+
             }
         });
         final TextButton settingsButton = new TextButton("SETTINGS", skin, "default");
@@ -95,8 +107,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        stage.dispose();
         batch.dispose();
+        bgbatch.dispose();
     }
     @Override
     public void show() {
@@ -105,9 +117,13 @@ public class MenuScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        bgbatch.begin();
+        bgbatch.draw(background,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        bgbatch.end();
         batch.begin();
         stage.draw();
         batch.end();
+
     }
 
     /**

@@ -6,14 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mygdx.game.Constants.FPS;
 import static com.mygdx.game.Constants.GIRL_NAKED;
-import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
  * Created by Giddy on 23/11/2017.
@@ -199,7 +196,7 @@ public class Player implements ApplicationListener {
 
     public float getPlainX() { return x; }
 
-    public float getX() { return x - (float)(TiledTest.tileSize*0.25); } //place the animation in the center of the tile
+    public float getX() { return x - (float)(Constants.tileSize*0.25); } //place the animation in the center of the tile
 
     public float getY() {return y;}
 
