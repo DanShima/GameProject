@@ -48,7 +48,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
     private InputMultiplexer multiplexer;
 
 
-    private Item underwear,socks,tshirt;
+    private Item underwear,socks,tshirt, pants, apple;
     private Player girl; //animated player
 
 
@@ -117,11 +117,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
         underwear = new Item("underwear", UNDERWEAR, 256,256);
         socks=new Item("socks", SOCKS,1280, 896);
         tshirt=new Item("tshirt", TSHIRT,1280, 384);
+        pants = new Item("pants", "pants.png", 637, 256);
+        apple = new Item("apple", "apple.png", 384, 512);
 
-       //Monster Gazeti
-
-      gazeti = new GazetiMonster();
-       yeti = new YetiMonster();
+        //monsters
+        gazeti = new GazetiMonster();
+        yeti = new YetiMonster();
 
 
     }
@@ -149,9 +150,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
         girl.updateSpriteBatch(underwear);
         girl.updateSpriteBatch(tshirt);
         girl.updateSpriteBatch(socks);
+        girl.updateSpriteBatch(pants);
         underwear.render();
         socks.render();
         tshirt.render();
+        pants.render();
+        apple.render();
 
         gazeti.render(782, 512); //spawn gazeti at the given position in the map
         yeti.render(128, 252); //spawn yeti at the given position in the map
@@ -217,6 +221,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
         }
         if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
             playerCollideWithItem(underwear);
+        }
+        if(girl.getOldX ()>509 && girl.getOldX ()<765  && girl.getOldY()>192&& girl.getOldY()<320) {
+            playerCollideWithItem(pants); //637, 1021
+        }
+        if(girl.getOldX ()>256 && girl.getOldX ()<512  && girl.getOldY()>384&& girl.getOldY()<640) {
+            playerCollideWithItem(apple); //384, 512
         }
         multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(hud.stage);
@@ -474,10 +484,6 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
-
-
-
-
         int differenceInPositionX; //difference between simplified player position and simplified touch position in X
         int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
 
@@ -499,6 +505,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationLEFTSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationLEFTShirt());
+                girl.setCurrentAnimationPants(girl.getWalkAnimationLEFTPants());
                 girl.move(differenceInPositionX*tileWidth,0);
             }else
             if(Math.signum((int) differenceInPositionX*tileWidth)==1){
@@ -506,6 +513,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationRIGHTSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
+                girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                 girl.move(differenceInPositionX*tileWidth,0);
 
             }
@@ -521,13 +529,14 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationDOWNSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationDOWNShirt());
-
+                girl.setCurrentAnimationPants(girl.getWalkAnimationDOWNPants());
                 girl.move(0,differenceInPositionY*tileHeight);
             }else if(Math.signum((float)differenceInPositionY)==1) {
                 girl.setCurrentAnimation(girl.getWalkAnimationUP());
                 girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationUPSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
+                girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                 girl.move(0,differenceInPositionY*tileHeight);
                 //exitLevel(13 , 7);
             }
