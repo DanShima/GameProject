@@ -29,9 +29,12 @@ public class Monster  {
     protected float monsterPositionX;
     protected float monsterPositionY;
     protected boolean initialMonsterPos=false;
+    private  Controller playerPos;
 
     //Yeti monster
     public Monster(){
+
+
 
     }
 
@@ -118,9 +121,9 @@ public class Monster  {
 
 
 //////////////////////////////////////////////////////////////////
-    public void move(){
+    public void move(int playerPositionX, int playerPositionY){
 
-
+       // Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
 
 
 

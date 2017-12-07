@@ -489,10 +489,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         public void checkTurn(){
 
             if(turnCounter%2 == 0){
-                yeti.move();
+                yeti.move(playerPositionX,playerPositionY);
             }else if (turnCounter % 2==1){
 
-                gazeti.move();
+                gazeti.move(playerPositionX,playerPositionY);
             }
 
 
@@ -599,6 +599,14 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             //convert player positions to the simplified version
             playerPositionX = ScreenPosXtoSimplified(playerPositionX);
             playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+        }
+
+        public int getPlayerPositionY() {
+            return playerPositionY;
+        }
+
+        public int getPlayerPositionX() {
+            return playerPositionX;
         }
 
         /**

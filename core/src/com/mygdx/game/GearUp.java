@@ -10,6 +10,6 @@ public class GearUp extends Game {
 
     @Override
     public void create() {
-        this.setScreen(new MenuScreen());
+        this.setScreen(new PlayerLogin());
     }
 }
