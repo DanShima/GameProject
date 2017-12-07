@@ -14,6 +14,9 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import static com.mygdx.game.Constants.APPLE;
+import static com.mygdx.game.Constants.PANTS;
+
 
 /**
  * Created by Waseem on 12/7/2017.
@@ -47,7 +50,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         private InputMultiplexer multiplexer;
 
 
-        private Item underwear,socks,tshirt;
+        private Item underwear,socks,tshirt, pants, apple;
         private Player girl; //animated player
 
 
@@ -78,6 +81,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         int differenceInPositionY;
         int playerPositionY;
         int playerPositionX;
+
+        LevelController levelController;
 
         public Controller(GameView GameView)
         {
@@ -128,12 +133,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             underwear = new Item("underwear", Constants.UNDERWEAR, 256,256);
             socks=new Item("socks", Constants.SOCKS,1280, 896);
             tshirt=new Item("tshirt", Constants.TSHIRT,1280, 384);
-
+            pants = new Item("pants", PANTS, 637, 256);
+            apple = new Item("apple", APPLE, 384, 512);
             //Monster Gazeti
 
             gazeti = new GazetiMonster();
             yeti = new YetiMonster();
-
+            levelController.getItems();
 
         }
 
@@ -170,6 +176,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             underwear.render();
             socks.render();
             tshirt.render();
+            pants.render();
+            apple.render();
 
             gazeti.render(782, 512); //spawn gazeti at the given position in the map
             yeti.render(128, 252); //spawn yeti at the given position in the map
@@ -233,6 +241,12 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             }
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
                 playerCollideWithItem(underwear);
+            }
+            if(girl.getOldX ()>509 && girl.getOldX ()<765  && girl.getOldY()>192&& girl.getOldY()<320) {
+                playerCollideWithItem(pants); //637, 1021
+            }
+            if(girl.getOldX ()>256 && girl.getOldX ()<512  && girl.getOldY()>384&& girl.getOldY()<640) {
+                playerCollideWithItem(apple); //384, 512
             }
             multiplexer = new InputMultiplexer();
             multiplexer.addProcessor(hud.stage);
@@ -533,6 +547,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationLEFTSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationLEFTShirt());
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationLEFTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
                     } else if (Math.signum((int) differenceInPositionX * tileWidth) == 1) {
@@ -540,6 +555,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationRIGHTSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
                         exitLevel(13, 7);
@@ -558,7 +574,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationDOWNSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationDOWNShirt());
-
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationDOWNPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
                     }else if(Math.signum((float)differenceInPositionY)==1) {
@@ -566,6 +582,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationUPSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
                         exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level

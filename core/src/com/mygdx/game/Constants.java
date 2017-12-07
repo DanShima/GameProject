@@ -39,6 +39,8 @@ public class Constants {
     public static final String UNDERWEAR = "underwear.png";
     public static final String TSHIRT = "tshirt.png";
     public static final String SOCKS = "socks.png";
+    public static final String PANTS = "pants.png";
+    public static final String APPLE = "apple.png";
     //Monster Gazeti
     public static final String MONSTER1 = "gazeti_3.png";
     public static final String MONSTER2 = "hydra_3.png";

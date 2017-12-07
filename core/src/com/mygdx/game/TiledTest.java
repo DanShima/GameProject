@@ -18,6 +18,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import static com.mygdx.game.Constants.APPLE;
+import static com.mygdx.game.Constants.PANTS;
 import static com.mygdx.game.Constants.SOCKS;
 import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
@@ -85,7 +87,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     int playerPositionY;
     int playerPositionX;
 
-    public TiledTest() {
+
+    LevelController levelController;
+
+    public TiledTest()
+    {
         create();
     }
 
@@ -118,25 +124,19 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
 
         //items
-<<<<<<< HEAD
-        underwear = new Item("underwear", UNDERWEAR, 256, 256);
-        socks = new Item("socks", SOCKS, 1280, 896);
-        tshirt = new Item("tshirt", TSHIRT, 1280, 384);
 
-        //Monster Gazeti
-
-=======
         underwear = new Item("underwear", UNDERWEAR, 256,256);
-        socks=new Item("socks", SOCKS,1280, 896);
+        socks= new Item("socks", SOCKS,1280, 896);
         tshirt=new Item("tshirt", TSHIRT,1280, 384);
-        pants = new Item("pants", "pants.png", 637, 256);
-        apple = new Item("apple", "apple.png", 384, 512);
+        pants = new Item("pants", PANTS, 637, 256);
+        apple = new Item("apple", APPLE, 384, 512);
+
 
         //monsters
->>>>>>> 98eeb60510c7371fa4296b0b2dade9257973c483
         gazeti = new GazetiMonster();
         yeti = new YetiMonster();
 
+        levelController.getItems();
 
     }
 

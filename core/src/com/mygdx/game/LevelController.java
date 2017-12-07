@@ -3,6 +3,12 @@ package com.mygdx.game;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mygdx.game.Constants.APPLE;
+import static com.mygdx.game.Constants.PANTS;
+import static com.mygdx.game.Constants.SOCKS;
+import static com.mygdx.game.Constants.TSHIRT;
+import static com.mygdx.game.Constants.UNDERWEAR;
+
 /**
  * This class is the container for levels
  * Some stuff in TiledTest needs to be moved here
@@ -10,6 +16,9 @@ import java.util.List;
 
 public class LevelController {
     Player animator;
+
+
+
     List<Item> items;
     List<Monster> monsters;
     boolean hasItem;
@@ -19,6 +28,7 @@ public class LevelController {
         animator = new Player();
         items = new ArrayList<Item>();
         monsters = new ArrayList<Monster>();
+        addItem();
         hasItem = false;
     }
 
@@ -35,10 +45,11 @@ public class LevelController {
     }
 
     public void addItem() {
-        items.add(new Item("underwear","underwear.png", 256, 256));
-        items.add(new Item("tshirt", "tshirt.png", 512, 1024));
-        items.add(new Item("socks", "socks.png", 512, 512));
-        items.add(new Item("pants", "pants.png", 896, 128));
+        items.add(new Item("underwear", UNDERWEAR, 256,256));
+        items.add(new Item("tshirt", TSHIRT,1280, 384));
+        items.add(new Item("socks", SOCKS,1280, 896));
+        items.add(new Item("pants", PANTS, 637, 256));
+        items.add(new Item("apple", APPLE, 384, 512));
     }
 
     public void addMonster(){
@@ -52,6 +63,8 @@ public class LevelController {
         }
     }
 
-
+    public List<Item> getItems() {
+        return items;
+    }
 
 }
