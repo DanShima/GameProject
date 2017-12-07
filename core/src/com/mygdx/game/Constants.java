@@ -16,6 +16,15 @@ public class Constants {
     public static final float VIEWPORT_GUI_WIDTH = 0f;
     public static final float VIEWPORT_GUI_HEIGHT = 0f;
 
+    ////////
+    public static int currentLevel = 0;
+    public static final  int tileSize = 128; //tile in pixel
+    public static int tileCountW = 15; //numbers of tiles in width
+    public static int tileCountH = 8; //numbers of tiles in height
+    public static  final int  mapWidth = tileSize * tileCountW;
+    public static  final int  mapHeight = tileSize * tileCountH;
+
+    ////////
     // number of points at the start of the game
     public static final int SCORE_START = 0;
     // number of lives at the start of the game
@@ -37,11 +46,12 @@ public class Constants {
     public static final String skin=new String("skin/freezing-ui.json");
     //To Display menu
     public static final int screenWidth=Gdx.graphics.getWidth();
-    public static final int screenHeight=Gdx.graphics.getHeight();
+    public static final int mScreenHeight=Gdx.graphics.getHeight();
     public static final int centerX=screenWidth/2;
-    public static final int centerY=screenHeight/2;
+    public static final int centerY=mScreenHeight/2;
     public static final int colWidth=screenWidth/8;
-    public static final int rowHeight=screenHeight/8;
+    public static final int rowHeight=mScreenHeight/8;
+
 
 
     public static final float FPS = 0.3f; //time between frames in seconds

@@ -9,15 +9,7 @@ public class YetiMonster extends Monster {
         super(Constants.MONSTER2,4,3,1,2);
     }
 
-    public void move(){
 
-
-
-
-
-
-
-    }
 }
 
 

@@ -2,6 +2,7 @@ package com.mygdx.game;
 /**
  * Created by tmp-sda-1124 on 12/4/17.
  */
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -58,7 +59,10 @@ public class MenuScreen implements Screen {
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new TiledTest());
+
+                //playButton.setText("You clicked the button");
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
+
             }
         });
         final TextButton settingsButton = new TextButton("SETTINGS", skin, "default");

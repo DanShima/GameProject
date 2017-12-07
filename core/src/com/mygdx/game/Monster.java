@@ -29,9 +29,12 @@ public class Monster  {
     protected float monsterPositionX;
     protected float monsterPositionY;
     protected boolean initialMonsterPos=false;
+    private  Controller playerPos;
 
     //Yeti monster
     public Monster(){
+
+
 
     }
 
@@ -72,7 +75,7 @@ public class Monster  {
         }else
         {
 
-            move();
+
 
             spriteBatch.draw(currentFrame, monsterPositionX, monsterPositionY); // Update the monster place
             Gdx.app.log("AAAAAAAAAAAAAAAAA" + monsterPositionX," AAAAAAAAAAAAAAAAA" + monsterPositionY);
@@ -84,6 +87,8 @@ public class Monster  {
         spriteBatch.end();
 
     }
+
+
 
 
 
@@ -115,10 +120,10 @@ public class Monster  {
     }
 
 
+//////////////////////////////////////////////////////////////////
+    public void move(int playerPositionX, int playerPositionY){
 
-    public void move(){
-
-
+       // Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
 
 
 
