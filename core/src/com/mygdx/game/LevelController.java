@@ -10,7 +10,7 @@ import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
- * This class is the container for levels
+ * This class is the container for LEVELS
  * Some stuff in TiledTest needs to be moved here
  */
 

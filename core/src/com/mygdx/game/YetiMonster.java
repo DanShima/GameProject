@@ -6,7 +6,7 @@ package com.mygdx.game;
 
 public class YetiMonster extends Monster {
     public YetiMonster() {
-        super(Constants.MONSTER2,4,3,1,2);
+        super(Constants.HYDRA,4,3,1,2);
     }
 
 

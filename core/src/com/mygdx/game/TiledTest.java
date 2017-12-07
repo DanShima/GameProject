@@ -111,7 +111,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
         camera.translate(128, 128);
         camera.update();
         //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
+        tiledMap = new TmxMapLoader().load(Constants.LEVELS[currentLevel]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
         tiledMapRenderer.setView(camera);
 
@@ -670,7 +670,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
         boolean notMovedYet = true;
         if(notMovedYet) {
             currentLevel++;
-            tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
+            tiledMap = new TmxMapLoader().load(Constants.LEVELS[currentLevel]);
             tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
             //getProperties();
             //clear monster from the previous level

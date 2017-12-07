@@ -17,13 +17,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import static com.mygdx.game.Constants.APPLE;
 import static com.mygdx.game.Constants.PANTS;
 
-
-/**
- * Created by Waseem on 12/7/2017.
- */
-
     /**
-     * This class renders the tile map made with Tiled and shows it on the screen
+     * This class is the controller for game objects and map
      * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
      */
 
@@ -31,33 +26,23 @@ import static com.mygdx.game.Constants.PANTS;
         private int turnCounter=0;
         private GameView interactView;
         private Map interactMap;
-        private int animatioPlayerYpos;
-        private int animatioPlayerXpos;
-        //calculate the game world dimensions
-
-        float oldX , oldY;
+              float oldX , oldY;
 
         public final static int mapWidth = Constants.tileSize * Constants.tileCountW;
         public final static int mapHeight = Constants.tileSize * Constants.tileCountH;
         private int NumberOfMovedTiles=2;
         public   int tileWidth = 128;
         public   int tileHeight = 128;
-      //  public static TiledMap tiledMap;
-        //public static OrthographicCamera camera;
-      //  public static TiledMapRenderer tiledMapRenderer;
+
         private TiledMapTileLayer Blockedlayer;
         private TiledMapTileLayer terrain;
         private InputMultiplexer multiplexer;
 
-
         private Item underwear,socks,tshirt, pants, apple;
         private Player girl; //animated player
 
-
         private GazetiMonster gazeti;
         private YetiMonster yeti;
-
-
 
         private String message;
 
@@ -66,21 +51,16 @@ import static com.mygdx.game.Constants.PANTS;
 
       //  static int currentLevel = 0;
 
-        int oneStepHorizontaly ;
-        int twoStepsHorizontally;
-        int oneStepVertically ;
-        int twoStepsvertically ;
+        private int oneStepHorizontaly ;
+        private int twoStepsHorizontally;
+        private int oneStepVertically ;
+        private int twoStepsvertically ;
 
         private TiledMapTileLayer.Cell ground;
         private TiledMapTileLayer.Cell obstacles;
 
-        //int marginTop = 55; //parameterize as: screen height -1 -mapHeight
-
-
-        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
-        int differenceInPositionY;
-        int playerPositionY;
-        int playerPositionX;
+        private int playerPositionY;
+        private int playerPositionX;
 
         LevelController levelController;
 
@@ -93,35 +73,12 @@ import static com.mygdx.game.Constants.PANTS;
 
         @Override
         public void create () {
-
-           // float width = Gdx.graphics.getWidth();
-           // float height = Gdx.graphics.getHeight();
             sp=new SpriteBatch (  );
             hud = new HUD ( sp );
-          /*  screenHeight = Gdx.graphics.getHeight(); //this is here, since it seems it cannot be done at init time    MOVEDDDDD
-            marginTop = screenHeight-1-mapHeight; //this depends on screenHeight so it needs to be done after that
-
-            //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
-            camera = new OrthographicCamera();
-            camera.setToOrtho(false,width,screenHeight);
-            camera.translate ( 128 ,128 );
-            camera.update();*/
-
-
-/////////////////////////////////////////////////////////////////////////////
-
-
-           /* //load map and create a renderer passing in our tiled map                                                  MOVEDDDDDD
-            tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
-            tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-            tiledMapRenderer.setView(camera);*/
 
           interactMap.create();
-
-
           getTiledMapRender().setView(interactView.getCamera());
 
-///////////////////////////////////////////////////////////////////////////////
             girl = new Player();
             girl.create();
 
@@ -139,13 +96,11 @@ import static com.mygdx.game.Constants.PANTS;
 
             gazeti = new GazetiMonster();
             yeti = new YetiMonster();
-            levelController.getItems();
+           // levelController.getItems();
 
         }
 
         public TiledMapRenderer getTiledMapRender(){
-
-
           return   interactMap.getTiledMapRenderer();
         }
         // Initial render
@@ -192,32 +147,15 @@ import static com.mygdx.game.Constants.PANTS;
         }
 
         @Override
-        public void show() {
-
-        }
-
-
-
+        public void show() {}
         @Override
-        public void resize(int width, int height) {
-
-        }
-
+        public void resize(int width, int height) {}
         @Override
-        public void pause() {
-
-        }
-
+        public void pause() {}
         @Override
-        public void resume() {
-
-        }
-
+        public void resume() {}
         @Override
-        public void hide() {
-
-        }
-
+        public void hide() {}
         @Override
         public void dispose() {
             //free allocated memory by disposing the instance
@@ -268,10 +206,7 @@ import static com.mygdx.game.Constants.PANTS;
          */
         public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.LEFT){// one step left
-
-
                 collisionL();
-
             }
             if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
@@ -649,7 +584,7 @@ import static com.mygdx.game.Constants.PANTS;
             if(notMovedYet) {
                 Constants.currentLevel++;
 
-                interactMap.setTiledMap(new TmxMapLoader().load(Constants.levels[Constants.currentLevel])) ;
+                interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel])) ;
                 interactMap.setTiledMapRenderer( new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
 
                 //getProperties();

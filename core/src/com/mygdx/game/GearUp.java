@@ -3,7 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 
 /**
- * Created by Shashidhar on 06-12-2017.
+ * This class shows the player login page
  */
 
 public class GearUp extends Game {
