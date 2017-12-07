@@ -33,7 +33,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
                 //playButton.setText("You clicked the button");
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new TiledTest());
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
             }
         });
         final TextButton settingsButton = new TextButton("SETTINGS", skin, "default");
