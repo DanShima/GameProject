@@ -42,25 +42,30 @@ public class AnimationUtil {
         return new Animation<TextureRegion>(FPS, animatedFrames);
     }
 
-    //same method but different parameters. If we use a whole row from a sprite sheet for a frame then we use this method.
+    /**
+     * same method as the one above but different parameters.
+     * If we use a whole row from a sprite sheet for a frame then we use this method.
+     */
     public Animation<TextureRegion> makeAnimation(Texture texture, int totalColumn ,int totalRow , int row ){
-
         //split texture into regions
         TextureRegion[][] textureReg = TextureRegion.split(texture,
                 texture.getWidth() / totalColumn,
                 texture.getHeight() / totalRow);
-
         //make 1d collection of regions based on specified row and columns (assumes that all animation frames are in one row)
         TextureRegion[] animatedFrames = new TextureRegion[totalColumn];
         for (int i = 0; i < totalColumn; i++) {
             animatedFrames[i] = textureReg[row][i];
         }
-
         //returns animation based on 1d texture region
         return new Animation<TextureRegion>(FPS, animatedFrames);
     }
 
-    //animation method specifically for the player girl
+    /**
+     * Animation method used specifically for the character girl
+     * @param texture the sprite sheet used
+     * @param row a specific row in a sprite sheet
+     * @return animation made from assembling frames from a sprite sheet
+     */
     public Animation<TextureRegion> makeAnimation(Texture texture, int row){
         TextureRegion[][] textureReg = TextureRegion.split(texture,
                 texture.getWidth() / 3,
