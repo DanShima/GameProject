@@ -172,6 +172,8 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
 
 
 
+
+
     @Override
     public void resize(int width, int height) {
 
@@ -505,7 +507,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationRIGHTSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
                 girl.move(differenceInPositionX*tileWidth,0);
-                exitLevel(13 , 7);
+
             }
 
         }
@@ -527,11 +529,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener{
                 girl.setCurrentAnimationSocks(girl.getWalkAnimationUPSocks());
                 girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
                 girl.move(0,differenceInPositionY*tileHeight);
-                exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
+                //exitLevel(13 , 7);
             }
         }
     }
-
+        exitLevel(13 , 7);//if the player moves to tile(13,7), he can go to the next level
         return false;
         }
 
