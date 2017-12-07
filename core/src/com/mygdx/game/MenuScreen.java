@@ -26,11 +26,11 @@ public class MenuScreen implements Screen {
 
     // options
     private Window popUpSettings;
-    private TextButton btnWinOptSave;
-    private TextButton btnWinOptCancel;
+    private TextButton saveButton;
+    private TextButton cancelButton;
     private CheckBox checkBoxSound;
+    private CheckBox checkBoxMusic;
     private Slider sliderSound;
-    private CheckBox checkkBoxMusic;
     private Slider sliderMusic;
 
 
@@ -59,9 +59,9 @@ public class MenuScreen implements Screen {
         settingsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-               // buildOptionsWindowLayer();
+               // createSettingsWindow();
                 //setUpAudioSettings();
-                onOptionsClicked();
+                onSettingsClicked();
                // settingsButton.setText("You clicked the settings button");
             }
         });
@@ -84,12 +84,12 @@ public class MenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
-        Table layerOptionsWindow = buildOptionsWindowLayer();
+        Table settingsWindow = createSettingsWindow(); //the settings pop-up window
         stage.addActor(playButton);
         stage.addActor(settingsButton);
+        stage.addActor(settingsWindow);
         stage.addActor(scoreButton);
         stage.addActor(exitButton);
-        stage.addActor(layerOptionsWindow);
         Gdx.input.setInputProcessor(stage);
     }
 
@@ -110,119 +110,124 @@ public class MenuScreen implements Screen {
         batch.end();
     }
 
-    private void option(){
-       // Table layerOptionsWindow = buildOptionsWindowLayer();
-    }
-
-    private Table buildOptionsWindowLayer() {
+    /**
+     * Creating a pop up window that shows the audio settings
+     * @return
+     */
+    private Table createSettingsWindow() {
         popUpSettings = new Window("Options", skin);
-        // + Audio Settings: Sound/Music CheckBox and Volume Slider
+        // fill the window with content: Sound/Music checkBoxes and volume sliders
         popUpSettings.add(setUpAudioSettings()).row();
-
-        // + Separator and Buttons (Save, Cancel)
-        popUpSettings.add(buildOptWinButtons()).pad(10, 0, 10, 0);
-
-        // Hide options window by default
+        // include save and cancel buttons
+        popUpSettings.add(createSettingsButtons()).pad(10, 0, 10, 0);
+        // hide options window by default
         popUpSettings.setVisible(false);
-
-        // Let TableLayout recalculate widget sizes and positions
+        // set size and position
         popUpSettings.pack();
+        popUpSettings.setPosition(500, 500);
         return popUpSettings;
     }
 
+    /**
+     * Filling the settings window with a table with checkboxes and sliders for audio
+     * @return the table that contains the audio options
+     */
     private Table setUpAudioSettings() {
         Table table = new Table();
-        // + Title: "Audio"
-        table.pad(10, 10, 0, 10);
-//        table.add(new Label("Audio", skin, "default-font", Color.ORANGE)).colspan(3);
-        table.row();
-        table.columnDefaults(0).padRight(10);
-        table.columnDefaults(1).padRight(10);
-        // + Checkbox, "Sound" label, sound volume sliderSound
+        //checkbox for turning on and off sound and setting volume
         checkBoxSound = new CheckBox("", skin);
         table.add(checkBoxSound);
-        table.add(new Label("Sound", skin));
+        Label soundLabel = new Label("Sound", skin);
+        soundLabel.setFontScale(3f,3f);
+        table.add(soundLabel);
         sliderSound = new Slider(0, 100, 10, false, skin);
-        table.add(sliderSound);
+        table.add(sliderSound).padLeft(10);
         table.row();
-        // + Checkbox, "Music" label, music volume sliderSound
-        checkkBoxMusic = new CheckBox("", skin);
-        table.add(checkkBoxMusic);
-        table.add(new Label("Music", skin));
+        //checkbox for turning on and off music and setting volume
+        checkBoxMusic = new CheckBox("", skin);
+        table.add(checkBoxMusic);
+        Label musicLabel = new Label("Music", skin);
+        musicLabel.setFontScale(3f,3f);
+        table.add(musicLabel).padLeft(10);
         sliderMusic = new Slider(0, 100, 10, false, skin);
         table.add(sliderMusic);
         table.row();
         return table;
     }
 
-    private Table buildOptWinButtons() {
-        Table tbl = new Table();
-        // + Separator
-        Label lbl = null;
-        lbl = new Label("", skin);
-        lbl.setColor(0.75f, 0.75f, 0.75f, 1);
-        lbl.setStyle(new Label.LabelStyle(lbl.getStyle()));
-        lbl.getStyle().background = skin.newDrawable("white");
-        tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 0, 0, 1);
-        tbl.row();
-        lbl = new Label("", skin);
-        lbl.setColor(0.5f, 0.5f, 0.5f, 1);
-        lbl.setStyle(new Label.LabelStyle(lbl.getStyle()));
-        lbl.getStyle().background = skin.newDrawable("white");
-        tbl.add(lbl).colspan(2).height(1).width(220).pad(0, 1, 5, 0);
-        tbl.row();
-        // + Save Button with event handler
-        btnWinOptSave = new TextButton("Save", skin);
-        tbl.add(btnWinOptSave).padRight(30);
-        btnWinOptSave.addListener(new ChangeListener() {
+    /**
+     * Adding save and cancel buttons to the settings window
+     * @return the table that contains the save and cancel buttons
+     */
+    private Table createSettingsButtons() {
+        Table table = new Table();
+        table.row();
+
+        saveButton = new TextButton("Save", skin);
+        table.add(saveButton).padRight(30).padLeft(30);
+        saveButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 onSaveClicked();
             }
         });
-        // + Cancel Button with event handler
-        btnWinOptCancel = new TextButton("Cancel", skin);
-        tbl.add(btnWinOptCancel);
-        btnWinOptCancel.addListener(new ChangeListener() {
+
+        cancelButton = new TextButton("Cancel", skin);
+        table.add(cancelButton).padRight(30);
+        cancelButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 onCancelClicked();
             }
         });
-        return tbl;
+        return table;
     }
 
+    /**
+     * Load sound preferences from GameSetting class
+     */
     private void loadSettings() {
         GameSetting prefs = GameSetting.newSetting;
         prefs.load();
         checkBoxSound.setChecked(prefs.hasSoundOn);
         sliderSound.setValue(prefs.soundVolume);
-        checkkBoxMusic.setChecked(prefs.hasMusicOn);
+        checkBoxMusic.setChecked(prefs.hasMusicOn);
         sliderMusic.setValue(prefs.musicVolume);
     }
 
-    private void onOptionsClicked() {
+    /**
+     * Define what happens when the player clicks on Settings in the menu
+     */
+    private void onSettingsClicked() {
           loadSettings();
-          popUpSettings.setVisible(true);
+          popUpSettings.setVisible(true); //make the pop-up visible
     }
 
+    /**
+     * Define what happens when the player clicks on "Save" button in the settings
+     */
     private void onSaveClicked() {
         saveSettings();
-        onCancelClicked();
-        SoundManager.newSoundManager.onSettingsUpdated();
+        onCancelClicked(); //close the pop-up window
+        SoundManager.newSoundManager.onSettingsUpdated(); //update soundmanager with the new settings
     }
 
+    /**
+     * Define what happens when the player clicks on "Cancel" button in the settings
+     */
     private void onCancelClicked() {
         popUpSettings.setVisible(false);
         SoundManager.newSoundManager.onSettingsUpdated();
     }
 
-
+    /**
+     * Save the new audio preferences. for instance, if the checkbox is unchecked. it stays unchecked
+     */
     private void saveSettings() {
         GameSetting prefs = GameSetting.newSetting;
         prefs.hasSoundOn = checkBoxSound.isChecked();
         prefs.soundVolume = (int) sliderSound.getValue();
-        prefs.hasMusicOn = checkkBoxMusic.isChecked();
+        prefs.hasMusicOn = checkBoxMusic.isChecked();
         prefs.musicVolume = (int) sliderMusic.getValue();
         prefs.save();
     }
