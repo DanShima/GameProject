@@ -25,21 +25,22 @@ public class LevelController {
     //int score;
     //TODO add map
     public LevelController(){
-        animator = new Player();
+       // animator = new Player();
         items = new ArrayList<Item>();
-        monsters = new ArrayList<Monster>();
+     //   monsters = new ArrayList<Monster>();
         addItem();
-        hasItem = false;
+      // addMonster();
+      //  hasItem = false;
     }
 
     public void render() {
-        animator.render();
+//        animator.render();
         for(Item item : items){
             item.render();
         }
-        for(Monster monster: monsters){
-            //monster.render();
-        }
+      /*  for(Monster monster: monsters){
+            monster.render();
+        }*/
 
         //map should be rendered here too
     }
@@ -52,9 +53,12 @@ public class LevelController {
         items.add(new Item("apple", APPLE, 384, 512));
     }
 
-    public void addMonster(){
-       // monsters.add(new Monster("yeti03.png", 512, 256));
-    }
+   /* public void addMonster(){
+       monsters.add(new HydraMonster());
+       monsters.add(new GazetiMonster());
+
+    }*/
+
 
     public void hasItemOn(boolean collected){
         hasItem = collected;
@@ -65,6 +69,9 @@ public class LevelController {
 
     public List<Item> getItems() {
         return items;
+    }
+    public Item getSpecificItem(int index){
+        return items.get(index);
     }
 
 }

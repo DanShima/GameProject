@@ -42,7 +42,7 @@ import static com.mygdx.game.Constants.PANTS;
         private Player girl; //animated player
 
         private GazetiMonster gazeti;
-        private YetiMonster yeti;
+        private HydraMonster yeti;
 
         private String message;
 
@@ -84,7 +84,7 @@ import static com.mygdx.game.Constants.PANTS;
 
             SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
             GameSetting.newSetting.load(); //load audio settings
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
 
             //items
             underwear = new Item("underwear", Constants.UNDERWEAR, 256,256);
@@ -95,7 +95,8 @@ import static com.mygdx.game.Constants.PANTS;
             //Monster Gazeti
 
             gazeti = new GazetiMonster();
-            yeti = new YetiMonster();
+            yeti = new HydraMonster();
+           // levelController = new LevelController();
            // levelController.getItems();
 
         }
@@ -128,11 +129,13 @@ import static com.mygdx.game.Constants.PANTS;
             girl.updateSpriteBatch(underwear);
             girl.updateSpriteBatch(tshirt);
             girl.updateSpriteBatch(socks);
+            girl.updateSpriteBatch(pants);
             underwear.render();
             socks.render();
             tshirt.render();
             pants.render();
             apple.render();
+          //  levelController.render();
 
             gazeti.render(782, 512); //spawn gazeti at the given position in the map
             yeti.render(128, 252); //spawn yeti at the given position in the map
@@ -143,6 +146,7 @@ import static com.mygdx.game.Constants.PANTS;
         private void playerCollideWithItem(Item item){
             item.setCollected(true);
             initialItemRender();
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect); //bugged. it only plays once :X
 
         }
 
@@ -158,13 +162,13 @@ import static com.mygdx.game.Constants.PANTS;
         public void hide() {}
         @Override
         public void dispose() {
-            //free allocated memory by disposing the instance
-            SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
+            //free allocated memory
+           SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
+           SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         }
 
         @Override
         public void render(float delta) {
-//Calling initial render
             initialRender();
             initialItemRender();
             // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
@@ -178,7 +182,7 @@ import static com.mygdx.game.Constants.PANTS;
                 playerCollideWithItem(tshirt);
             }
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
-                playerCollideWithItem(underwear);
+               playerCollideWithItem(underwear);
             }
             if(girl.getOldX ()>509 && girl.getOldX ()<765  && girl.getOldY()>192&& girl.getOldY()<320) {
                 playerCollideWithItem(pants); //637, 1021
@@ -192,9 +196,7 @@ import static com.mygdx.game.Constants.PANTS;
             Gdx.input.setInputProcessor(multiplexer);
         }
         @Override
-        public void render () {
-
-        }
+        public void render () {}
 
         @Override
         public boolean keyDown(int keycode) {return false;}
@@ -397,7 +399,6 @@ import static com.mygdx.game.Constants.PANTS;
             return false;
         }
 
-
         /** This method converts screen Y position to simplified Y
          **/
         public int ScreenPosYtoSimplified(float PositionY){
@@ -406,7 +407,6 @@ import static com.mygdx.game.Constants.PANTS;
             return (int) Math.floor( Math.max(0.0,temporary));
             //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
         }
-
 
         /**
          * This method converts screen X position to simplified X
@@ -426,13 +426,9 @@ import static com.mygdx.game.Constants.PANTS;
         public int invertScreenPos(int PositionY){ //convert sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
              int screenHeight=Gdx.graphics.getHeight();
             return screenHeight-interactView.getMarginTop()-PositionY; //probably slightly wrong in the offset (+-1 or something like that), but works to convert sprite position
-
         }
 
-        public int invertSimplifiedHeight(int simplified){
-            return Constants.tileCountH-1-simplified;
-        }
-
+        public int invertSimplifiedHeight(int simplified){return Constants.tileCountH-1-simplified; }
 
 
         public void checkTurn(){
@@ -442,9 +438,7 @@ import static com.mygdx.game.Constants.PANTS;
             }else if (turnCounter % 2==1){
 
                 gazeti.move(playerPositionX,playerPositionY);
-            }
-
-
+           }
 
         }
 
@@ -455,14 +449,8 @@ import static com.mygdx.game.Constants.PANTS;
          */
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
-
-
-
-
             int differenceInPositionX; //difference between simplified player position and simplified touch position in X
             int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
-
 
             int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
             int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
@@ -592,6 +580,8 @@ import static com.mygdx.game.Constants.PANTS;
                 yeti.dispose();
                 gazeti.dispose();
                 hud.setLevel(Constants.currentLevel);
+                //change background music
+                SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
                 //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
             }
             return false;

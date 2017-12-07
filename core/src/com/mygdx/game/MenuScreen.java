@@ -71,10 +71,8 @@ public class MenuScreen implements Screen {
         settingsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-               // createSettingsWindow();
-                //setUpAudioSettings();
+
                 onSettingsClicked();
-               // settingsButton.setText("You clicked the settings button");
             }
         });
         final TextButton scoreButton = new TextButton("SCORE", skin, "default");

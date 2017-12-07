@@ -17,7 +17,6 @@ public class SoundManager {
         }
 
         public void play (Sound sound, int volume) {
-            //TODO create menu with checkboxes for sound and music options in a new class
             if (!GameSetting.newSetting.hasSoundOn) return; //if the user doesnt want sounds on in the menu option, no sounds will be played
             sound.play(GameSetting.newSetting.soundVolume * volume);
         }

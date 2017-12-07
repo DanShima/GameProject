@@ -70,8 +70,6 @@ public class SoundEffect implements Disposable, AssetErrorListener{
             backgroundMusic = new GameMusic(manager);
         }
 
-    //SoundEffect music = Gdx.audio.newMusic(Gdx.files.internal("backgroundmusic.mp3"));
-
     public void setVolume(float volume){}
     public void play(){}
     public void pause(){}

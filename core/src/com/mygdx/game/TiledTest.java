@@ -61,7 +61,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
 
 
     private GazetiMonster gazeti;
-    private YetiMonster yeti;
+    private HydraMonster yeti;
 
 
     private String message;
@@ -134,7 +134,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
 
         //monsters
         gazeti = new GazetiMonster();
-        yeti = new YetiMonster();
+        yeti = new HydraMonster();
 
         levelController.getItems();
 
