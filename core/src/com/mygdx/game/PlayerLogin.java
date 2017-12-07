@@ -11,7 +11,8 @@ import com.badlogic.gdx.Gdx;
  import com.badlogic.gdx.ApplicationListener;
           import com.badlogic.gdx.Gdx;
           import com.badlogic.gdx.graphics.GL20;
-          import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
           import com.badlogic.gdx.scenes.scene2d.InputEvent;
           import com.badlogic.gdx.scenes.scene2d.Stage;
           import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -27,18 +28,28 @@ import sun.security.util.Password;
 public class PlayerLogin implements ApplicationListener {
  private TiledTest game;
  private SpriteBatch batch;
- private Skin skin;
+ private SpriteBatch bgbatch;
+
+    private Skin skin;
  private Stage stage;
+ private Texture background;
+
+ //Texture bground = new Texture(Gdx.files.internal("background.png"));
+
+
  @Override
  public void create() {
          batch = new SpriteBatch();
+         bgbatch =new SpriteBatch();
          game=new TiledTest();
+         background = new Texture("background.png");
          skin = new Skin(Gdx.files.internal(Constants.skin));
          stage = new Stage();
 
+
                  final TextButton LoginButton = new TextButton("LOGIN", skin, "default");
-     LoginButton.setSize(Constants.colWidth ,Constants.rowHeight);
-     LoginButton.setPosition(Constants.centerX,Constants.centerY+200);
+     LoginButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
+     LoginButton.setPosition(Constants.centerX,Constants.centerY+250);
      LoginButton.addListener(new ClickListener(){
  @Override
  public void clicked(InputEvent event, float x, float y){
@@ -46,8 +57,8 @@ public class PlayerLogin implements ApplicationListener {
                  }
  });
          final TextButton NewPlayerButton = new TextButton("NEW PLAYER", skin, "default");
-     NewPlayerButton.setSize(Constants.colWidth ,Constants.rowHeight);
-     NewPlayerButton.setPosition(Constants.centerX ,Constants.centerY+50);
+     NewPlayerButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
+     NewPlayerButton.setPosition(Constants.centerX ,Constants.centerY+150);
      NewPlayerButton.addListener(new ClickListener(){
  @Override
  public void clicked(InputEvent event, float x, float y){
@@ -56,13 +67,24 @@ public class PlayerLogin implements ApplicationListener {
  });
 
                 final TextField Player = new TextField("", skin, "default");
-     Player.setSize(Constants.colWidth ,Constants.rowHeight);
-     Player.setPosition(Constants.centerX-200 ,Constants.centerY+200);
+
+     TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
+     textFieldStyle.font.getData().setScale(2.0f);
+     Player.setMessageText("PLAYER");
+
+     Player.setSize(Constants.colWidth+50 ,Constants.rowHeight);
+     Player.setPosition(Constants.centerX-250 ,Constants.centerY+250);
 
 
      final TextField Password = new TextField("", skin, "default");
-     Password.setSize(Constants.colWidth ,Constants.rowHeight);
-     Password.setPosition(Constants.centerX-200 ,Constants.centerY+50);
+     TextField.TextFieldStyle textFieldStyle1 = skin.get(TextField.TextFieldStyle.class);
+     textFieldStyle1.font.getData().setScale(2.0f);
+     Password.setMessageText("PASSWORD");
+     Password.setPasswordCharacter('*');
+     Password.setPasswordMode(true);
+
+     Password.setSize(Constants.colWidth+50 ,Constants.rowHeight);
+     Password.setPosition(Constants.centerX-250 ,Constants.centerY+150);
 
 
 
@@ -88,14 +110,27 @@ public class PlayerLogin implements ApplicationListener {
  @Override
  public void dispose() {
          batch.dispose();
+         bgbatch.dispose();
          }
+
+
  @Override
  public void render() {
+
          Gdx.gl.glClearColor(1, 1, 1, 1);
          Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-         batch.begin();
-         stage.draw();
-         batch.end();
+
+         //for the background
+         bgbatch.begin();
+         bgbatch.draw(background,0,0,Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+         bgbatch.end();
+
+         //for the login buttons on top of the background
+     batch.begin();
+     stage.draw();
+      batch.end();
+
+
          }
  @Override
 public void resize(int width, int height) {
