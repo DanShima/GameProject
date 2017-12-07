@@ -1,3 +1,4 @@
+/*
 
 package com.mygdx.game;
 
@@ -21,11 +22,11 @@ import static com.mygdx.game.Constants.SOCKS;
 import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
 
-
+*/
 /**
  * This class renders the tile map made with Tiled and shows it on the screen
  * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
- */
+ *//*
 
 
 public class TiledTest implements InputProcessor,Screen,ApplicationListener {
@@ -229,13 +230,15 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
         return false;
     }
 
-    /**
+    */
+/**
      * Navigating around the map is simply a matter of moving around the camera. Move in 128px per tile size.
      * move left/right/up/down by one tile each time an arrow key is pressed. A/D/W/S for moving two tiles(no collision tho)
      *
      * @param keycode The key pressed on the keyboard
      * @return true if a key is pressed.
-     */
+     *//*
+
 
     public boolean keyUp(int keycode) {
         if (keycode == Input.Keys.LEFT) {// one step left
@@ -279,10 +282,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
       *check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
      *
-     */
+     *//*
+
 
 
     public void collisionL() {
@@ -301,9 +306,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
      *  collision for the right side
-     */
+     *//*
+
 
     public void collisionR(){
         getProperties();
@@ -334,9 +341,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
             girl.move(0, +oneStepVertically);}
     }
 
+*/
 /**
      *  collision for the downward
-     */
+     *//*
+
 
     public void collisionD(){
         getProperties();
@@ -394,9 +403,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
      * assign the values of the tiles Properties
-     */
+     *//*
+
 
     public void getProperties(){
          Blockedlayer = (TiledMapTileLayer)tiledMap.getLayers().get("background");
@@ -414,9 +425,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
      *  This method checks whether a tile for the second layer contains the property "blocked"
-     */
+     *//*
+
 
     public boolean checkSecondLayer(TiledMapTileLayer.Cell obstacle){
         if(obstacle != null) { //if it is not an empty cell
@@ -425,11 +438,13 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
      * This method checks whether a tile from the first layer contains the property "blocked"
      * @param ground the first tile layer
      * @return false if it is an empty cell
-     */
+     *//*
+
 
 
     public boolean checkFirstLayer(TiledMapTileLayer.Cell ground){
@@ -442,10 +457,12 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     public boolean keyTyped(char character) {return false;}
 
 
+*/
 /**
      * Called when the user touches the screen
      *
-     * */
+     * *//*
+
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
@@ -454,8 +471,10 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
 
 
 
+*/
 /** This method converts screen Y position to simplified Y
-    **/
+    **//*
+
 
     public int ScreenPosYtoSimplified(float PositionY){
         float temporary = (PositionY-(float) marginTop)/(float) Constants.tileSize;
@@ -465,9 +484,11 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
      * This method converts screen X position to simplified X
-     */
+     *//*
+
 
     public int ScreenPosXtoSimplified(float PositionX){ //convert screen X position to simplified X
         return (int) Math.floor( Math.max(0,PositionX/(float) Constants.tileSize));
@@ -490,11 +511,13 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
      *Called when the user lifts their finger from the screen.
      * We use touchUp instead of touchDown to avoid actions triggered by double clicks
      *
-     */
+     *//*
+
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -588,12 +611,15 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+*/
 /**
      * This method checks player position against a position that we specify as the exit (Danning)
      * We want to have the exit as parameter because each level might have its exit in a different place.
      * @param tileX exit tile position in X
      * @param tileY exit tile position in Y
      *//*
+*/
+/*
 
     public void exitLevel(int tileX, int tileY) {
         convertPlayerPositionToSimplified();
@@ -603,11 +629,14 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 
 
-    */
+    *//*
+
+*/
 /**
      * Load the next level map
      * @return false after loading once. otherwise it will keep loading for some reason
-     */
+     *//*
+
 
     public boolean updateLevel(){
         boolean notMovedYet = true;
@@ -626,3 +655,4 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     }
 }
 
+*/
