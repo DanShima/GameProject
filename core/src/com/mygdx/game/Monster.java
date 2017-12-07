@@ -72,7 +72,7 @@ public class Monster  {
         }else
         {
 
-            move();
+
 
             spriteBatch.draw(currentFrame, monsterPositionX, monsterPositionY); // Update the monster place
             Gdx.app.log("AAAAAAAAAAAAAAAAA" + monsterPositionX," AAAAAAAAAAAAAAAAA" + monsterPositionY);
@@ -84,6 +84,8 @@ public class Monster  {
         spriteBatch.end();
 
     }
+
+
 
 
 
@@ -115,7 +117,7 @@ public class Monster  {
     }
 
 
-
+//////////////////////////////////////////////////////////////////
     public void move(){
 
 

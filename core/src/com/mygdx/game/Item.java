@@ -1,12 +1,9 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
-import static com.mygdx.game.TiledTest.tileSize;
 
 /**
  * Created by Giddy on 26/11/2017.
