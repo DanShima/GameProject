@@ -26,12 +26,18 @@ public class Monster  {
     protected final static int merginTop=55;
     private AnimationUtil animationUtil;
     private int turnOrder;
-    protected float monsterPositionX;
-    protected float monsterPositionY;
+    protected float YposMonster;
+    protected float XposMonster;
     protected boolean initialMonsterPos=false;
+    private  Controller playerPos;
+
+    private int simpleMonsterX;
+    private int simpleMonsterY;
 
     //Yeti monster
     public Monster(){
+
+
 
     }
 
@@ -62,20 +68,25 @@ public class Monster  {
         //go back to idle state after 2 sec
         spriteBatch.begin();
 
+
+
+
         if (!(initialMonsterPos)){
-            spriteBatch.draw(currentFrame, positionX, positionY); // Draw current monster  at (position x, position Y)
-            Gdx.app.log("inside render condition " + positionX," innnnn" + positionY);
-            monsterPositionX= positionX;
-            monsterPositionY= positionY;
+            XposMonster=positionX;
+            YposMonster=positionY;
+            spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Draw current monster  at (position x, position Y)
+
+
+
             initialMonsterPos=true;
 
         }else
         {
 
-            move();
 
-            spriteBatch.draw(currentFrame, monsterPositionX, monsterPositionY); // Update the monster place
-            Gdx.app.log("AAAAAAAAAAAAAAAAA" + monsterPositionX," AAAAAAAAAAAAAAAAA" + monsterPositionY);
+
+            spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Update the monster place
+
 
         }
 
@@ -87,43 +98,78 @@ public class Monster  {
 
 
 
-/*
-    // return Y position for the Monster
-
-    public float getMonsterY(){
-        return monsterPositionY;
-    }
-
-    // Return X position for the Monster
-
-    public float getMonsterX(){
-        return monsterPositionX;
-    }*/
 
 
 
 
-    // convert X monster position To simplified X
-    public int ScreenPosYtoSimplified(float monsterPositionY){
-        float temporary = (monsterPositionY-(float) merginTop)/(float) tileSize;
-
-        return (int) Math.floor( Math.max(0.0,temporary));
-    }
-    // convert Y monster position To simplified Y
-    public int ScreenPosXtoSimplified(float monsterPositionX){ //convert screen X position to simplified X
-        return (int) Math.floor( Math.max(0,monsterPositionX/(float) tileSize));
-    }
 
 
 
-    public void move(){
+
+
+
+//////////////////////////////////////////////////////////////////
+    public void move(int playerPositionX, int playerPositionY){
+
+        simpleMonsterY = (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tileSize));
+        simpleMonsterX= (int) Math.floor( Math.max(0,XposMonster/(float) tileSize));
+        Gdx.app.log("************************************************","ym"+simpleMonsterY );
+
+        Gdx.app.log("************************************************","mx"+simpleMonsterX );
+
+
+
+       // Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
+
+
+        int diffBetweenX= playerPositionX-simpleMonsterX;
+        int simpleInvertedy=(Constants.tileCountH-1-playerPositionY);
+        int diffBetweenY=simpleInvertedy-simpleMonsterY;
+
+        Gdx.app.log(" >>>>>>>>>>>  simpleMonsterX    "+simpleMonsterX,"Xxxxxxxxxxx" );
+        Gdx.app.log(">>>>>>>>>>>>>simpleMonsterYYYYY     "+simpleMonsterY,"YYYY" );
+        Gdx.app.log("************************************************","**********************" );
+        Gdx.app.log("************************************************","**********************" );
+        Gdx.app.log(">>>>>>>>>>>>>playerrrrr  xxxxx"+playerPositionX,"playerXXXXXXXXXXX" );
+        Gdx.app.log(">>>>>>>>>>>>>playerPositionYYYYYYYY"+simpleInvertedy,"YYYY" );
+
+        if ((Math.signum((int)diffBetweenX) == -1)){
+           if (simpleMonsterX!=playerPositionX ){
+
+                XposMonster-=tileSize;
+            if ((Math.signum((int)diffBetweenY) == -1)){
+
+
+                  if (simpleMonsterY!=simpleInvertedy ){
+
+                YposMonster-=tileSize;
+                Gdx.app.log("11yyyyy111","ddddd" );
+                  }
+            }
+        } }else if ((Math.signum((int)diffBetweenX) == 1)){
+            if (simpleMonsterX!=playerPositionX){
+                XposMonster+=tileSize;
+                if ((Math.signum((int)diffBetweenY) == 1)){
+
+                     if (simpleMonsterY!=simpleInvertedy  ){
+                    YposMonster+=tileSize;
+
+                     }
+
+                }
+                Gdx.app.log("333333333","3333333" );
+            }
+
+            }
+
+
+
 
 
 
 
 
         }
-
 
     public void dispose() {
         spriteBatch.dispose();

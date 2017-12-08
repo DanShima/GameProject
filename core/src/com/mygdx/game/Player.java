@@ -6,14 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mygdx.game.Constants.FPS;
 import static com.mygdx.game.Constants.GIRL_NAKED;
-import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
  * Created by Giddy on 23/11/2017.
@@ -199,20 +197,18 @@ public class Player implements ApplicationListener {
 
     public float getPlainX() { return x; }
 
-    public float getX() { return x - (float)(TiledTest.tileSize*0.25); } //place the animation in the center of the tile
+    public float getX() { return x - (float)(Constants.tileSize*0.25); } //place the animation in the center of the tile
 
     public float getY() {return y;}
 
     /**
      * Update girl with clothes on
-     * @param item
+     * @param items the array(Libgdx specific) of items
      */
-    public void updateSpriteBatch(Item item){
-       // stateTime += Gdx.graphics.getDeltaTime();
-      //  currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
-
+    public void updateSpriteBatch(Array<Item> items){
         spriteBatch.begin();
-        //TODO fix this code...
+
+        for(Item item : items){
         if(item.isCollected() == true && item.getName().equals("underwear")) {
             // spriteBatch.draw(currentFrame, getX(), getY());
             spriteBatch.draw(currentFrameUnderwear, getX(), getY());
@@ -223,33 +219,21 @@ public class Player implements ApplicationListener {
             spriteBatch.draw(currentFrameShirt, getX(), getY());}
         if(item.isCollected() == true && item.getName().equals("pants")){
             spriteBatch.draw(currentFramePants, getX(), getY());
-        }
+        }}
         spriteBatch.end();
     }
 
     /**
-     * update girl with clothes on
-     * @param textureRegion
+     * Define how the player moves. the new positions in X and Y are the results of
+     * the previous positions PLUS the steps taken
+     * @param stepX the steps taken horizontally
+     * @param stepY the steps taken vertically
      */
-    public void updateSpriteBatch(TextureRegion textureRegion){
-        //stateTime += Gdx.graphics.getDeltaTime();
-        //currentFrameUnderwear = getCurrentAnimationUnderwear().getKeyFrame(stateTime, true);
-
-        spriteBatch.begin();
-         // spriteBatch.draw(currentFrame, getX(), getY());
-            spriteBatch.draw(textureRegion, getX(), getY());
-        spriteBatch.end();
-    }
-
-
     public void move(float stepX, float stepY){
-
-
         x = stepX + oldX;
         y = stepY + oldY;
         oldX = x;
         oldY = y;
-
     }
 
     public float getOldX() {return oldX;}
@@ -260,6 +244,9 @@ public class Player implements ApplicationListener {
         spriteBatch.dispose();
         walkSheet.dispose();
         underwearSheet.dispose();
+        socksSheet.dispose();
+        pantsSheet.dispose();
+        tshirtSheet.dispose();
     }
     @Override
     public void resume(){updateAnimationStateTime = true;}

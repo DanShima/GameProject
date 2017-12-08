@@ -9,7 +9,7 @@ public class GazetiMonster extends Monster {
 
 
     public GazetiMonster() {
-        super(Constants.MONSTER1,4,3,1,1);
+        super(Constants.GAZETI,4,3,1,1);
     }
 
 
@@ -19,13 +19,5 @@ public class GazetiMonster extends Monster {
     }
 
 
-    public void move(){
 
-        monsterPositionY+=1;
-
-
-
-
-
-    }
 }
