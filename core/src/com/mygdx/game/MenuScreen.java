@@ -44,6 +44,7 @@ public class MenuScreen implements Screen {
 
     public MenuScreen() {
         create();
+
     }
     public void create() {
 
@@ -101,6 +102,7 @@ public class MenuScreen implements Screen {
         stage.addActor(scoreButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
+
     }
 
     @Override
@@ -154,7 +156,7 @@ public class MenuScreen implements Screen {
         Label soundLabel = new Label("Sound", skin);
         soundLabel.setFontScale(3f,3f);
         table.add(soundLabel);
-        sliderSound = new Slider(0, 100, 10, false, skin);
+        sliderSound = new Slider(0, 100, 20, false, skin);
         table.add(sliderSound).padLeft(10);
         table.row();
         //checkbox for turning on and off music and setting volume
@@ -163,7 +165,7 @@ public class MenuScreen implements Screen {
         Label musicLabel = new Label("Music", skin);
         musicLabel.setFontScale(3f,3f);
         table.add(musicLabel).padLeft(10);
-        sliderMusic = new Slider(0, 100, 10, false, skin);
+        sliderMusic = new Slider(0, 100, 20, false, skin);
         table.add(sliderMusic);
         table.row();
         return table;
