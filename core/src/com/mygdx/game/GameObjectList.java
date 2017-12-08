@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.utils.Array;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,39 +12,27 @@ import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
- * This class is the container for LEVELS
- * Some stuff in TiledTest needs to be moved here
+ * This class creates lists of game objects: items and monsters
+ *
  */
 
-public class LevelController {
-    Player animator;
-
-
-
-    List<Item> items;
+public class GameObjectList {
+    Array<Item> items;
     List<Monster> monsters;
-    boolean hasItem;
-    //int score;
-    //TODO add map
-    public LevelController(){
-       // animator = new Player();
-        items = new ArrayList<Item>();
+
+
+    public GameObjectList(){
+          items = new Array<Item>();
      //   monsters = new ArrayList<Monster>();
         addItem();
       // addMonster();
       //  hasItem = false;
     }
 
-    public void render() {
-//        animator.render();
+    public void renderItems() {
         for(Item item : items){
             item.render();
         }
-      /*  for(Monster monster: monsters){
-            monster.render();
-        }*/
-
-        //map should be rendered here too
     }
 
     public void addItem() {
@@ -61,17 +51,18 @@ public class LevelController {
 
 
     public void hasItemOn(boolean collected){
-        hasItem = collected;
+        //hasItem = collected;
         if(collected){
 
         }
     }
 
-    public List<Item> getItems() {
+    public Array<Item> getItems() {
         return items;
     }
     public Item getSpecificItem(int index){
         return items.get(index);
     }
+
 
 }

@@ -14,10 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-import static com.mygdx.game.Constants.APPLE;
-import static com.mygdx.game.Constants.PANTS;
-
-    /**
+/**
      * This class is the controller for game objects and map
      * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
      */
@@ -26,7 +23,7 @@ import static com.mygdx.game.Constants.PANTS;
         private int turnCounter=0;
         private GameView interactView;
         private Map interactMap;
-              float oldX , oldY;
+        private float oldX , oldY;
 
         public final static int mapWidth = Constants.tileSize * Constants.tileCountW;
         public final static int mapHeight = Constants.tileSize * Constants.tileCountH;
@@ -38,7 +35,6 @@ import static com.mygdx.game.Constants.PANTS;
         private TiledMapTileLayer terrain;
         private InputMultiplexer multiplexer;
 
-        private Item underwear,socks,tshirt, pants, apple;
         private Player girl; //animated player
 
         private GazetiMonster gazeti;
@@ -62,7 +58,7 @@ import static com.mygdx.game.Constants.PANTS;
         private int playerPositionY;
         private int playerPositionX;
 
-        LevelController levelController;
+        private GameObjectList gameObjectList;
 
         public Controller(GameView GameView)
         {
@@ -86,18 +82,9 @@ import static com.mygdx.game.Constants.PANTS;
             GameSetting.newSetting.load(); //load audio settings
             SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
 
-            //items
-            underwear = new Item("underwear", Constants.UNDERWEAR, 256,256);
-            socks=new Item("socks", Constants.SOCKS,1280, 896);
-            tshirt=new Item("tshirt", Constants.TSHIRT,1280, 384);
-            pants = new Item("pants", PANTS, 637, 256);
-            apple = new Item("apple", APPLE, 384, 512);
-            //Monster Gazeti
-
             gazeti = new GazetiMonster();
             yeti = new HydraMonster();
-           // levelController = new LevelController();
-           // levelController.getItems();
+            gameObjectList = new GameObjectList();
 
         }
 
@@ -124,18 +111,9 @@ import static com.mygdx.game.Constants.PANTS;
         //Initial Item Render
         public void initialItemRender()
         {
-
             girl.render();
-            girl.updateSpriteBatch(underwear);
-            girl.updateSpriteBatch(tshirt);
-            girl.updateSpriteBatch(socks);
-            girl.updateSpriteBatch(pants);
-            underwear.render();
-            socks.render();
-            tshirt.render();
-            pants.render();
-            apple.render();
-          //  levelController.render();
+            girl.updateSpriteBatch(gameObjectList.getItems());
+            gameObjectList.renderItems();
 
             gazeti.render(782, 512); //spawn gazeti at the given position in the map
             yeti.render(128, 252); //spawn yeti at the given position in the map
@@ -144,9 +122,10 @@ import static com.mygdx.game.Constants.PANTS;
 
         //Player collide with Item
         private void playerCollideWithItem(Item item){
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.gainHP);
             item.setCollected(true);
             initialItemRender();
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect); //bugged. it only plays once :X
+          //bugged. it only plays once :X
 
         }
 
@@ -175,20 +154,25 @@ import static com.mygdx.game.Constants.PANTS;
             //Grab Item
 
             if(girl.getOldX ()>1152 && girl.getOldX ()<1408  && girl.getOldY()>768&& girl.getOldY()<1024) {
-                playerCollideWithItem(socks); //1280, 896
+                playerCollideWithItem(gameObjectList.getSpecificItem(2)); //1280, 896
+
             }
 
             if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
-                playerCollideWithItem(tshirt);
+                playerCollideWithItem(gameObjectList.getSpecificItem(1));
+
             }
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
-               playerCollideWithItem(underwear);
+               playerCollideWithItem(gameObjectList.getSpecificItem(0));
+
             }
             if(girl.getOldX ()>509 && girl.getOldX ()<765  && girl.getOldY()>192&& girl.getOldY()<320) {
-                playerCollideWithItem(pants); //637, 1021
+                playerCollideWithItem(gameObjectList.getSpecificItem(3)); //637, 1021
+
             }
             if(girl.getOldX ()>256 && girl.getOldX ()<512  && girl.getOldY()>384&& girl.getOldY()<640) {
-                playerCollideWithItem(apple); //384, 512
+                playerCollideWithItem(gameObjectList.getSpecificItem(4)); //384, 512
+
             }
             multiplexer = new InputMultiplexer();
             multiplexer.addProcessor(hud.stage);
@@ -481,7 +465,7 @@ import static com.mygdx.game.Constants.PANTS;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
-                        exitLevel(13, 7);
+
                     }
                 }
 
@@ -508,11 +492,16 @@ import static com.mygdx.game.Constants.PANTS;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
-                        exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
+                        //exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
                     }
                 }
             }
-
+            if(Constants.currentLevel == 0) {
+            exitLevel(4, 1);
+            exitLevel(3, 1);
+            }
+            if(Constants.currentLevel == 1) {
+                exitLevel(13, 7);}
             return false;
         }
 

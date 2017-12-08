@@ -42,5 +42,36 @@ public class GameSetting {
             preference.flush(); //this is called to write the changed data into the file
         }
 
+    public boolean isHasSoundOn() {
+        return hasSoundOn;
     }
+
+    public void setHasSoundOn(boolean hasSoundOn) {
+        this.hasSoundOn = hasSoundOn;
+    }
+
+    public boolean isHasMusicOn() {
+        return hasMusicOn;
+    }
+
+    public void setHasMusicOn(boolean hasMusicOn) {
+        this.hasMusicOn = hasMusicOn;
+    }
+
+    public int getSoundVolume() {
+        return soundVolume;
+    }
+
+    public void setSoundVolume(int soundVolume) {
+        this.soundVolume = soundVolume;
+    }
+
+    public int getMusicVolume() {
+        return musicVolume;
+    }
+
+    public void setMusicVolume(int musicVolume) {
+        this.musicVolume = musicVolume;
+    }
+}
 
