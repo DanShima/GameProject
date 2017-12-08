@@ -52,7 +52,7 @@ public class MenuScreen implements Screen {
         skin = new Skin(Gdx.files.internal(Constants.skin));
         stage = new Stage();
         bgbatch =new SpriteBatch();
-        background = new Texture("snowbackground2.jpg");
+        background = new Texture("menu.jpg");
 
         final TextButton playButton = new TextButton("PLAY", skin, "default");
         playButton.setSize(Constants.colWidth ,Constants.rowHeight);
