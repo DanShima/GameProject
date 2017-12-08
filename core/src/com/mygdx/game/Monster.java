@@ -33,11 +33,10 @@ public class Monster  {
 
     private int simpleMonsterX;
     private int simpleMonsterY;
+    private int simplePlayerInvertedy;
 
     //Yeti monster
     public Monster(){
-
-
 
     }
 
@@ -59,7 +58,6 @@ public class Monster  {
     }
 
 
-
     public void render(float positionX, float positionY) {
         // setting the received monster position from tiletest  for the monster
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
@@ -68,70 +66,48 @@ public class Monster  {
         //go back to idle state after 2 sec
         spriteBatch.begin();
 
-
-
-
         if (!(initialMonsterPos)){
             XposMonster=positionX;
             YposMonster=positionY;
             spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Draw current monster  at (position x, position Y)
-
-
 
             initialMonsterPos=true;
 
         }else
         {
 
-
-
             spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Update the monster place
 
-
         }
-
-
 
         spriteBatch.end();
 
     }
 
+    public Texture getTexture() {
+        return texture;
+    }
 
+    public int getSimpleMonsterX() {
+        return simpleMonsterX;
+    }
 
+    public int getSimpleMonsterY() {
+        return simpleMonsterY;
+    }
 
+ public int getSimplePlayerInvertedy() {
+        return simplePlayerInvertedy;
+    }
 
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////
     public void move(int playerPositionX, int playerPositionY){
 
         simpleMonsterY = (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tileSize));
         simpleMonsterX= (int) Math.floor( Math.max(0,XposMonster/(float) tileSize));
-        Gdx.app.log("************************************************","ym"+simpleMonsterY );
-
-        Gdx.app.log("************************************************","mx"+simpleMonsterX );
-
-
-
-       // Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
-
 
         int diffBetweenX= playerPositionX-simpleMonsterX;
-        int simpleInvertedy=(Constants.tileCountH-1-playerPositionY);
-        int diffBetweenY=simpleInvertedy-simpleMonsterY;
-
-        Gdx.app.log(" >>>>>>>>>>>  simpleMonsterX    "+simpleMonsterX,"Xxxxxxxxxxx" );
-        Gdx.app.log(">>>>>>>>>>>>>simpleMonsterYYYYY     "+simpleMonsterY,"YYYY" );
-        Gdx.app.log("************************************************","**********************" );
-        Gdx.app.log("************************************************","**********************" );
-        Gdx.app.log(">>>>>>>>>>>>>playerrrrr  xxxxx"+playerPositionX,"playerXXXXXXXXXXX" );
-        Gdx.app.log(">>>>>>>>>>>>>playerPositionYYYYYYYY"+simpleInvertedy,"YYYY" );
+        simplePlayerInvertedy=(Constants.tileCountH-1-playerPositionY);
+        int diffBetweenY=simplePlayerInvertedy-simpleMonsterY;
 
         if ((Math.signum((int)diffBetweenX) == -1)){
            if (simpleMonsterX!=playerPositionX ){
@@ -140,10 +116,10 @@ public class Monster  {
             if ((Math.signum((int)diffBetweenY) == -1)){
 
 
-                  if (simpleMonsterY!=simpleInvertedy ){
+                  if (simpleMonsterY!=simplePlayerInvertedy ){
 
                 YposMonster-=tileSize;
-                Gdx.app.log("11yyyyy111","ddddd" );
+
                   }
             }
         } }else if ((Math.signum((int)diffBetweenX) == 1)){
@@ -151,16 +127,17 @@ public class Monster  {
                 XposMonster+=tileSize;
                 if ((Math.signum((int)diffBetweenY) == 1)){
 
-                     if (simpleMonsterY!=simpleInvertedy  ){
+                     if (simpleMonsterY!=simplePlayerInvertedy  ){
                     YposMonster+=tileSize;
 
                      }
 
                 }
-                Gdx.app.log("333333333","3333333" );
+
             }
 
             }
+
 
 
 
