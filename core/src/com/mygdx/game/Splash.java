@@ -24,7 +24,7 @@ public class Splash implements Screen
     @Override
     public void show()
     {
-        logo = new Texture(Gdx.files.internal("golem.png"));
+        logo = new Texture(Gdx.files.internal("teamlogo.png"));
         spriteBatch = new SpriteBatch();
     }
 

@@ -26,7 +26,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     private float oldX, oldY;
 
 
-
     public final static int mapWidth = Constants.tileSize * Constants.tileCountW;
     public final static int mapHeight = Constants.tileSize * Constants.tileCountH;
     private int NumberOfMovedTiles = 2;
@@ -188,7 +187,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         multiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(multiplexer);
 
-       // Gdx.app.log("move", "HUD BARRRRRRR: " + hud.getHealth() + " :::::::::::::"  );
+        // Gdx.app.log("move", "HUD BARRRRRRR: " + hud.getHealth() + " :::::::::::::"  );
     }
 
     @Override
@@ -242,7 +241,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
     public void debugMe() {
         //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
-       // Gdx.app.log("movement", "oldX: " + (oldX / tileWidth) + " oldY: " + (oldY / tileHeight));
+        // Gdx.app.log("movement", "oldX: " + (oldX / tileWidth) + " oldY: " + (oldY / tileHeight));
     }
 
     /**
@@ -447,8 +446,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     }
 
 
-
-
     /**
      * Called when the user lifts their finger from the screen.
      * We use touchUp instead of touchDown to avoid actions triggered by double clicks
@@ -489,16 +486,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                     girl.move(differenceInPositionX * tileWidth, 0);
                     turnCounter++;
-
                     checkTurn();
-
-                    exitLevel(13, 7);
-
                 }
             }
-
-
-        } else if ((Math.abs(differenceInPositionY) < 3 && differenceInPositionX == 0)) {
+        }
+        else if( ( Math.abs(differenceInPositionY)<3 && differenceInPositionX==0 ) ) {
             //attempt at vertical movement - may be still blocked by collision, so let's check for that
             if (collisionCheck(differenceInPositionX, differenceInPositionY)) {
                 // set the animation for the vertical movment with clothes
@@ -511,7 +503,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     girl.move(0, differenceInPositionY * tileHeight);
                     turnCounter++;
                     checkTurn();
-
                 } else if (Math.signum((float) differenceInPositionY) == 1) {
                     girl.setCurrentAnimation(girl.getWalkAnimationUP());
                     girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
@@ -521,105 +512,122 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     girl.move(0, differenceInPositionY * tileHeight);
                     turnCounter++;
                     checkTurn();
-
-                    exitLevel(13, 7); //if the player moves to tile(13,7), he can go to the next le
-                    //exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
-
                 }
             }
         }
-        if (Constants.currentLevel == 0) {
+
+
+        if(Constants.currentLevel == 0) {
             exitLevel(4, 1);
             exitLevel(3, 1);
         }
-        if (Constants.currentLevel == 1) {
-            exitLevel(13, 7);
-        }
+        if(Constants.currentLevel == 1) {
+            exitLevel(13, 7);}
         return false;
     }
 
+    /**
+     * Called when a finger or the mouse was dragged.
+     *
+     * @param screenX
+     * @param screenY
+     * @param pointer the pointer for the event.  @return whether the input was processed
+     */
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
 
+    /**
+     * Called when the mouse was moved without any buttons being pressed. Will not be called on iOS.
+     *
+     * @param screenX
+     * @param screenY
+     * @return whether the input was processed
+     */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 
+    /**
+     * Called when the mouse wheel was scrolled. Will not be called on iOS.
+     *
+     * @param amount the scroll amount, -1 or 1 depending on the direction the wheel was scrolled.
+     * @return whether the input was processed.
+     */
     @Override
     public boolean scrolled(int amount) {
         return false;
     }
 
-    public void convertPlayerPositionToSimplified() {
-        //get player positions
-        //we need to invert the Y because the sprite is in a different coordinate system
-        playerPositionY = invertScreenPos((int) girl.getOldY());
-        playerPositionX = (int) girl.getOldX();
-        //convert player positions to the simplified version
-        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
-        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
-    }
 
-    public int getPlayerPositionY() {
-        return playerPositionY;
-    }
+    public void convertPlayerPositionToSimplified () {
+                    //get player positions
+                    //we need to invert the Y because the sprite is in a different coordinate system
+                    playerPositionY = invertScreenPos((int) girl.getOldY());
+                    playerPositionX = (int) girl.getOldX();
+                    //convert player positions to the simplified version
+                    playerPositionX = ScreenPosXtoSimplified(playerPositionX);
+                    playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+                }
 
-    public int getPlayerPositionX() {
-        return playerPositionX;
-    }
+                public int getPlayerPositionY () {
+                    return playerPositionY;
+                }
 
-    /**
-     * This method checks player position against a position that we specify as the exit (Danning)
-     * We want to have the exit as parameter because each level might have its exit in a different place.
-     *
-     * @param tileX exit tile position in X
-     * @param tileY exit tile position in Y
-     */
-    public void exitLevel(int tileX, int tileY) {
-        convertPlayerPositionToSimplified();
-        //if player position is the same as the tile position marked as "exit", then call the next level loader method
-        if (playerPositionX == tileX && playerPositionY == tileY) {
-            updateLevel();
-        }
-    }
+                public int getPlayerPositionX () {
+                    return playerPositionX;
+                }
 
-    public void checkTurn() {
+                /**
+                 * This method checks player position against a position that we specify as the exit (Danning)
+                 * We want to have the exit as parameter because each level might have its exit in a different place.
+                 *
+                 * @param tileX exit tile position in X
+                 * @param tileY exit tile position in Y
+                 */
+                public void exitLevel ( int tileX, int tileY){
+                    convertPlayerPositionToSimplified();
+                    //if player position is the same as the tile position marked as "exit", then call the next level loader method
+                    if (playerPositionX == tileX && playerPositionY == tileY) {
+                        updateLevel();
+                    }
+                }
 
-        if (turnCounter % 2 == 0) {
-            yeti.move(playerPositionX, playerPositionY);
+                public void checkTurn () {
+
+                    if (turnCounter % 2 == 0) {
+                        yeti.move(playerPositionX, playerPositionY);
 
 
+                        if (yeti.getSimpleMonsterX() == playerPositionX - 1 && yeti.getSimpleMonsterY() == yeti.getSimplePlayerInvertedy()) {
+                            hitByMonster();
 
-            if ( yeti.getSimpleMonsterX()==playerPositionX-1 && yeti.getSimpleMonsterY()==yeti.getSimplePlayerInvertedy()){
-                hitByMonster();
+                        }
+                    } else if (turnCounter % 2 == 1) {
+                        Gdx.app.log("GGGGGG  xxx  " + yeti.getSimpleMonsterX(), "YYYYYY" + (yeti.getSimpleMonsterY() + 1));
 
-            }
-        } else if (turnCounter % 2 == 1) {
-            Gdx.app.log( "GGGGGG  xxx  " + yeti.getSimpleMonsterX() ,"YYYYYY" +(yeti.getSimpleMonsterY()+1));
+                        Gdx.app.log("PLAYER XXX " + (playerPositionX - 1), "PLAYER   YYYYYY" + yeti.getSimplePlayerInvertedy());
+                        gazeti.move(playerPositionX, playerPositionY);
+                        if (gazeti.getSimpleMonsterX() == playerPositionX - 1 && gazeti.getSimpleMonsterY() == gazeti.getSimplePlayerInvertedy()) {
+                            hitByMonster();
+                        }
+                    }
 
-            Gdx.app.log( "PLAYER XXX " + (playerPositionX-1) ,"PLAYER   YYYYYY" +yeti.getSimplePlayerInvertedy());
-            gazeti.move(playerPositionX, playerPositionY);
-            if ( gazeti.getSimpleMonsterX()==playerPositionX-1 && gazeti.getSimpleMonsterY()==gazeti.getSimplePlayerInvertedy()){
-                hitByMonster();
-            }
-        }
+                }
 
-    }
+                public void hitByMonster () {
+                    float halfHelth = 50;
+                    float noHealth = 0;
 
-    public void hitByMonster() {
-            float halfHelth = 50;
-            float noHealth = 0;
+                    if (hud.getHealth() >= noHealth && hud.getHealth() >= halfHelth) {
 
-            if (hud.getHealth() >= noHealth && hud.getHealth()>=halfHelth) {
+                        hud.setHealth(hud.getHealth() * 0.75f);
+                    } else if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
 
-                hud.setHealth(hud.getHealth()*0.75f);
-            } else if (hud.getHealth()<halfHelth && hud.getHealth()>noHealth)
-
-                hud.setHealth(noHealth);
-        }
+                        hud.setHealth(noHealth);
+                }
 
 
 
@@ -632,26 +640,27 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
          * @return false after loading once. otherwise it will keep loading for some reason
          */
 
-    public boolean updateLevel() {
-        boolean notMovedYet = true;
-        if (notMovedYet) {
-            Constants.currentLevel++;
+                public boolean updateLevel () {
+                    boolean notMovedYet = true;
+                    if (notMovedYet) {
+                        Constants.currentLevel++;
 
-            interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
-            interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
+                        interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
+                        interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
 
-            //getProperties();
-            //clear monster from the previous level
-            yeti.dispose();
-            gazeti.dispose();
-            hud.setLevel(Constants.currentLevel);
-            //change background music
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
-            //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
-        }
-        return false;
-    }
+                        //getProperties();
+                        //clear monster from the previous level
+                        yeti.dispose();
+                        gazeti.dispose();
+                        hud.setLevel(Constants.currentLevel);
+                        //change background music
+                        SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
+                        //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
+                    }
+                    return false;
+                }
+
+
+
 }
-
-
 
