@@ -120,20 +120,16 @@ import java.util.Iterator;
                 girl.updateSpriteBatch(gameObjectList.getItems());
                 gameObjectList.renderItems();
 
-
                 gazeti.render(782, 640); //spawn gazeti at the given position in the map
                 yeti.render(256, 352); //spawn yeti at the given position in the map
-
     }
 
         //Player collide with Item
         private void playerCollideWithItem(Item item){
             item.setCollected(true);
             initialItemRender();
+            //plays a sound effect when collecting a cloth item
             SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
-            Gdx.app.log("SOUND","PLAYER COLLIDE");
-          //bugged. it only plays once :X
-
         }
 
 
@@ -162,42 +158,38 @@ import java.util.Iterator;
         //free allocated memory
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
         SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
+        SoundEffect.newSoundEffect.sounds.collect.stop();
     }
 
     @Override
     public void render(float delta) {
         initialRender();
         initialItemRender();
-        // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
-        //Grab Item
 
-        if (girl.getOldX() > 1152 && girl.getOldX() < 1408 && girl.getOldY() > 768 && girl.getOldY() < 1024) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(2)); //1280, 896
-
-        }
-
-        if (girl.getOldX() > 1216 && girl.getOldX() < 1344 && girl.getOldY() > 320 && girl.getOldY() < 448) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(1));
-
-        }
-        if (girl.getOldX() > 192 && girl.getOldX() < 320 && girl.getOldY() > 192 && girl.getOldY() < 320) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(0));
-
-        }
-        if (girl.getOldX() > 509 && girl.getOldX() < 765 && girl.getOldY() > 192 && girl.getOldY() < 320) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(3)); //637, 1021
-
-        }
-        if (girl.getOldX() > 256 && girl.getOldX() < 512 && girl.getOldY() > 384 && girl.getOldY() < 640) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(4)); //384, 512
-
-        }
         multiplexer = new InputMultiplexer();
         multiplexer.addProcessor(hud.stage);
         multiplexer.addProcessor(this);
         Gdx.input.setInputProcessor(multiplexer);
+    }
 
-        // Gdx.app.log("move", "HUD BARRRRRRR: " + hud.getHealth() + " :::::::::::::"  );
+    public void checkCollisionPlayerAndItem() {
+        Gdx.app.log("SOUND", "COLLISION QUERY");
+        // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
+        if (girl.getOldX() > 1152 && girl.getOldX() < 1408 && girl.getOldY() > 768 && girl.getOldY() < 1024) {
+            playerCollideWithItem(gameObjectList.getSpecificItem(2)); //1280, 896
+        }
+        if (girl.getOldX() > 1216 && girl.getOldX() < 1344 && girl.getOldY() > 320 && girl.getOldY() < 448) {
+            playerCollideWithItem(gameObjectList.getSpecificItem(1));
+        }
+        if (girl.getOldX() > 192 && girl.getOldX() < 320 && girl.getOldY() > 192 && girl.getOldY() < 320) {
+            playerCollideWithItem(gameObjectList.getSpecificItem(0));
+        }
+        if (girl.getOldX() > 509 && girl.getOldX() < 765 && girl.getOldY() > 192 && girl.getOldY() < 320) {
+            playerCollideWithItem(gameObjectList.getSpecificItem(3)); //637, 1021
+        }
+        if (girl.getOldX() > 256 && girl.getOldX() < 512 && girl.getOldY() > 384 && girl.getOldY() < 640) {
+            playerCollideWithItem(gameObjectList.getSpecificItem(4)); //384, 512
+        }
     }
 
     @Override
@@ -485,6 +477,7 @@ import java.util.Iterator;
                     girl.setCurrentAnimationShirt(girl.getWalkAnimationLEFTShirt());
                     girl.setCurrentAnimationPants(girl.getWalkAnimationLEFTPants());
                     girl.move(differenceInPositionX * tileWidth, 0);
+                    checkCollisionPlayerAndItem();
                     turnCounter++;
                     checkTurn();
 
@@ -495,6 +488,7 @@ import java.util.Iterator;
                     girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
                     girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                     girl.move(differenceInPositionX * tileWidth, 0);
+                    checkCollisionPlayerAndItem();
                     turnCounter++;
                     checkTurn();
                 }
@@ -511,6 +505,7 @@ import java.util.Iterator;
                     girl.setCurrentAnimationShirt(girl.getWalkAnimationDOWNShirt());
                     girl.setCurrentAnimationPants(girl.getWalkAnimationDOWNPants());
                     girl.move(0, differenceInPositionY * tileHeight);
+                    checkCollisionPlayerAndItem();
                     turnCounter++;
                     checkTurn();
                 } else if (Math.signum((float) differenceInPositionY) == 1) {
@@ -520,6 +515,7 @@ import java.util.Iterator;
                     girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
                     girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                     girl.move(0, differenceInPositionY * tileHeight);
+                    checkCollisionPlayerAndItem();
                     turnCounter++;
                     checkTurn();
                 }
@@ -570,7 +566,6 @@ import java.util.Iterator;
     public boolean scrolled(int amount) {
         return false;
     }
-
 
     public void convertPlayerPositionToSimplified () {
                     //get player positions
@@ -640,16 +635,9 @@ import java.util.Iterator;
                 }
 
 
-
-
-
-
-
-
-         /* Load the next level map
+         /** Load the next level map
          * @return false after loading once. otherwise it will keep loading for some reason
          */
-
                 public boolean updateLevel() {
                     boolean notMovedYet = true;
                     if (notMovedYet) {
