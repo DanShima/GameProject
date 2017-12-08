@@ -104,8 +104,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             interactMap.getTiledMapRenderer().setView(interactView.getCamera());
             interactMap.getTiledMapRenderer().render();
 
-            sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
-            hud.stage.draw ();
+
         }
 
         //Initial Item Render
@@ -124,6 +123,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         private void playerCollideWithItem(Item item){
             SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.gainHP);
             item.setCollected(true);
+           // hud.setScore(hud.getScore()+);
             initialItemRender();
           //bugged. it only plays once :X
 
@@ -150,6 +150,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         public void render(float delta) {
             initialRender();
             initialItemRender();
+            sp.setProjectionMatrix ( hud.stage.getCamera ().combined);
+            hud.stage.draw ();
             // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
             //Grab Item
 
