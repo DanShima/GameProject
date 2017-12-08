@@ -7,12 +7,16 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.Iterator;
 
 /**
      * This class is the controller for game objects and map
@@ -60,6 +64,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
         private GameObjectList gameObjectList;
 
+
         public Controller(GameView GameView)
         {
             interactView= GameView;
@@ -69,6 +74,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
         @Override
         public void create () {
+         //   Gdx.graphics.setContinuousRendering(false);
+
             sp=new SpriteBatch (  );
             hud = new HUD ( sp );
 
@@ -114,7 +121,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             girl.render();
             girl.updateSpriteBatch(gameObjectList.getItems());
             gameObjectList.renderItems();
-
             gazeti.render(782, 640); //spawn gazeti at the given position in the map
             yeti.render(256, 352); //spawn yeti at the given position in the map
 
@@ -122,9 +128,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
         //Player collide with Item
         private void playerCollideWithItem(Item item){
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.gainHP);
             item.setCollected(true);
             initialItemRender();
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
+            Gdx.app.log("SOUND","PLAYER COLLIDE");
           //bugged. it only plays once :X
 
         }
