@@ -115,8 +115,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             girl.updateSpriteBatch(gameObjectList.getItems());
             gameObjectList.renderItems();
 
-            gazeti.render(782, 512); //spawn gazeti at the given position in the map
-            yeti.render(128, 252); //spawn yeti at the given position in the map
+            gazeti.render(782, 640); //spawn gazeti at the given position in the map
+            yeti.render(256, 352); //spawn yeti at the given position in the map
 
         }
 
@@ -433,6 +433,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
          */
         @Override
         public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
             int differenceInPositionX; //difference between simplified player position and simplified touch position in X
             int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
 
@@ -457,6 +458,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationLEFTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
+                        checkTurn();
                     } else if (Math.signum((int) differenceInPositionX * tileWidth) == 1) {
                         girl.setCurrentAnimation(girl.getWalkAnimationRIGHT());
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
@@ -465,6 +467,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
+
+                        checkTurn();
+                        exitLevel(13, 7);
 
                     }
                 }
@@ -484,6 +489,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationDOWNPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
+                        checkTurn();
                     }else if(Math.signum((float)differenceInPositionY)==1) {
                         girl.setCurrentAnimation(girl.getWalkAnimationUP());
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
@@ -492,7 +498,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
+
+                        checkTurn();
+                        exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next le
                         //exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
+
                     }
                 }
             }
