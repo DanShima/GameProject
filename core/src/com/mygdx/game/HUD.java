@@ -35,7 +35,10 @@ public class HUD implements Disposable  {
     private Table table;
     private TextButton button ;
     private Skin myskin ;// skin for better UI
+
     final ProgressBar progressBar;
+
+
     public HUD(SpriteBatch sb)
 
     {
@@ -70,7 +73,8 @@ public class HUD implements Disposable  {
         progressBarStyle.knobBefore = tiledDrawable;
 
         progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, myskin, "fancy");
-        progressBar.setValue(75.0f);//initializing the bar
+       // progressBar.setAnimateDuration(2);
+        progressBar.setValue(50f);//initializing the bar
 
         // add the widgets to a table
         table.add(progressBar).width(335.0f);
@@ -108,4 +112,6 @@ public class HUD implements Disposable  {
     public void dispose() {
         stage.dispose();
     }
+
+
 }
