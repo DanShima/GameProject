@@ -88,7 +88,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
     int playerPositionX;
 
 
-    LevelController levelController;
+    GameObjectList gameObjectList;
 
     public TiledTest()
     {
@@ -136,7 +136,7 @@ public class TiledTest implements InputProcessor,Screen,ApplicationListener {
         gazeti = new GazetiMonster();
         yeti = new HydraMonster();
 
-        levelController.getItems();
+        gameObjectList.getItems();
 
     }
 

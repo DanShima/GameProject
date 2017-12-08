@@ -204,8 +204,10 @@ public class Player implements ApplicationListener {
      * Update girl with clothes on
      * @param item
      */
-    public void updateSpriteBatch(Item item){
+    public void updateSpriteBatch(List<Item> items){
         spriteBatch.begin();
+
+        for(Item item : items){
         if(item.isCollected() == true && item.getName().equals("underwear")) {
             // spriteBatch.draw(currentFrame, getX(), getY());
             spriteBatch.draw(currentFrameUnderwear, getX(), getY());
@@ -216,7 +218,7 @@ public class Player implements ApplicationListener {
             spriteBatch.draw(currentFrameShirt, getX(), getY());}
         if(item.isCollected() == true && item.getName().equals("pants")){
             spriteBatch.draw(currentFramePants, getX(), getY());
-        }
+        }}
         spriteBatch.end();
     }
 
