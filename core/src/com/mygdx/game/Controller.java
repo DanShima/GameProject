@@ -467,13 +467,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
-
                         checkTurn();
-                        exitLevel(13, 7);
-
                     }
                 }
-
 
             }
 
@@ -498,11 +494,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
-
                         checkTurn();
-                        exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next le
-                        //exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
-
                     }
                 }
             }

@@ -26,7 +26,7 @@ public class Constants {
     public static final String TSHIRT = "tshirt.png";
     public static final String SOCKS = "socks.png";
     public static final String PANTS = "pants.png";
-    public static final String APPLE = "apple.png";
+    public static final String APPLE = "apple1.png";
     //locations of the sprite sheets for monsters
     public static final String GAZETI = "gazeti.png";
     public static final String HYDRA = "hydra.png";
