@@ -23,7 +23,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         private int turnCounter=0;
         private GameView interactView;
         private Map interactMap;
-              float oldX , oldY;
+        private float oldX , oldY;
 
         public final static int mapWidth = Constants.tileSize * Constants.tileCountW;
         public final static int mapHeight = Constants.tileSize * Constants.tileCountH;
@@ -35,7 +35,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         private TiledMapTileLayer terrain;
         private InputMultiplexer multiplexer;
 
-        private Item underwear,socks,tshirt, pants, apple;
         private Player girl; //animated player
 
         private GazetiMonster gazeti;
@@ -59,7 +58,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         private int playerPositionY;
         private int playerPositionX;
 
-        GameObjectList gameObjectList;
+        private GameObjectList gameObjectList;
 
         public Controller(GameView GameView)
         {
@@ -86,7 +85,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             gazeti = new GazetiMonster();
             yeti = new HydraMonster();
             gameObjectList = new GameObjectList();
-
 
         }
 
@@ -124,9 +122,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
         //Player collide with Item
         private void playerCollideWithItem(Item item){
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.gainHP);
             item.setCollected(true);
             initialItemRender();
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect); //bugged. it only plays once :X
+          //bugged. it only plays once :X
 
         }
 
@@ -156,19 +155,24 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
             if(girl.getOldX ()>1152 && girl.getOldX ()<1408  && girl.getOldY()>768&& girl.getOldY()<1024) {
                 playerCollideWithItem(gameObjectList.getSpecificItem(2)); //1280, 896
+
             }
 
             if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
                 playerCollideWithItem(gameObjectList.getSpecificItem(1));
+
             }
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
                playerCollideWithItem(gameObjectList.getSpecificItem(0));
+
             }
             if(girl.getOldX ()>509 && girl.getOldX ()<765  && girl.getOldY()>192&& girl.getOldY()<320) {
                 playerCollideWithItem(gameObjectList.getSpecificItem(3)); //637, 1021
+
             }
             if(girl.getOldX ()>256 && girl.getOldX ()<512  && girl.getOldY()>384&& girl.getOldY()<640) {
                 playerCollideWithItem(gameObjectList.getSpecificItem(4)); //384, 512
+
             }
             multiplexer = new InputMultiplexer();
             multiplexer.addProcessor(hud.stage);
@@ -461,7 +465,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
-                        exitLevel(13, 7);
+
                     }
                 }
 
@@ -488,11 +492,16 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
-                        exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
+                        //exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
                     }
                 }
             }
-
+            if(Constants.currentLevel == 0) {
+            exitLevel(4, 1);
+            exitLevel(3, 1);
+            }
+            if(Constants.currentLevel == 1) {
+                exitLevel(13, 7);}
             return false;
         }
 

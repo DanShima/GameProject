@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.utils.Array;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +17,12 @@ import static com.mygdx.game.Constants.UNDERWEAR;
  */
 
 public class GameObjectList {
-    List<Item> items;
+    Array<Item> items;
     List<Monster> monsters;
 
 
     public GameObjectList(){
-          items = new ArrayList<Item>();
+          items = new Array<Item>();
      //   monsters = new ArrayList<Monster>();
         addItem();
       // addMonster();
@@ -55,7 +57,7 @@ public class GameObjectList {
         }
     }
 
-    public List<Item> getItems() {
+    public Array<Item> getItems() {
         return items;
     }
     public Item getSpecificItem(int index){

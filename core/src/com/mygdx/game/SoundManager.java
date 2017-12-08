@@ -20,7 +20,7 @@ public class SoundManager {
             if (!GameSetting.newSetting.hasSoundOn) return; //if the user doesnt want sounds on in the menu option, no sounds will be played
             sound.play(GameSetting.newSetting.soundVolume * volume);
         }
-    public void play (Music music) {
+        public void play (Music music) {
         stopMusic();
         playAudio = music;
         if (GameSetting.newSetting.hasMusicOn) {
@@ -30,13 +30,15 @@ public class SoundManager {
         } }
 
 
-    public void stopMusic () {
+        public void stopMusic () {
             if (playAudio != null)
                 playAudio.stop();
-    }
+        }
 
-    //notify when the user has changed something in settings
-    public void onSettingsUpdated () {
+        /**
+         *notify when the user has changed something in settings
+         */
+         public void onSettingsUpdated () {
         if (playAudio == null) return;
         playAudio.setVolume(GameSetting.newSetting.musicVolume);
         if (GameSetting.newSetting.hasMusicOn) {
@@ -45,7 +47,7 @@ public class SoundManager {
         } else {
             playAudio.pause();
         }
-    }
+        }
 
     
 }

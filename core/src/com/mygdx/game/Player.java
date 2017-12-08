@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -202,9 +203,9 @@ public class Player implements ApplicationListener {
 
     /**
      * Update girl with clothes on
-     * @param item
+     * @param items the array(Libgdx specific) of items
      */
-    public void updateSpriteBatch(List<Item> items){
+    public void updateSpriteBatch(Array<Item> items){
         spriteBatch.begin();
 
         for(Item item : items){
