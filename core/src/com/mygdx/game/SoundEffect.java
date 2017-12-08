@@ -31,7 +31,7 @@ public class SoundEffect implements Disposable, AssetErrorListener{
 
         public GameSound(AssetManager manager) {
             collect = manager.get("levelup.mp3", Sound.class);
-            loseLife = manager.get("life_lost.wav", Sound.class);
+            loseLife = manager.get("wscream_2.wav", Sound.class);
             monsterGroan = manager.get("monstergroan.wav", Sound.class);
             gainHP = manager.get("level up1.mp3", Sound.class);
         }
@@ -61,7 +61,7 @@ public class SoundEffect implements Disposable, AssetErrorListener{
             manager.setErrorListener(this);
 
             manager.load("levelup.mp3", Sound.class);
-            manager.load("life_lost.wav", Sound.class);
+            manager.load("wscream_2.wav", Sound.class);
             manager.load("monstergroan.wav", Sound.class);
             manager.load("level up1.mp3", Sound.class);
 
