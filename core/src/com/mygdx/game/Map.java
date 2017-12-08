@@ -27,7 +27,7 @@ public class Map  implements InputProcessor,Screen {
         //cam=g;
 
         //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load(Constants.levels[Constants.currentLevel]);
+        tiledMap = new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
        // tiledMapRenderer.setView(cam.getCamera());
 

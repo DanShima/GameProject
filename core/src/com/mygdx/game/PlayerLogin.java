@@ -37,11 +37,11 @@ public class PlayerLogin implements ApplicationListener, Screen {
     public void create() {
         batch = new SpriteBatch();
         bgbatch =new SpriteBatch();
-        background = new Texture("snowbackground1.jpg");
+        background = new Texture("bg.jpg");
         skin = new Skin(Gdx.files.internal(Constants.skin));
         stage = new Stage();
 
-        //Login button validate the player from firebase
+        //Login button :Validation of player in Firebase
         final TextButton LoginButton = new TextButton("LOGIN", skin, "default");
         LoginButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
         LoginButton.setPosition(Constants.centerX,Constants.centerY+250);
@@ -52,7 +52,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
             }
         });
 
-        //NewPlayer button helps the player to register
+        //NewPlayer button: registration of new player
         final TextButton NewPlayerButton = new TextButton("NEW PLAYER", skin, "default");
         NewPlayerButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
         NewPlayerButton.setPosition(Constants.centerX ,Constants.centerY+50);
@@ -74,7 +74,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
             }
         });
 
-        //To get name from the player
+        //User Input:player name
         final TextField Player = new TextField("", skin, "default");
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle.font.getData().setScale(2.0f);
@@ -82,7 +82,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
         Player.setSize(Constants.colWidth+50 ,Constants.rowHeight);
         Player.setPosition(Constants.centerX-350 ,Constants.centerY+250);
 
-        //To get password from the player
+        //Password to be entered by the player
         final TextField Password = new TextField("", skin, "default");
         TextField.TextFieldStyle textFieldStyle1 = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle1.font.getData().setScale(2.0f);

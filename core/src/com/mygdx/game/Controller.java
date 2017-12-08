@@ -14,13 +14,8 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-
 /**
- * Created by Waseem on 12/7/2017.
- */
-
-    /**
-     * This class renders the tile map made with Tiled and shows it on the screen
+     * This class is the controller for game objects and map
      * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
      */
 
@@ -28,33 +23,22 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         private int turnCounter=0;
         private GameView interactView;
         private Map interactMap;
-        private int animatioPlayerYpos;
-        private int animatioPlayerXpos;
-        //calculate the game world dimensions
-
-        float oldX , oldY;
+        private float oldX , oldY;
 
         public final static int mapWidth = Constants.tileSize * Constants.tileCountW;
         public final static int mapHeight = Constants.tileSize * Constants.tileCountH;
         private int NumberOfMovedTiles=2;
         public   int tileWidth = 128;
         public   int tileHeight = 128;
-      //  public static TiledMap tiledMap;
-        //public static OrthographicCamera camera;
-      //  public static TiledMapRenderer tiledMapRenderer;
+
         private TiledMapTileLayer Blockedlayer;
         private TiledMapTileLayer terrain;
         private InputMultiplexer multiplexer;
 
-
-        private Item underwear,socks,tshirt;
         private Player girl; //animated player
 
-
         private GazetiMonster gazeti;
-        private YetiMonster yeti;
-
-
+        private HydraMonster yeti;
 
         private String message;
 
@@ -63,21 +47,18 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
       //  static int currentLevel = 0;
 
-        int oneStepHorizontaly ;
-        int twoStepsHorizontally;
-        int oneStepVertically ;
-        int twoStepsvertically ;
+        private int oneStepHorizontaly ;
+        private int twoStepsHorizontally;
+        private int oneStepVertically ;
+        private int twoStepsvertically ;
 
         private TiledMapTileLayer.Cell ground;
         private TiledMapTileLayer.Cell obstacles;
 
-        //int marginTop = 55; //parameterize as: screen height -1 -mapHeight
+        private int playerPositionY;
+        private int playerPositionX;
 
-
-        int differenceInPositionX; //difference between simplified player position and simplified touch position in X
-        int differenceInPositionY;
-        int playerPositionY;
-        int playerPositionX;
+        private GameObjectList gameObjectList;
 
         public Controller(GameView GameView)
         {
@@ -88,58 +69,26 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
         @Override
         public void create () {
-
-           // float width = Gdx.graphics.getWidth();
-           // float height = Gdx.graphics.getHeight();
             sp=new SpriteBatch (  );
             hud = new HUD ( sp );
-          /*  screenHeight = Gdx.graphics.getHeight(); //this is here, since it seems it cannot be done at init time    MOVEDDDDD
-            marginTop = screenHeight-1-mapHeight; //this depends on screenHeight so it needs to be done after that
-
-            //set up an OrthographicCamera, set it to the dimensions of the screen and update() it.
-            camera = new OrthographicCamera();
-            camera.setToOrtho(false,width,screenHeight);
-            camera.translate ( 128 ,128 );
-            camera.update();*/
-
-
-/////////////////////////////////////////////////////////////////////////////
-
-
-           /* //load map and create a renderer passing in our tiled map                                                  MOVEDDDDDD
-            tiledMap = new TmxMapLoader().load(Constants.levels[currentLevel]);
-            tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-            tiledMapRenderer.setView(camera);*/
 
           interactMap.create();
-
-
           getTiledMapRender().setView(interactView.getCamera());
 
-///////////////////////////////////////////////////////////////////////////////
             girl = new Player();
             girl.create();
 
             SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
             GameSetting.newSetting.load(); //load audio settings
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap); //play background music
-
-            //items
-            underwear = new Item("underwear", Constants.UNDERWEAR, 256,256);
-            socks=new Item("socks", Constants.SOCKS,1280, 896);
-            tshirt=new Item("tshirt", Constants.TSHIRT,1280, 384);
-
-            //Monster Gazeti
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
 
             gazeti = new GazetiMonster();
-            yeti = new YetiMonster();
-
+            yeti = new HydraMonster();
+            gameObjectList = new GameObjectList();
 
         }
 
         public TiledMapRenderer getTiledMapRender(){
-
-
           return   interactMap.getTiledMapRenderer();
         }
         // Initial render
@@ -162,14 +111,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         //Initial Item Render
         public void initialItemRender()
         {
-
             girl.render();
-            girl.updateSpriteBatch(underwear);
-            girl.updateSpriteBatch(tshirt);
-            girl.updateSpriteBatch(socks);
-            underwear.render();
-            socks.render();
-            tshirt.render();
+            girl.updateSpriteBatch(gameObjectList.getItems());
+            gameObjectList.renderItems();
 
             gazeti.render(782, 640); //spawn gazeti at the given position in the map
             yeti.render(256, 352); //spawn yeti at the given position in the map
@@ -178,61 +122,57 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
         //Player collide with Item
         private void playerCollideWithItem(Item item){
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.gainHP);
             item.setCollected(true);
             initialItemRender();
+          //bugged. it only plays once :X
 
         }
 
         @Override
-        public void show() {
-
-        }
-
-
-
+        public void show() {}
         @Override
-        public void resize(int width, int height) {
-
-        }
-
+        public void resize(int width, int height) {}
         @Override
-        public void pause() {
-
-        }
-
+        public void pause() {}
         @Override
-        public void resume() {
-
-        }
-
+        public void resume() {}
         @Override
-        public void hide() {
-
-        }
-
+        public void hide() {}
         @Override
         public void dispose() {
-            //free allocated memory by disposing the instance
-            SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
+            //free allocated memory
+           SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
+           SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         }
 
         @Override
         public void render(float delta) {
-//Calling initial render
             initialRender();
             initialItemRender();
             // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
             //Grab Item
 
             if(girl.getOldX ()>1152 && girl.getOldX ()<1408  && girl.getOldY()>768&& girl.getOldY()<1024) {
-                playerCollideWithItem(socks); //1280, 896
+                playerCollideWithItem(gameObjectList.getSpecificItem(2)); //1280, 896
+
             }
 
             if(girl.getOldX ()>1216 && girl.getOldX ()<1344  && girl.getOldY()>320&& girl.getOldY()<448) {
-                playerCollideWithItem(tshirt);
+                playerCollideWithItem(gameObjectList.getSpecificItem(1));
+
             }
             if(girl.getOldX ()>192 && girl.getOldX ()<320  && girl.getOldY()>192&& girl.getOldY()<320) {
-                playerCollideWithItem(underwear);
+               playerCollideWithItem(gameObjectList.getSpecificItem(0));
+
+            }
+            if(girl.getOldX ()>509 && girl.getOldX ()<765  && girl.getOldY()>192&& girl.getOldY()<320) {
+                playerCollideWithItem(gameObjectList.getSpecificItem(3)); //637, 1021
+
+            }
+            if(girl.getOldX ()>256 && girl.getOldX ()<512  && girl.getOldY()>384&& girl.getOldY()<640) {
+                playerCollideWithItem(gameObjectList.getSpecificItem(4)); //384, 512
+
             }
             multiplexer = new InputMultiplexer();
             multiplexer.addProcessor(hud.stage);
@@ -240,9 +180,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             Gdx.input.setInputProcessor(multiplexer);
         }
         @Override
-        public void render () {
-
-        }
+        public void render () {}
 
         @Override
         public boolean keyDown(int keycode) {return false;}
@@ -254,10 +192,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
          */
         public boolean keyUp(int keycode) {
             if (keycode == Input.Keys.LEFT){// one step left
-
-
                 collisionL();
-
             }
             if (keycode == Input.Keys.A)    {  // 2 steps left
                 girl.setCurrentAnimation(girl.getWalkAnimationLEFT());
@@ -448,7 +383,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             return false;
         }
 
-
         /** This method converts screen Y position to simplified Y
          **/
         public int ScreenPosYtoSimplified(float PositionY){
@@ -457,7 +391,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             return (int) Math.floor( Math.max(0.0,temporary));
             //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
         }
-
 
         /**
          * This method converts screen X position to simplified X
@@ -477,13 +410,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         public int invertScreenPos(int PositionY){ //convert sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
              int screenHeight=Gdx.graphics.getHeight();
             return screenHeight-interactView.getMarginTop()-PositionY; //probably slightly wrong in the offset (+-1 or something like that), but works to convert sprite position
-
         }
 
-        public int invertSimplifiedHeight(int simplified){
-            return Constants.tileCountH-1-simplified;
-        }
-
+        public int invertSimplifiedHeight(int simplified){return Constants.tileCountH-1-simplified; }
 
 
         public void checkTurn(){
@@ -493,9 +422,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             }else if (turnCounter % 2==1){
 
                 gazeti.move(playerPositionX,playerPositionY);
-            }
-
-
+           }
 
         }
 
@@ -528,6 +455,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationLEFTUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationLEFTSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationLEFTShirt());
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationLEFTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
                         checkTurn();
@@ -536,10 +464,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationRIGHTUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationRIGHTSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationRIGHTShirt());
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationRIGHTPants());
                         girl.move(differenceInPositionX * tileWidth, 0);
                         turnCounter++;
+
                         checkTurn();
                         exitLevel(13, 7);
+
                     }
                 }
 
@@ -555,7 +486,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationDOWNUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationDOWNSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationDOWNShirt());
-
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationDOWNPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
                         checkTurn();
@@ -564,14 +495,23 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
                         girl.setCurrentAnimationSocks(girl.getWalkAnimationUPSocks());
                         girl.setCurrentAnimationShirt(girl.getWalkAnimationUPShirt());
+                        girl.setCurrentAnimationPants(girl.getWalkAnimationUPPants());
                         girl.move(0,differenceInPositionY*tileHeight);
                         turnCounter++;
+
                         checkTurn();
-                        exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
+                        exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next le
+                        //exitLevel(13 , 7); //if the player moves to tile(13,7), he can go to the next level
+
                     }
                 }
             }
-
+            if(Constants.currentLevel == 0) {
+            exitLevel(4, 1);
+            exitLevel(3, 1);
+            }
+            if(Constants.currentLevel == 1) {
+                exitLevel(13, 7);}
             return false;
         }
 
@@ -631,7 +571,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
             if(notMovedYet) {
                 Constants.currentLevel++;
 
-                interactMap.setTiledMap(new TmxMapLoader().load(Constants.levels[Constants.currentLevel])) ;
+                interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel])) ;
                 interactMap.setTiledMapRenderer( new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
 
                 //getProperties();
@@ -639,6 +579,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                 yeti.dispose();
                 gazeti.dispose();
                 hud.setLevel(Constants.currentLevel);
+                //change background music
+                SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
                 //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
             }
             return false;
