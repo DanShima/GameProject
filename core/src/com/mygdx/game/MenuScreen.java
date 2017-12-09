@@ -52,6 +52,7 @@ public class MenuScreen implements Screen {
         SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicStartMenu); //play background music
+        Gdx.app.debug("SOUND", "MENUUUU");
 
         batch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal(Constants.skin));
@@ -263,6 +264,7 @@ public class MenuScreen implements Screen {
     }
     @Override
     public void resume() {
+
     }
     @Override
     public void hide() {
