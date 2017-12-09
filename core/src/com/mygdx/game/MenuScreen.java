@@ -6,6 +6,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -47,6 +48,10 @@ public class MenuScreen implements Screen {
 
     }
     public void create() {
+
+        SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
+        GameSetting.newSetting.load(); //load audio settings
+        SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicStartMenu); //play background music
 
         batch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal(Constants.skin));
@@ -109,6 +114,7 @@ public class MenuScreen implements Screen {
     public void dispose() {
         batch.dispose();
         bgbatch.dispose();
+        SoundEffect.newSoundEffect.backgroundMusic.musicStartMenu.stop();
     }
     @Override
     public void show() {
@@ -217,7 +223,6 @@ public class MenuScreen implements Screen {
     private void onSettingsClicked() {
           loadSettings();
           popUpSettings.setVisible(true); //make the pop-up visible
-
     }
 
     /**

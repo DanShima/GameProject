@@ -156,6 +156,7 @@ import java.util.Iterator;
     @Override
     public void dispose() {
         //free allocated memory
+        interactMap.dispose();
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
         SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         SoundEffect.newSoundEffect.sounds.collect.stop();
@@ -648,8 +649,8 @@ import java.util.Iterator;
 
                         //getProperties();
                         //clear monster from the previous level
-                        yeti.dispose();
-                        gazeti.dispose();
+                        //yeti.dispose();
+                        //gazeti.dispose();
                         hud.setLevel(Constants.currentLevel);
                         //change background music
                         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);

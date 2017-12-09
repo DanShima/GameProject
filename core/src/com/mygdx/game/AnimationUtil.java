@@ -13,7 +13,6 @@ import static com.mygdx.game.Constants.FPS;
 
 public class AnimationUtil {
 
-
     /**
      * This method creates an Animation<textureRegion> from a texture, row, column and frame specifications
      * @param texture
