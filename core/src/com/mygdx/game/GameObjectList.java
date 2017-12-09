@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.utils.Array;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.mygdx.game.Constants.APPLE;
@@ -12,35 +11,36 @@ import static com.mygdx.game.Constants.TSHIRT;
 import static com.mygdx.game.Constants.UNDERWEAR;
 
 /**
- * This class creates lists of game objects: items and monsters
+ * This class creates lists of game objects: itemsLevelZero and monsters
  *
  */
 
 public class GameObjectList {
-    Array<Item> items;
+    Array<Item> itemsLevelZero;
+    Array<Item> itemsLevelOne;
     List<Monster> monsters;
 
 
     public GameObjectList(){
-          items = new Array<Item>();
+          itemsLevelZero = new Array<Item>();
      //   monsters = new ArrayList<Monster>();
-        addItem();
+        addItemLevelZero();
       // addMonster();
       //  hasItem = false;
     }
 
     public void renderItems() {
-        for(Item item : items){
+        for(Item item : itemsLevelZero){
             item.render();
         }
     }
 
-    public void addItem() {
-        items.add(new Item("underwear", UNDERWEAR, 256,256));
-        items.add(new Item("tshirt", TSHIRT,1280, 384));
-        items.add(new Item("socks", SOCKS,1280, 896));
-        items.add(new Item("pants", PANTS, 637, 256));
-        items.add(new Item("apple", APPLE, 384, 512));
+    public void addItemLevelZero() {
+        itemsLevelZero.add(new Item("underwear", UNDERWEAR, 256,256));
+        itemsLevelZero.add(new Item("tshirt", TSHIRT,1280, 384));
+        itemsLevelZero.add(new Item("socks", SOCKS,1280, 896));
+        itemsLevelZero.add(new Item("pants", PANTS, 637, 256));
+        itemsLevelZero.add(new Item("apple", APPLE, 384, 512));
     }
 
    /* public void addMonster(){
@@ -57,11 +57,11 @@ public class GameObjectList {
         }
     }
 
-    public Array<Item> getItems() {
-        return items;
+    public Array<Item> getItemsLevelZero() {
+        return itemsLevelZero;
     }
     public Item getSpecificItem(int index){
-        return items.get(index);
+        return itemsLevelZero.get(index);
     }
 
 

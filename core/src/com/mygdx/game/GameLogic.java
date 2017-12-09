@@ -38,7 +38,7 @@ public class GameLogic extends InputAdapter {
          //        playerCollideWithMonster(monster);
        //      }
          }
-      //   for(Item item: gameObjectList.items){
+      //   for(Item item: gameObjectList.itemsLevelZero){
       //       float distance = 0; //not done yet
         //     if(distance < 0.15){
         //         playerCollideWithItem(item);

@@ -21,7 +21,7 @@ public class Constants {
 
     // location of the sprite sheet for the player without clothes
     public static final String GIRL_NAKED = "pinkGirl_v02.png";
-    //locations of the sprite sheets for items
+    //locations of the sprite sheets for itemsLevelZero
     public static final String UNDERWEAR = "underwear.png";
     public static final String TSHIRT = "tshirt.png";
     public static final String SOCKS = "socks.png";

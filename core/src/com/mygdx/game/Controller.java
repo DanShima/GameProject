@@ -117,7 +117,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     //Initial Item Render
     public void initialItemRender() {
                 girl.render();
-                girl.updateSpriteBatch(gameObjectList.getItems());
+                girl.updateSpriteBatch(gameObjectList.getItemsLevelZero());
                 gameObjectList.renderItems();
 
                 gazeti.render(782, 640); //spawn gazeti at the given position in the map
@@ -662,7 +662,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                         hud.setLevel(Constants.currentLevel);
                         //change background music
                         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
-                        //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
+                        //TODO add monsters and itemsLevelZero to next level and finalize exit position. change player starting position in the second map
                     }
                     return false;
                 }
