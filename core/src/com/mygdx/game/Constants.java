@@ -15,7 +15,7 @@ public class Constants {
     public static  final int  mapHeight = tileSize * tileCountH;
 
     // number of points at the start of the game
-    public static final int SCORE_START = 0;
+    public static final int SCORE_START = 100;
     // number of lives at the start of the game
     public static final int LIVES = 4;
 

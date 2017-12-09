@@ -68,6 +68,8 @@ public class MenuScreen implements Screen {
 
                 //playButton.setText("You clicked the button");
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
+                //((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(batch));
+
 
             }
         });
