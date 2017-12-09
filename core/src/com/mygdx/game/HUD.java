@@ -38,13 +38,13 @@ public class HUD implements Disposable  {
     private Table table;
     private TextButton button ;
     private Skin skin ;// skin for better UI
-    final ProgressBar progressBar;
     TextButton Continue ;
     TextButton  TryAgain;
     TextButton  Settings ;
     TextButton  Menu;
     MenuScreen menuScreen;
     private Window PauseMenu;
+    final ProgressBar progressBar;
 
 
     public HUD(SpriteBatch sb)
@@ -55,7 +55,6 @@ public class HUD implements Disposable  {
         stage=new Stage(viewport,sb);//stage is as box and try to put widget and organize things inside that table
         skin = new Skin ( Gdx.files.internal ( Constants.skin ) );
         menuScreen = new MenuScreen();
-        final Dialog dialog = new Dialog ( "Pause",skin,"default" );
         table = new Table();
         table.setFillParent(true);//table is now fill all the stage
         table.top();//table at top of the stage
@@ -95,6 +94,8 @@ public class HUD implements Disposable  {
 
         progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, skin, "fancy");
         progressBar.setValue(75.0f);//initializing the bar
+//        progressBar.setAnimateDuration(2f);
+
 
         // add the widgets to a table
         table.add(progressBar).width(335.0f);
@@ -107,15 +108,6 @@ public class HUD implements Disposable  {
         stage.addActor(PauseMenu);
     }
 
-//    private Table createSettingsWindow() {
-//        // fill the window with content: Sound/Music checkBoxes and volume sliders
-//        PauseMenu.add(createSettingsButtons()).row();
-//        // hide options window by default
-//        PauseMenu.setVisible(true);
-//        // set size and position
-//        PauseMenu.pack();
-//        return PauseMenu;
-//    }
     private Table createSettingsButtons() {
         Table table = new Table();
         table.row();
@@ -162,10 +154,6 @@ public class HUD implements Disposable  {
 
         return table;
     }
-
-
-
-
 
 
 

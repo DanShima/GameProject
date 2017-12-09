@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         private Skin skin;
         private HUD hud ;
         private int score;
-        private int Hscore = 0;
+      //  private int Hscore = 0;
         private Texture background;
         //GameSetting prefs;
 
@@ -43,12 +43,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             table.center();
             table.setFillParent(true);
             Label gameOverLabel = new Label("GAME OVER", skin,"default");
-            gameOverLabel.setFontScale(10f,15f);
+            gameOverLabel.setFontScale(9f,9f);
 
             Label ScoreLabel=new Label("Score: " + score ,skin,"default");
-            Label HighestScoreLabel=new Label("Highest Score : " + Hscore ,skin,"default");
-            ScoreLabel.setFontScale(5f,5f);
-            HighestScoreLabel.setFontScale(5f,5f);
+            ScoreLabel.setFontScale(7f,7f);
+       //   Label HighestScoreLabel=new Label("Highest Score : " + Hscore ,skin,"default");
+          //  HighestScoreLabel.setFontScale(5f,5f);
 
 
             TextButton replay = new TextButton("Play again!",skin,"default");
@@ -69,25 +69,26 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             menu.setScale(2f);
 
 
-
-            table.add(gameOverLabel).expandX();
+            table.center();
+            table.add(gameOverLabel).padTop(50f).expandX();
             table.row();
-            table.add(ScoreLabel).expandX().padTop(10f);
+            table.add(ScoreLabel).padTop(40f);
             table.row();
-            table.add(HighestScoreLabel).expandX().padTop(10f);
+           // table.add(HighestScoreLabel).expandX().padTop(10f);
             table.row();
-            table.add(replay).expand().padTop(5f);
-            table.add(menu).expand().padTop(10f);
+            table.add(replay).padTop(150f).padRight(200f);
+            table.row();
+            table.add(menu).padTop(150f).padRight(200f);
             stage.addActor(table);
 
         }
-        public int getHscore() {
-            return Hscore;
-        }
-
-        public void setHscore(int hscore) {
-            Hscore = hscore;
-        }
+//        public int getHscore() {
+//            return Hscore;
+//        }
+//
+//        public void setHscore(int hscore) {
+//            Hscore = hscore;
+//        }
 
         @Override
         public void show() {
