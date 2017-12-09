@@ -15,53 +15,50 @@ import static com.mygdx.game.Constants.UNDERWEAR;
  *
  */
 
-public class GameObjectList {
+public class ItemList {
     Array<Item> itemsLevelZero;
     Array<Item> itemsLevelOne;
-    List<Monster> monsters;
 
-
-    public GameObjectList(){
+    public ItemList(){
           itemsLevelZero = new Array<Item>();
-     //   monsters = new ArrayList<Monster>();
-        addItemLevelZero();
-      // addMonster();
-      //  hasItem = false;
+          itemsLevelOne = new Array<Item>();
+          addItemLevelZero();
+        addItemLevelOne();
     }
 
-    public void renderItems() {
+    public void renderItemsLevelZero() {
         for(Item item : itemsLevelZero){
             item.render();
         }
     }
-
+    public void renderItemsLevelOne() {
+        for(Item item : itemsLevelOne){
+            item.render();
+        }
+    }
     public void addItemLevelZero() {
         itemsLevelZero.add(new Item("underwear", UNDERWEAR, 256,256));
         itemsLevelZero.add(new Item("tshirt", TSHIRT,1280, 384));
-        itemsLevelZero.add(new Item("socks", SOCKS,1280, 896));
-        itemsLevelZero.add(new Item("pants", PANTS, 637, 256));
         itemsLevelZero.add(new Item("apple", APPLE, 384, 512));
     }
 
-   /* public void addMonster(){
-       monsters.add(new MushRoomMonster());
-       monsters.add(new GazetiMonster());
-
-    }*/
-
-
-    public void hasItemOn(boolean collected){
-        //hasItem = collected;
-        if(collected){
-
-        }
+    public void addItemLevelOne() {
+        itemsLevelOne.add(new Item("socks", SOCKS,1280, 896));
+        itemsLevelOne.add(new Item("pants", PANTS, 637, 256));
+        itemsLevelOne.add(new Item("apple", APPLE, 384, 512));
     }
 
     public Array<Item> getItemsLevelZero() {
         return itemsLevelZero;
     }
-    public Item getSpecificItem(int index){
+    public Array<Item> getItemsLevelOne() {
+        return itemsLevelOne;
+    }
+    public Item getSpecificItemLevelZero(int index){
         return itemsLevelZero.get(index);
+    }
+    public Item getSpecificItemLevelOne(int index){
+        return itemsLevelOne.get(index);
     }
 
 

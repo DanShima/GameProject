@@ -9,7 +9,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
  */
 
 public class GameLogic extends InputAdapter {
-    public GameObjectList gameObjectList; //need everything on a level
+    public ItemList itemList; //need everything on a level
     public int lives;
     public int score;
     public TiledMap map; //this class should hold map only
@@ -31,21 +31,6 @@ public class GameLogic extends InputAdapter {
          return lives < 0;
      }
 
-     public void checkCollisions() {
-         for(Monster monster: gameObjectList.monsters){
-         //    float distance = gameObjectList.animator.getX(); //TODO complete calculation
-         //    if(distance < 0.10f){
-         //        playerCollideWithMonster(monster);
-       //      }
-         }
-      //   for(Item item: gameObjectList.itemsLevelZero){
-      //       float distance = 0; //not done yet
-        //     if(distance < 0.15){
-        //         playerCollideWithItem(item);
-             }
-        // }
-
-    // }
 
     private void playerCollideWithMonster(Monster monster){}
 
