@@ -6,7 +6,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
@@ -61,7 +60,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     private int playerPositionY;
     private int playerPositionX;
 
-    private GameObjectList gameObjectList;
+    private ItemList itemList;
 
     public Controller(GameView GameView) {
         interactView = GameView;
@@ -81,15 +80,16 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         girl = new Player();
         girl.create();
 
-        SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
+       // SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
+       // Gdx.app.debug("SOUND", "CONTROLLERRRR");
 
         gazeti = new GazetiMonster();
         yeti = new MushRoomMonster();
         wasp = new Monster(Constants.WASP, 4, 3, 1, 1);
         golem = new Monster(Constants.GOLEM, 4, 3, 1, 2);
-        gameObjectList = new GameObjectList();
+        itemList = new ItemList();
 
     }
 
@@ -116,13 +116,19 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
     //Initial Item Render
     public void initialItemRender() {
-                girl.render();
-                girl.updateSpriteBatch(gameObjectList.getItems());
-                gameObjectList.renderItems();
+        girl.render();
+        girl.updateSpriteBatch(itemList.getItemsLevelZero()); //update clothes on girl level 0
+        girl.updateSpriteBatch(itemList.getItemsLevelOne()); //update clothes on girl level 1
 
-                gazeti.render(782, 640); //spawn gazeti at the given position in the map
-                yeti.render(256, 352); //spawn yeti at the given position in the map
+        if(Constants.currentLevel == 0) {
+
+            itemList.renderItemsLevelZero();
+            gazeti.render(782, 640); //spawn gazeti at the given position in the map
+            yeti.render(256, 352); //spawn yeti at the given position in the map
+        }
         if(Constants.currentLevel == 1){
+
+            itemList.renderItemsLevelOne();
             wasp.render(512, 256);
             golem.render(256, 782); //
         }
@@ -130,14 +136,25 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
         //Player collide with Item
         private void playerCollideWithItem(Item item){
-            if(item.isCollected()==false) {
-            item.setCollected(true);
-            initialItemRender();
-            //TODO should add to score, here!
-
-            //plays a sound effect when collecting a cloth item
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
+            boolean isRightLevel = false;
+            //refactor the following
+            if( itemList.getItemsLevelZero().contains(item,true) && Constants.currentLevel == 0 ){
+                isRightLevel = true;
             }
+            else if( itemList.getItemsLevelOne().contains(item,true) && Constants.currentLevel == 1 ) {
+                isRightLevel = true;
+            }
+
+            if ( item.isCollected() == false && isRightLevel ) {
+                item.setCollected(true);
+                initialItemRender();
+                //TODO should add to score, here!
+
+                //plays a sound effect when collecting a cloth item
+                SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
+                Gdx.app.debug("SOUND", "ITEM COLLECT");
+            }
+
         }
 
 
@@ -155,6 +172,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
     @Override
     public void resume() {
+
     }
 
     @Override
@@ -166,8 +184,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         //free allocated memory
         interactMap.dispose();
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
+       // Gdx.app.debug("SOUND", "DISPOSE");
         SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         SoundEffect.newSoundEffect.sounds.collect.stop();
+
     }
 
     @Override
@@ -182,22 +202,24 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     }
 
     public void checkCollisionPlayerAndItem() {
-        Gdx.app.log("SOUND", "COLLISION QUERY");
+        //Gdx.app.log("SOUND", "COLLISION QUERY");
         // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
         if (girl.getOldX() > 1152 && girl.getOldX() < 1408 && girl.getOldY() > 768 && girl.getOldY() < 1024) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(2)); //1280, 896
+            playerCollideWithItem(itemList.getSpecificItemLevelOne(0)); //socks 1280, 896
         }
         if (girl.getOldX() > 1216 && girl.getOldX() < 1344 && girl.getOldY() > 320 && girl.getOldY() < 448) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(1));
+            playerCollideWithItem(itemList.getSpecificItemLevelZero(1)); //shirt
         }
         if (girl.getOldX() > 192 && girl.getOldX() < 320 && girl.getOldY() > 192 && girl.getOldY() < 320) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(0));
+            playerCollideWithItem(itemList.getSpecificItemLevelZero(0)); //underwear
         }
         if (girl.getOldX() > 509 && girl.getOldX() < 765 && girl.getOldY() > 192 && girl.getOldY() < 320) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(3)); //637, 1021
+            playerCollideWithItem(itemList.getSpecificItemLevelOne(1)); //pants
         }
         if (girl.getOldX() > 256 && girl.getOldX() < 512 && girl.getOldY() > 384 && girl.getOldY() < 640) {
-            playerCollideWithItem(gameObjectList.getSpecificItem(4)); //384, 512
+            playerCollideWithItem(itemList.getSpecificItemLevelZero(2)); //apple
+            playerCollideWithItem(itemList.getSpecificItemLevelOne(2)); //apple
+
         }
     }
 
@@ -652,17 +674,21 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     if (notMovedYet) {
                         Constants.currentLevel++;
 
-                        interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
-                        interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
+                       interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
+                       interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
 
                         //getProperties();
                         //clear monster from the previous level
+                        itemList.renderItemsLevelOne();
+                        wasp.render(512, 256);
+                        golem.render(256, 782);
                         yeti.dispose();
                         gazeti.dispose();
                         hud.setLevel(Constants.currentLevel);
                         //change background music
                         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
-                        //TODO add monsters and items to next level and finalize exit position. change player starting position in the second map
+                       // Gdx.app.debug("SOUND", "NEXT LEVEL");
+                        //TODO add monsters and itemsLevelZero to next level and finalize exit position. change player starting position in the second map
                     }
                     return false;
                 }

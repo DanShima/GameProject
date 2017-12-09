@@ -203,7 +203,7 @@ public class Player implements ApplicationListener {
 
     /**
      * Update girl with clothes on
-     * @param items the array(Libgdx specific) of items
+     * @param items the array(Libgdx specific) of itemsLevelZero
      */
     public void updateSpriteBatch(Array<Item> items){
         spriteBatch.begin();
