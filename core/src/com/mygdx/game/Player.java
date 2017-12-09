@@ -93,8 +93,7 @@ public class Player implements ApplicationListener {
 
     private AnimationUtil animationUtil;
 
-
-    @Override
+        @Override
     public void create() {
         // Load the sprite sheet as a Texture
         walkSheet = new Texture(Gdx.files.internal(GIRL_NAKED));

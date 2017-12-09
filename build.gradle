@@ -11,8 +11,9 @@ buildscript {
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
         classpath 'com.android.tools.build:gradle:2.2.0'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.1'
-        
 
+
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
@@ -59,6 +60,7 @@ project(":android") {
 
     dependencies {
         compile project(":core")
+        compile 'com.google.firebase:firebase-database:11.0.4'
         compile "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -114,7 +116,9 @@ project(":core") {
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        
+        // add firebase
+       // compile 'com.google.firebase:firebase-database:10.0.1'
+      //  compile 'com.firebase:firebase-client-android:2.5.2'
     }
 }
 
