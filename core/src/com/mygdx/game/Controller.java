@@ -7,16 +7,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.utils.Array;
-
-import java.util.Iterator;
 
 /**
      * This class is the controller for game objects and map
@@ -43,7 +39,9 @@ import java.util.Iterator;
     private Player girl; //animated player
 
     private GazetiMonster gazeti;
-    private HydraMonster yeti;
+    private MushRoomMonster yeti;
+    private Monster wasp;
+    private Monster golem;
 
     private String message;
 
@@ -88,7 +86,9 @@ import java.util.Iterator;
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
 
         gazeti = new GazetiMonster();
-        yeti = new HydraMonster();
+        yeti = new MushRoomMonster();
+        wasp = new Monster(Constants.WASP, 4, 3, 1, 1);
+        golem = new Monster(Constants.GOLEM, 4, 3, 1, 2);
         gameObjectList = new GameObjectList();
 
     }
@@ -122,14 +122,22 @@ import java.util.Iterator;
 
                 gazeti.render(782, 640); //spawn gazeti at the given position in the map
                 yeti.render(256, 352); //spawn yeti at the given position in the map
+        if(Constants.currentLevel == 1){
+            wasp.render(512, 256);
+            golem.render(256, 782); //
+        }
     }
 
         //Player collide with Item
         private void playerCollideWithItem(Item item){
+            if(item.isCollected()==false) {
             item.setCollected(true);
             initialItemRender();
+            //TODO should add to score, here!
+
             //plays a sound effect when collecting a cloth item
             SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
+            }
         }
 
 
@@ -649,8 +657,8 @@ import java.util.Iterator;
 
                         //getProperties();
                         //clear monster from the previous level
-                        //yeti.dispose();
-                        //gazeti.dispose();
+                        yeti.dispose();
+                        gazeti.dispose();
                         hud.setLevel(Constants.currentLevel);
                         //change background music
                         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);

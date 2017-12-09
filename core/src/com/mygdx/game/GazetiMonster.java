@@ -6,12 +6,9 @@ package com.mygdx.game;
 
 public class GazetiMonster extends Monster {
 
-
-
     public GazetiMonster() {
         super(Constants.GAZETI,4,3,1,1);
     }
-
 
     @Override
     public void render(float positionX, float positionY) {
