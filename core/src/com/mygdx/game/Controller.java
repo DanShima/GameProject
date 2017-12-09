@@ -8,14 +8,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.utils.Array;
 
 
 /**
@@ -43,7 +41,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private Player girl; //animated player
 
     private GazetiMonster gazeti;
-    private HydraMonster yeti;
+    private MushRoomMonster yeti;
+    private Monster wasp;
+    private Monster golem;
 
     private String message;
 
@@ -88,7 +88,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
 
         gazeti = new GazetiMonster();
-        yeti = new HydraMonster();
+        yeti = new MushRoomMonster();
+        wasp = new Monster(Constants.WASP, 4, 3, 1, 1);
+        golem = new Monster(Constants.GOLEM, 4, 3, 1, 2);
         gameObjectList = new GameObjectList();
 
     }
@@ -117,7 +119,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         girl.render();
         girl.updateSpriteBatch(gameObjectList.getItems());
         gameObjectList.renderItems();
-
         gazeti.render(782, 640); //spawn gazeti at the given position in the map
         yeti.render(256, 352); //spawn yeti at the given position in the map
     }
@@ -133,15 +134,13 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 hud.setHealth(hud.getHealth()+item.giveScorePoint());
             }
             else {hud.setScore(hud.getScore()+item.giveScorePoint());}
-
-            //plays a sound effect when collecting a cloth item
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
+                gazeti.render(782, 640); //spawn gazeti at the given position in the map
+                yeti.render(256, 352); //spawn yeti at the given position in the map
+        if(Constants.currentLevel == 1){
+            wasp.render(512, 256);
+            golem.render(256, 782);
+            }
         }
-        else
-
-        initialItemRender();
-        //hud.setScore(hud.getScore()+item.giveScorePoint());
-        //SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
     }
 
 
@@ -168,6 +167,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     @Override
     public void dispose() {
         //free allocated memory
+        interactMap.dispose();
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
         SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         SoundEffect.newSoundEffect.sounds.collect.stop();
@@ -179,11 +179,13 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         initialItemRender();
         sp.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(hud.stage);
-        multiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(multiplexer);
+        if(!hud.getisPaused()){
+            multiplexer = new InputMultiplexer();
+            multiplexer.addProcessor(hud.stage);
+            multiplexer.addProcessor(this);
+            Gdx.input.setInputProcessor(multiplexer);
+        }
+        else  Gdx.input.setInputProcessor(hud.stage);
     }
 
     public void checkCollisionPlayerAndItem() {

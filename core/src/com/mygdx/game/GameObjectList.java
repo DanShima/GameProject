@@ -44,7 +44,7 @@ public class GameObjectList {
     }
 
    /* public void addMonster(){
-       monsters.add(new HydraMonster());
+       monsters.add(new MushRoomMonster());
        monsters.add(new GazetiMonster());
 
     }*/

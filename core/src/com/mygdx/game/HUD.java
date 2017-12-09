@@ -47,6 +47,10 @@ public class HUD implements Disposable  {
     final ProgressBar progressBar;
 
 
+
+    boolean isPaused = false;
+
+
     public HUD(SpriteBatch sb)
 
     {
@@ -75,6 +79,7 @@ public class HUD implements Disposable  {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, final int button) {
                 // fill the window with content: Sound/Music checkBoxes and volume sliders
                 Gdx.graphics.setContinuousRendering(false);
+                isPaused = true;
                 PauseMenu.setVisible(true);
                 // set size and position
                 return true; }});
@@ -118,6 +123,7 @@ public class HUD implements Disposable  {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Gdx.graphics.setContinuousRendering(true);
+                isPaused = false;
                // Gdx.graphics.requestRendering();
                 PauseMenu.setVisible(false);
             }
@@ -131,16 +137,16 @@ public class HUD implements Disposable  {
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
             }
         });
-        table.row();
-        Settings = new TextButton("Settings", skin);
-        table.add(Settings);
-        Settings.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-               // menuScreen.onSettingsClicked();
-                // menuScreen.
-            }
-        });
+//        table.row();
+//        Settings = new TextButton("Settings", skin);
+//        table.add(Settings);
+//        Settings.addListener(new ChangeListener() {
+//            @Override
+//            public void changed(ChangeEvent event, Actor actor) {
+//               // menuScreen.onSettingsClicked();
+//                // menuScreen.
+//            }
+//        });
         table.row();
         Menu = new TextButton("Menu", skin);
         table.add(Menu);
@@ -180,6 +186,9 @@ public class HUD implements Disposable  {
     public  float getHealth()
     {
         return progressBar.getValue();
+    }
+    public boolean getisPaused() {
+        return isPaused;
     }
     @Override
     public void dispose() {
