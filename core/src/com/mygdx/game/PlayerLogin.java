@@ -19,20 +19,34 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 /**
  * PlayerLogin class allows the player to choose login or Quickplay without login to enter the Game
   */
-public class PlayerLogin implements ApplicationListener, Screen {
+public  class PlayerLogin implements ApplicationListener, Screen,firebase
+{
 
-
+    //DatabaseReference db;
     private SpriteBatch batch;
     private SpriteBatch bgbatch;
     private Skin skin;
     private Stage stage;
     private Texture background;
 
+    private String name;
+    private String password;
+    firebase fb;
+
     //Constructor
     public PlayerLogin() {
        create();
     }
 
+    @Override
+    public void onclicklogin(String name, String password) {
+        fb.onclicklogin(name,password);
+    }
+
+    @Override
+    public void onclicknewuser(String name, String password) {
+        fb.onclicknewuser(name,password);
+    }
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -41,6 +55,8 @@ public class PlayerLogin implements ApplicationListener, Screen {
         skin = new Skin(Gdx.files.internal(Constants.skin));
         stage = new Stage();
 
+
+
         //Login button :Validation of player in Firebase
         final TextButton LoginButton = new TextButton("LOGIN", skin, "default");
         LoginButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
@@ -48,7 +64,8 @@ public class PlayerLogin implements ApplicationListener, Screen {
         LoginButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                LoginButton.setText("You clicked the button");
+                //LoginButton.setText("You clicked the button");
+               onclicklogin(name,password);
             }
         });
 
@@ -59,8 +76,9 @@ public class PlayerLogin implements ApplicationListener, Screen {
         NewPlayerButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                 NewPlayerButton.setText("You clicked the button");
-                }
+                // NewPlayerButton.setText("You clicked the button");
+                onclicknewuser(name,password);
+                                              }
                 });
 
         //Quickaplay button allows the player to directly enter the Game
@@ -75,12 +93,13 @@ public class PlayerLogin implements ApplicationListener, Screen {
         });
 
         //User Input:player name
-        final TextField Player = new TextField("", skin, "default");
+        final TextField Playername = new TextField("", skin, "default");
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle.font.getData().setScale(2.0f);
-        Player.setMessageText("PLAYER");
-        Player.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        Player.setPosition(Constants.centerX-350 ,Constants.centerY+250);
+        Playername.setMessageText("PLAYER");
+        Playername.setSize(Constants.colWidth+50 ,Constants.rowHeight);
+        Playername.setPosition(Constants.centerX-350 ,Constants.centerY+250);
+        name=Playername.getMessageText();
 
         //Password to be entered by the player
         final TextField Password = new TextField("", skin, "default");
@@ -91,12 +110,12 @@ public class PlayerLogin implements ApplicationListener, Screen {
         Password.setPasswordMode(true);
         Password.setSize(Constants.colWidth+50 ,Constants.rowHeight);
         Password.setPosition(Constants.centerX-350 ,Constants.centerY+50);
-
+        password=Password.getMessageText();
         //Adding all Buttons and TextFiels to stage
         stage.addActor(LoginButton);
         stage.addActor(NewPlayerButton);
         stage.addActor(QuickPlayButton);
-        stage.addActor(Player);
+        stage.addActor(Playername);
         stage.addActor(Password);
 
         //set the InputProcessor

@@ -1,20 +1,24 @@
+package com.mygdx.game;/*
 package com.mygdx.game;
 
+*/
 /**
  * Created by Pintu on 12/8/2017.
  */
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.GearUp;
 
 public class Splash implements Screen
 {
     private Texture logo;
     private SpriteBatch spriteBatch;
-    private  GearUp game;
+    private GearUp game;
 
     public Splash( GearUp game )
     {
@@ -24,8 +28,8 @@ public class Splash implements Screen
     @Override
     public void show()
     {
-        logo = new Texture(Gdx.files.internal("teamlogo.png"));
-        spriteBatch = new SpriteBatch();
+     //   logo = new Texture(Gdx.files.internal("teamlogo.png"));
+      //  spriteBatch = new SpriteBatch();
     }
 
     @Override
