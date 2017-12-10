@@ -1,6 +1,7 @@
 
 package com.mygdx.game;
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -13,12 +14,13 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
-/**
-     * This class is the controller for game objects and map
-     * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
-     */
 
-    public class Controller implements InputProcessor,Screen,ApplicationListener {
+/**
+ * This class is the controller for game objects and map
+ * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
+ */
+
+public class Controller implements InputProcessor,Screen,ApplicationListener {
     private int turnCounter = 0;
     private GameView interactView;
     private Map interactMap;
@@ -80,10 +82,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         girl = new Player();
         girl.create();
 
-       // SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
+        // SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
-       // Gdx.app.debug("SOUND", "CONTROLLERRRR");
+        // Gdx.app.debug("SOUND", "CONTROLLERRRR");
 
         gazeti = new GazetiMonster();
         yeti = new MushRoomMonster();
@@ -110,8 +112,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         interactMap.getTiledMapRenderer().setView(interactView.getCamera());
         interactMap.getTiledMapRenderer().render();
 
-        sp.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
     }
 
     //Initial Item Render
@@ -119,7 +119,6 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         girl.render();
         girl.updateSpriteBatch(itemList.getItemsLevelZero()); //update clothes on girl level 0
         girl.updateSpriteBatch(itemList.getItemsLevelOne()); //update clothes on girl level 1
-
         if(Constants.currentLevel == 0) {
 
             itemList.renderItemsLevelZero();
@@ -130,32 +129,38 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
             itemList.renderItemsLevelOne();
             wasp.render(512, 256);
+            golem.render(256, 782);
             golem.render(256, 782); //
         }
     }
 
-        //Player collide with Item
-        private void playerCollideWithItem(Item item){
-            boolean isRightLevel = false;
-            //refactor the following
-            if( itemList.getItemsLevelZero().contains(item,true) && Constants.currentLevel == 0 ){
-                isRightLevel = true;
-            }
-            else if( itemList.getItemsLevelOne().contains(item,true) && Constants.currentLevel == 1 ) {
-                isRightLevel = true;
-            }
+    //Player collide with Item
+    private void playerCollideWithItem(Item item){
+        boolean isRightLevel = false;
+        //refactor the following
+        if( itemList.getItemsLevelZero().contains(item,true) && Constants.currentLevel == 0 ){
+            isRightLevel = true;
+        }
+        else if( itemList.getItemsLevelOne().contains(item,true) && Constants.currentLevel == 1 ) {
+            isRightLevel = true;
+        }
 
-            if ( item.isCollected() == false && isRightLevel ) {
-                item.setCollected(true);
-                initialItemRender();
-                //TODO should add to score, here!
+        if ( (!item.getCollected()) && isRightLevel ) {
+            item.setCollected(true);
+            initialItemRender();
+                // apple give health only
+                if(item.getName().equals("apple")){
+                    hud.setHealth(hud.getHealth()+item.giveScorePoint());
+                }
+                else {hud.setScore(hud.getScore()+item.giveScorePoint());
 
-                //plays a sound effect when collecting a cloth item
-                SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
+                    //plays a sound effect when collecting a cloth ite
+                    SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);}
                 Gdx.app.debug("SOUND", "ITEM COLLECT");
-            }
+
 
         }
+    }
 
 
     @Override
@@ -184,7 +189,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         //free allocated memory
         interactMap.dispose();
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
-       // Gdx.app.debug("SOUND", "DISPOSE");
+        // Gdx.app.debug("SOUND", "DISPOSE");
         SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         SoundEffect.newSoundEffect.sounds.collect.stop();
 
@@ -194,11 +199,15 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     public void render(float delta) {
         initialRender();
         initialItemRender();
-
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(hud.stage);
-        multiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(multiplexer);
+        sp.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
+        if(!hud.getisPaused()){
+            multiplexer = new InputMultiplexer();
+            multiplexer.addProcessor(hud.stage);
+            multiplexer.addProcessor(this);
+            Gdx.input.setInputProcessor(multiplexer);
+        }
+        else  Gdx.input.setInputProcessor(hud.stage);
     }
 
     public void checkCollisionPlayerAndItem() {
@@ -510,6 +519,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     girl.move(differenceInPositionX * tileWidth, 0);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
 
                 } else if (Math.signum((int) differenceInPositionX * tileWidth) == 1) {
@@ -521,6 +531,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     girl.move(differenceInPositionX * tileWidth, 0);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
                 }
             }
@@ -538,6 +549,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     girl.move(0, differenceInPositionY * tileHeight);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
                 } else if (Math.signum((float) differenceInPositionY) == 1) {
                     girl.setCurrentAnimation(girl.getWalkAnimationUP());
@@ -548,6 +560,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
                     girl.move(0, differenceInPositionY * tileHeight);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
                 }
             }
@@ -599,100 +612,107 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     }
 
     public void convertPlayerPositionToSimplified () {
-                    //get player positions
-                    //we need to invert the Y because the sprite is in a different coordinate system
-                    playerPositionY = invertScreenPos((int) girl.getOldY());
-                    playerPositionX = (int) girl.getOldX();
-                    //convert player positions to the simplified version
-                    playerPositionX = ScreenPosXtoSimplified(playerPositionX);
-                    playerPositionY = ScreenPosYtoSimplified(playerPositionY);
-                }
+        //get player positions
+        //we need to invert the Y because the sprite is in a different coordinate system
+        playerPositionY = invertScreenPos((int) girl.getOldY());
+        playerPositionX = (int) girl.getOldX();
+        //convert player positions to the simplified version
+        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
+        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+    }
 
-                public int getPlayerPositionY () {
-                    return playerPositionY;
-                }
+    public int getPlayerPositionY () {
+        return playerPositionY;
+    }
 
-                public int getPlayerPositionX () {
-                    return playerPositionX;
-                }
+    public int getPlayerPositionX () {
+        return playerPositionX;
+    }
 
-                /**
-                 * This method checks player position against a position that we specify as the exit (Danning)
-                 * We want to have the exit as parameter because each level might have its exit in a different place.
-                 *
-                 * @param tileX exit tile position in X
-                 * @param tileY exit tile position in Y
-                 */
-                public void exitLevel ( int tileX, int tileY){
-                    convertPlayerPositionToSimplified();
-                    //if player position is the same as the tile position marked as "exit", then call the next level loader method
-                    if (playerPositionX == tileX && playerPositionY == tileY) {
-                        updateLevel();
-                    }
-                }
+    /**
+     * This method checks player position against a position that we specify as the exit (Danning)
+     * We want to have the exit as parameter because each level might have its exit in a different place.
+     *
+     * @param tileX exit tile position in X
+     * @param tileY exit tile position in Y
+     */
+    public void exitLevel ( int tileX, int tileY){
+        convertPlayerPositionToSimplified();
+        //if player position is the same as the tile position marked as "exit", then call the next level loader method
+        if (playerPositionX == tileX && playerPositionY == tileY) {
+            if( playerPositionX == 13 && playerPositionY == 7){
+                Constants.currentLevel --;
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+            }
+            else updateLevel();
+        }
+    }
 
-                public void checkTurn () {
+    public void checkTurn () {
 
-                    if (turnCounter % 2 == 0) {
-                        yeti.move(playerPositionX, playerPositionY);
-
-
-                        if (yeti.getSimpleMonsterX() == playerPositionX - 1 && yeti.getSimpleMonsterY() == yeti.getSimplePlayerInvertedy()) {
-                            hitByMonster();
-
-                        }
-                    } else if (turnCounter % 2 == 1) {
-                        Gdx.app.log("GGGGGG  xxx  " + yeti.getSimpleMonsterX(), "YYYYYY" + (yeti.getSimpleMonsterY() + 1));
-
-                        Gdx.app.log("PLAYER XXX " + (playerPositionX - 1), "PLAYER   YYYYYY" + yeti.getSimplePlayerInvertedy());
-                        gazeti.move(playerPositionX, playerPositionY);
-                        if (gazeti.getSimpleMonsterX() == playerPositionX - 1 && gazeti.getSimpleMonsterY() == gazeti.getSimplePlayerInvertedy()) {
-                            hitByMonster();
-                        }
-                    }
-
-                }
-
-                public void hitByMonster () {
-                    float halfHelth = 50;
-                    float noHealth = 0;
-
-                    if (hud.getHealth() >= noHealth && hud.getHealth() >= halfHelth) {
-
-                        hud.setHealth(hud.getHealth() * 0.75f);
-                    } else if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
-
-                        hud.setHealth(noHealth);
-                }
+        if (turnCounter % 2 == 0) {
+            yeti.move(playerPositionX, playerPositionY);
 
 
-         /** Load the next level map
-         * @return false after loading once. otherwise it will keep loading for some reason
-         */
-                public boolean updateLevel() {
-                    boolean notMovedYet = true;
-                    if (notMovedYet) {
-                        Constants.currentLevel++;
+            if (yeti.getSimpleMonsterX() == playerPositionX - 1 && yeti.getSimpleMonsterY() == yeti.getSimplePlayerInvertedy()) {
+                hitByMonster();
 
-                       interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
-                       interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
+            }
+        } else if (turnCounter % 2 == 1) {
+            Gdx.app.log("GGGGGG  xxx  " + yeti.getSimpleMonsterX(), "YYYYYY" + (yeti.getSimpleMonsterY() + 1));
 
-                        //getProperties();
-                        //clear monster from the previous level
-                        itemList.renderItemsLevelOne();
-                        wasp.render(512, 256);
-                        golem.render(256, 782);
-                        yeti.dispose();
-                        gazeti.dispose();
-                        hud.setLevel(Constants.currentLevel);
-                        //change background music
-                        SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
-                       // Gdx.app.debug("SOUND", "NEXT LEVEL");
-                        //TODO add monsters and itemsLevelZero to next level and finalize exit position. change player starting position in the second map
-                    }
-                    return false;
-                }
+            Gdx.app.log("PLAYER XXX " + (playerPositionX - 1), "PLAYER   YYYYYY" + yeti.getSimplePlayerInvertedy());
+            gazeti.move(playerPositionX, playerPositionY);
+            if (gazeti.getSimpleMonsterX() == playerPositionX - 1 && gazeti.getSimpleMonsterY() == gazeti.getSimplePlayerInvertedy()) {
+                hitByMonster();
+            }
+        }
 
+    }
+
+    public void hitByMonster () {
+        float halfHelth = 50f;
+        float noHealth = 0f;
+        if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
+        { ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+            hud.setHealth(noHealth);}
+        else {
+            hud.setHealth(hud.getHealth() * 0.75f);}
+    }
+
+    public void ScoreMoveDecrease(){
+        if(hud.getScore()>0)
+            hud.setScore(hud.getScore()-10);
+        else hud.setScore(0);
+    }
+
+
+    /** Load the next level map
+     * @return false after loading once. otherwise it will keep loading for some reason
+     */
+    public boolean updateLevel() {
+        boolean notMovedYet = true;
+        if (notMovedYet) {
+            Constants.currentLevel++;
+
+            interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
+            interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
+
+            //getProperties();
+            //clear monster from the previous level
+            itemList.renderItemsLevelOne();
+            wasp.render(512, 256);
+            golem.render(256, 782);
+            yeti.dispose();
+            gazeti.dispose();
+            hud.setLevel(Constants.currentLevel);
+            //change background music
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
+            // Gdx.app.debug("SOUND", "NEXT LEVEL");
+            //TODO add monsters and itemsLevelZero to next level and finalize exit position. change player starting position in the second map
+        }
+        return false;
+    }
 
 
 }
