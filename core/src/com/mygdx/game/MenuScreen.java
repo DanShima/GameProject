@@ -69,8 +69,6 @@ public class MenuScreen implements Screen {
 
                 //playButton.setText("You clicked the button");
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
-                //((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(batch));
-
 
             }
         });
@@ -161,20 +159,28 @@ public class MenuScreen implements Screen {
         Table table = new Table();
         //checkbox for turning on and off sound and setting volume
         checkBoxSound = new CheckBox("", skin);
-        table.add(checkBoxSound);
+        table.add(checkBoxSound).padTop(30f);
+        checkBoxSound.setTransform(true);
+        checkBoxSound.scaleBy(1.15f);
         Label soundLabel = new Label("Sound", skin);
         soundLabel.setFontScale(3f,3f);
         table.add(soundLabel);
         sliderSound = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        sliderSound.getStyle().knob.setMinHeight(30f);
+        sliderSound.getStyle().knob.setMinWidth(30f);
         table.add(sliderSound).width(300).padLeft(20).padRight(30);
         table.row();
         //checkbox for turning on and off music and setting volume
         checkBoxMusic = new CheckBox("", skin);
-        table.add(checkBoxMusic);
+        checkBoxMusic.setTransform(true);
+        checkBoxMusic.scaleBy(1.15f);
+        table.add(checkBoxMusic).padTop(30f);
         Label musicLabel = new Label("Music", skin);
         musicLabel.setFontScale(3f,3f);
         table.add(musicLabel).padLeft(20).padRight(30);
         sliderMusic = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        sliderMusic.getStyle().knob.setMinHeight(30f);
+        sliderMusic.getStyle().knob.setMinWidth(30f);
         table.add(sliderMusic).width(300);
         table.row();
         return table;
@@ -226,7 +232,7 @@ public class MenuScreen implements Screen {
     private void onSettingsClicked() {
           loadSettings();
           popUpSettings.setVisible(true);//make the pop-up visible
-          popUpSettings.toFront();
+        popUpSettings.toFront();
     }
 
     /**
