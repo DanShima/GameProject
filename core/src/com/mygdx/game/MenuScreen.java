@@ -225,7 +225,8 @@ public class MenuScreen implements Screen {
      */
     private void onSettingsClicked() {
           loadSettings();
-          popUpSettings.setVisible(true); //make the pop-up visible
+          popUpSettings.setVisible(true);//make the pop-up visible
+          popUpSettings.toFront();
     }
 
     /**

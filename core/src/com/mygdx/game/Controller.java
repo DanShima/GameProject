@@ -145,13 +145,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             isRightLevel = true;
         }
 
-        if ( item.isCollected() == false && isRightLevel ) {
+        if ( (!item.getCollected()) && isRightLevel ) {
             item.setCollected(true);
             initialItemRender();
-            if(!item.getCollected())
-            {
-                item.setCollected(true);
-                initialItemRender();
                 // apple give health only
                 if(item.getName().equals("apple")){
                     hud.setHealth(hud.getHealth()+item.giveScorePoint());
@@ -161,7 +157,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     //plays a sound effect when collecting a cloth ite
                     SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);}
                 Gdx.app.debug("SOUND", "ITEM COLLECT");
-            }
+
 
         }
     }
@@ -645,6 +641,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         //if player position is the same as the tile position marked as "exit", then call the next level loader method
         if (playerPositionX == tileX && playerPositionY == tileY) {
             if( playerPositionX == 13 && playerPositionY == 7){
+                Constants.currentLevel --;
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
             }
             else updateLevel();

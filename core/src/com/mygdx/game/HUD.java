@@ -134,6 +134,7 @@ public class HUD implements Disposable  {
         TryAgain.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Constants.currentLevel = 0;
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
             }
         });
