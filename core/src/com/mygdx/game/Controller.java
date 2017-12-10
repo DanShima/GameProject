@@ -741,9 +741,12 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         else hud.setScore(0);
     }
     public void GameOverSettings(){
-        Constants.SCORE_START=1000;
         Constants.currentLevel=0;
         ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+        hud.setScore(1000);
+
+
+
     }
 
 
