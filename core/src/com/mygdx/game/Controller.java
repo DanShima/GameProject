@@ -672,10 +672,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         convertPlayerPositionToSimplified();
         //if player position is the same as the tile position marked as "exit", then call the next level loader method
         if (playerPositionX == tileX && playerPositionY == tileY) {
-            if( playerPositionX == 13 && playerPositionY == 7){
-                Constants.currentLevel --;
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
-            }
+            if( playerPositionX == 13 && playerPositionY == 7)
+                GameOverSettings();
             else updateLevel();
         }
       }
@@ -729,8 +727,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         float halfHelth = 50f;
         float noHealth = 0f;
         if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
-        { ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+        {
             hud.setHealth(noHealth);
+            GameOverSettings();
         }
         else {
             hud.setHealth(hud.getHealth() * 0.75f);}
@@ -740,6 +739,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         if(hud.getScore()>0)
             hud.setScore(hud.getScore()-20);
         else hud.setScore(0);
+    }
+    public void GameOverSettings(){
+        Constants.SCORE_START=1000;
+        Constants.currentLevel=0;
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
     }
 
 
