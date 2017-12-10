@@ -13,8 +13,8 @@ public class Item {
     private Sprite sprite;
     private SpriteBatch spriteBatch;
     private Texture texture;
-    private float positionX;
-    private float positionY;
+    private float x;
+    private float y;
     private boolean collected;
     private String name;
 
@@ -23,6 +23,8 @@ public class Item {
      */
      public Item(String name, String pngFile, float x, float y) {
          this.name = name;
+         this.x=x;
+         this.y=y;
          create(pngFile, x, y);
     }
 
@@ -91,19 +93,19 @@ public class Item {
     }
 
     public float getPositionX() {
-        return positionX;
+        return x;
     }
 
     public void setPositionX(float positionX) {
-        this.positionX = positionX;
+        this.x = positionX;
     }
 
     public float getPositionY() {
-        return positionY;
+        return y;
     }
 
     public void setPositionY(float positionY) {
-        this.positionY = positionY;
+        this.y = positionY;
     }
 
     public void setTexture(Texture texture) {

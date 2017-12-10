@@ -220,25 +220,39 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
     public void checkCollisionPlayerAndItem() {
-        //Gdx.app.log("SOUND", "COLLISION QUERY");
-        // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
-        if (girl.getOldX() > 1152 && girl.getOldX() < 1408 && girl.getOldY() > 768 && girl.getOldY() < 1024) {
-            playerCollideWithItem(itemList.getSpecificItemLevelOne(0)); //socks 1280, 896
-        }
-        if (girl.getOldX() > 1216 && girl.getOldX() < 1344 && girl.getOldY() > 320 && girl.getOldY() < 448) {
-            playerCollideWithItem(itemList.getSpecificItemLevelZero(1)); //shirt
-        }
-        if (girl.getOldX() > 192 && girl.getOldX() < 320 && girl.getOldY() > 192 && girl.getOldY() < 320) {
+        //CollisionCheck for underwear
+        if(girl.getOldX()==itemList.getSpecificItemLevelZero(0).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelZero(0).getPositionY()) {
             playerCollideWithItem(itemList.getSpecificItemLevelZero(0)); //underwear
         }
-        if (girl.getOldX() > 509 && girl.getOldX() < 765 && girl.getOldY() > 192 && girl.getOldY() < 320) {
-            playerCollideWithItem(itemList.getSpecificItemLevelOne(1)); //pants
+        //CollisionCheck for Shirt
+        if(girl.getOldX()==itemList.getSpecificItemLevelZero(1).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelZero(1).getPositionY()) {
+            playerCollideWithItem(itemList.getSpecificItemLevelZero(1)); //shirt
         }
-        if (girl.getOldX() > 256 && girl.getOldX() < 512 && girl.getOldY() > 384 && girl.getOldY() < 640) {
-            playerCollideWithItem(itemList.getSpecificItemLevelZero(2)); //apple
-            playerCollideWithItem(itemList.getSpecificItemLevelOne(2)); //apple
+        //CollisionCheck for apple in level1
+        if(girl.getOldX()==itemList.getSpecificItemLevelZero(2).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelZero(2).getPositionY()) {
+
+                playerCollideWithItem(itemList.getSpecificItemLevelZero(2)); //apple
+            }
+            //CollisionCheck for Socks
+            if (girl.getOldX() == itemList.getSpecificItemLevelOne(0).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelOne(0).getPositionY()) {
+                playerCollideWithItem(itemList.getSpecificItemLevelOne(0)); //socks 1280, 896
+            }
+            //CollisionCheck for pants
+            if (girl.getOldX() == itemList.getSpecificItemLevelOne(1).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelOne(1).getPositionY()) {
+                playerCollideWithItem(itemList.getSpecificItemLevelOne(1)); //pants
+            }
+            //CollisionCheck for apple in level1
+            if (girl.getOldX() == itemList.getSpecificItemLevelOne(2).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelOne(2).getPositionY()) {
+                {
+                    playerCollideWithItem(itemList.getSpecificItemLevelOne(2)); //apple
+                }
 
         }
+    }
+
+    public void compareposition(int x, int y)
+    {
+
     }
 
     @Override
