@@ -36,6 +36,7 @@ public class Constants {
     public static final String WASP = "wasp.png";
     public static final String WINDGHOST = "windghost.png";
     public static final String MUSHROOM = "mossmushroom.png";
+    public static final String Phreeoni = "Phreoni.png";
     //UI skin for buttons and bars
     public static final String skin = new String("skin/freezing-ui.json");
     //to Display menu
