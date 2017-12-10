@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
@@ -13,19 +14,20 @@ public class SoundManager {
         private SoundManager() { }
 
         public void play (Sound sound) {
-            play(sound, 100);
+            play(sound, 1.0f);
         }
 
-        public void play (Sound sound, int volume) {
-            if (!GameSetting.newSetting.hasSoundOn) return; //if the user doesnt want sounds on in the menu option, no sounds will be played
-            sound.play(GameSetting.newSetting.soundVolume * volume);
+        public void play (Sound sound, float volume) {
+            if (!GameSetting.newSetting.isHasSoundOn()) return; //if the user doesnt want sounds on in the menu option, no sounds will be played
+            sound.play(GameSetting.newSetting.getSoundVolume() * volume);
+            Gdx.app.log("SOUND","SOUND PLAY");
         }
         public void play (Music music) {
         stopMusic();
         playAudio = music;
-        if (GameSetting.newSetting.hasMusicOn) {
+        if (GameSetting.newSetting.isHasMusicOn()) {
             music.setLooping(true); //set the song to loop
-            music.setVolume(GameSetting.newSetting.musicVolume);
+            music.setVolume(GameSetting.newSetting.getMusicVolume());
             music.play();
         } }
 
@@ -40,8 +42,8 @@ public class SoundManager {
          */
          public void onSettingsUpdated () {
         if (playAudio == null) return;
-        playAudio.setVolume(GameSetting.newSetting.musicVolume);
-        if (GameSetting.newSetting.hasMusicOn) {
+        playAudio.setVolume(GameSetting.newSetting.getMusicVolume());
+        if (GameSetting.newSetting.isHasMusicOn()) {
             if (!playAudio.isPlaying())
                 playAudio.play();
         } else {

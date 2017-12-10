@@ -27,13 +27,13 @@ public class SoundEffect implements Disposable, AssetErrorListener{
         public final Sound collect; //played when the player picks up an item
         public final Sound loseLife;
         public final Sound monsterGroan;
-        public final Sound gainHP; //gain some extra health points after picking up a health potion.
+        public final Sound gameOver; //gain some extra health points after picking up a health potion.
 
         public GameSound(AssetManager manager) {
-            collect = manager.get("levelup.mp3", Sound.class);
-            loseLife = manager.get("life_lost.wav", Sound.class);
+            collect = manager.get("cloth-inventory.wav", Sound.class);
+            loseLife = manager.get("wscream_2.wav", Sound.class);
             monsterGroan = manager.get("monstergroan.wav", Sound.class);
-            gainHP = manager.get("level up1.mp3", Sound.class);
+            gameOver = manager.get("level up1.mp3", Sound.class);
         }
     }
 
@@ -60,8 +60,8 @@ public class SoundEffect implements Disposable, AssetErrorListener{
             this.manager = manager;
             manager.setErrorListener(this);
 
-            manager.load("levelup.mp3", Sound.class);
-            manager.load("life_lost.wav", Sound.class);
+            manager.load("cloth-inventory.wav", Sound.class);
+            manager.load("wscream_2.wav", Sound.class);
             manager.load("monstergroan.wav", Sound.class);
             manager.load("level up1.mp3", Sound.class);
 
@@ -76,7 +76,6 @@ public class SoundEffect implements Disposable, AssetErrorListener{
     @Override
     public void dispose () {
         manager.dispose(); //free allocated memory by getting rid of the sound manager after it's no longer used
-
     }
 
     @Override

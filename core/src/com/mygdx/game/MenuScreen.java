@@ -6,6 +6,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -48,11 +49,16 @@ public class MenuScreen implements Screen {
     }
     public void create() {
 
+        SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
+        GameSetting.newSetting.load(); //load audio settings
+        SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicStartMenu); //play background music
+        Gdx.app.debug("SOUND", "MENUUUU");
+
         batch = new SpriteBatch();
         skin = new Skin(Gdx.files.internal(Constants.skin));
         stage = new Stage();
         bgbatch =new SpriteBatch();
-        background = new Texture("menu1.png");
+        background = new Texture("background_02.png");
 
         final TextButton playButton = new TextButton("PLAY", skin, "default");
         playButton.setSize(Constants.colWidth ,Constants.rowHeight);
@@ -109,6 +115,7 @@ public class MenuScreen implements Screen {
     public void dispose() {
         batch.dispose();
         bgbatch.dispose();
+        SoundEffect.newSoundEffect.backgroundMusic.musicStartMenu.stop();
     }
     @Override
     public void show() {
@@ -156,17 +163,17 @@ public class MenuScreen implements Screen {
         Label soundLabel = new Label("Sound", skin);
         soundLabel.setFontScale(3f,3f);
         table.add(soundLabel);
-        sliderSound = new Slider(0, 100, 20, false, skin);
-        table.add(sliderSound).padLeft(10);
+        sliderSound = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        table.add(sliderSound).width(300).padLeft(20).padRight(30);
         table.row();
         //checkbox for turning on and off music and setting volume
         checkBoxMusic = new CheckBox("", skin);
         table.add(checkBoxMusic);
         Label musicLabel = new Label("Music", skin);
         musicLabel.setFontScale(3f,3f);
-        table.add(musicLabel).padLeft(10);
-        sliderMusic = new Slider(0, 100, 20, false, skin);
-        table.add(sliderMusic);
+        table.add(musicLabel).padLeft(20).padRight(30);
+        sliderMusic = new Slider(0.0f, 1.0f, 0.1f, false, skin);
+        table.add(sliderMusic).width(300);
         table.row();
         return table;
     }
@@ -203,12 +210,12 @@ public class MenuScreen implements Screen {
      * Load sound preferences from GameSetting class
      */
     private void loadSettings() {
-        GameSetting prefs = GameSetting.newSetting;
-        prefs.load();
-        checkBoxSound.setChecked(prefs.hasSoundOn);
-        sliderSound.setValue(prefs.soundVolume);
-        checkBoxMusic.setChecked(prefs.hasMusicOn);
-        sliderMusic.setValue(prefs.musicVolume);
+        GameSetting setting = GameSetting.newSetting;
+        setting.load();
+        checkBoxSound.setChecked(setting.isHasSoundOn());
+        sliderSound.setValue(setting.getSoundVolume());
+        checkBoxMusic.setChecked(setting.isHasMusicOn());
+        sliderMusic.setValue(setting.getMusicVolume());
     }
 
     /**
@@ -240,13 +247,13 @@ public class MenuScreen implements Screen {
      * Save the new audio preferences. for instance, if the checkbox is unchecked. it stays unchecked
      */
     private void saveSettings() {
-        GameSetting prefs = GameSetting.newSetting;
-        prefs.hasSoundOn = checkBoxSound.isChecked();
-        prefs.soundVolume = (int) sliderSound.getValue();
-        prefs.hasMusicOn = checkBoxMusic.isChecked();
-        prefs.musicVolume = (int) sliderMusic.getValue();
-        prefs.save();
-    }
+        GameSetting setting = GameSetting.newSetting;
+        setting.setHasSoundOn(checkBoxSound.isChecked());
+        setting.setHasMusicOn(checkBoxMusic.isChecked());
+        setting.setSoundVolume(sliderSound.getValue());
+        setting.setMusicVolume(sliderMusic.getValue());
+        setting.save();
+  }
     @Override
     public void resize(int width, int height) {
     }
@@ -255,6 +262,7 @@ public class MenuScreen implements Screen {
     }
     @Override
     public void resume() {
+
     }
     @Override
     public void hide() {
