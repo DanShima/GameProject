@@ -2,6 +2,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
@@ -15,12 +16,13 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Timer;
 
-/**
-     * This class is the controller for game objects and map
-     * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
-     */
 
-    public class Controller implements InputProcessor,Screen,ApplicationListener {
+/**
+ * This class is the controller for game objects and map
+ * Event handling is done using the observer pattern. InputProcessor, a listener interface, is implemented
+ */
+
+public class Controller implements InputProcessor,Screen,ApplicationListener {
     private int turnCounter = 0;
     private GameView interactView;
     private Map interactMap;
@@ -85,10 +87,10 @@ import com.badlogic.gdx.utils.Timer;
         girl = new Player();
         girl.create();
 
-       // SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
+        // SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
-       // Gdx.app.debug("SOUND", "CONTROLLERRRR");
+        // Gdx.app.debug("SOUND", "CONTROLLERRRR");
 
         gazeti = new GazetiMonster();
         mushrom = new MushRoomMonster();
@@ -116,8 +118,6 @@ import com.badlogic.gdx.utils.Timer;
         interactMap.getTiledMapRenderer().setView(interactView.getCamera());
         interactMap.getTiledMapRenderer().render();
 
-        sp.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
     }
 
     //Initial Item Render
@@ -125,7 +125,6 @@ import com.badlogic.gdx.utils.Timer;
         girl.render();
         girl.updateSpriteBatch(itemList.getItemsLevelZero()); //update clothes on girl level 0
         girl.updateSpriteBatch(itemList.getItemsLevelOne()); //update clothes on girl level 1
-
         if(Constants.currentLevel == 0) {
 
             itemList.renderItemsLevelZero();
@@ -135,35 +134,42 @@ import com.badlogic.gdx.utils.Timer;
         if(Constants.currentLevel == 1){
 
             itemList.renderItemsLevelOne();
+
             gazeti.render(512, 256);
             mushrom.render(256, 782);
 
             phreeoni.render(1152,384);//spawn phreeoni at the given position in the map
+
         }
     }
 
-        //Player collide with Item
-        private void playerCollideWithItem(Item item){
-            boolean isRightLevel = false;
-            //refactor the following
-            if( itemList.getItemsLevelZero().contains(item,true) && Constants.currentLevel == 0 ){
-                isRightLevel = true;
-            }
-            else if( itemList.getItemsLevelOne().contains(item,true) && Constants.currentLevel == 1 ) {
-                isRightLevel = true;
-            }
+    //Player collide with Item
+    private void playerCollideWithItem(Item item){
+        boolean isRightLevel = false;
+        //refactor the following
+        if( itemList.getItemsLevelZero().contains(item,true) && Constants.currentLevel == 0 ){
+            isRightLevel = true;
+        }
+        else if( itemList.getItemsLevelOne().contains(item,true) && Constants.currentLevel == 1 ) {
+            isRightLevel = true;
+        }
 
-            if ( item.isCollected() == false && isRightLevel ) {
-                item.setCollected(true);
-                initialItemRender();
-                //TODO should add to score, here!
+        if ( (!item.getCollected()) && isRightLevel ) {
+            item.setCollected(true);
+            initialItemRender();
+                // apple give health only
+                if(item.getName().equals("apple")){
+                    hud.setHealth(hud.getHealth()+item.giveHealthPoint());
+                }
+                else {hud.setScore(hud.getScore()+item.giveScorePoint());
 
-                //plays a sound effect when collecting a cloth item
-                SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);
+                    //plays a sound effect when collecting a cloth ite
+                    SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);}
                 Gdx.app.debug("SOUND", "ITEM COLLECT");
-            }
+
 
         }
+    }
 
 
     @Override
@@ -192,7 +198,7 @@ import com.badlogic.gdx.utils.Timer;
         //free allocated memory
         interactMap.dispose();
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
-       // Gdx.app.debug("SOUND", "DISPOSE");
+        // Gdx.app.debug("SOUND", "DISPOSE");
         SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         SoundEffect.newSoundEffect.sounds.collect.stop();
 
@@ -202,11 +208,15 @@ import com.badlogic.gdx.utils.Timer;
     public void render(float delta) {
         initialRender();
         initialItemRender();
-
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(hud.stage);
-        multiplexer.addProcessor(this);
-        Gdx.input.setInputProcessor(multiplexer);
+        sp.setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.draw();
+        if(!hud.getisPaused()){
+            multiplexer = new InputMultiplexer();
+            multiplexer.addProcessor(hud.stage);
+            multiplexer.addProcessor(this);
+            Gdx.input.setInputProcessor(multiplexer);
+        }
+        else  Gdx.input.setInputProcessor(hud.stage);
     }
 
     public void checkCollisionPlayerAndItem() {
@@ -518,6 +528,7 @@ import com.badlogic.gdx.utils.Timer;
                     girl.move(differenceInPositionX * tileWidth, 0);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
 
                 } else if (Math.signum((int) differenceInPositionX * tileWidth) == 1) {
@@ -529,6 +540,7 @@ import com.badlogic.gdx.utils.Timer;
                     girl.move(differenceInPositionX * tileWidth, 0);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
                 }
             }
@@ -546,6 +558,7 @@ import com.badlogic.gdx.utils.Timer;
                     girl.move(0, differenceInPositionY * tileHeight);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
 
                 } else if (Math.signum((float) differenceInPositionY) == 1) {
@@ -557,6 +570,7 @@ import com.badlogic.gdx.utils.Timer;
                     girl.move(0, differenceInPositionY * tileHeight);
                     checkCollisionPlayerAndItem();
                     turnCounter++;
+                    ScoreMoveDecrease();
                     checkTurn();
 
                 }
@@ -631,38 +645,42 @@ import com.badlogic.gdx.utils.Timer;
                     return playerPositionY;
                 }
 
-                public int getPlayerPositionX () {
-                    return playerPositionX;
-                }
 
-                /**
-                 * This method checks player position against a position that we specify as the exit (Danning)
-                 * We want to have the exit as parameter because each level might have its exit in a different place.
-                 *
-                 * @param tileX exit tile position in X
-                 * @param tileY exit tile position in Y
-                 */
-                public void exitLevel ( int tileX, int tileY){
-                    convertPlayerPositionToSimplified();
-                    //if player position is the same as the tile position marked as "exit", then call the next level loader method
-                    if (playerPositionX == tileX && playerPositionY == tileY) {
-                        updateLevel();
-                    }
-                }
+    public int getPlayerPositionX () {
+        return playerPositionX;
+    }
+
 
                 public void checkTurn () {
-                    if(notMovedYetToNextMap==false) {
-                       moveInTurn(wasp,golem);
-                    }else
-                        if (notMovedYetToNextMap==true){
+                    if (notMovedYetToNextMap == false) {
+                        moveInTurn(wasp, golem);
+                    } else if (notMovedYetToNextMap == true) {
 
-                            moveInTurn(gazeti,mushrom);
-                            monsterFiexdPath();
+                        moveInTurn(gazeti, mushrom);
+                        monsterFiexdPath();
 
-
-
-                        }
                     }
+                }
+    /**
+     * This method checks player position against a position that we specify as the exit (Danning)
+     * We want to have the exit as parameter because each level might have its exit in a different place.
+     *
+     * @param tileX exit tile position in X
+     * @param tileY exit tile position in Y
+     */
+    public void exitLevel ( int tileX, int tileY){
+        convertPlayerPositionToSimplified();
+        //if player position is the same as the tile position marked as "exit", then call the next level loader method
+        if (playerPositionX == tileX && playerPositionY == tileY) {
+            if( playerPositionX == 13 && playerPositionY == 7){
+                Constants.currentLevel --;
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+            }
+            else updateLevel();
+        }
+      }
+
+
                     public void moveInTurn(final Monster monster1, final Monster monster2 ){
 
                         monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
@@ -698,27 +716,36 @@ import com.badlogic.gdx.utils.Timer;
 
                     }
 
-public void monsterFiexdPath(){
+                        public void monsterFiexdPath() {
 
                         phreeoni.monsterProceduralPatternMovement();
 
+
+                    }
+
+
+
+    public void hitByMonster () {
+        float halfHelth = 50f;
+        float noHealth = 0f;
+        if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
+        { ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+            hud.setHealth(noHealth);
+        }
+        else {
+            hud.setHealth(hud.getHealth() * 0.75f);}
+    }
+
+    public void ScoreMoveDecrease(){
+        if(hud.getScore()>0)
+            hud.setScore(hud.getScore()-20);
+        else hud.setScore(0);
     }
 
 
-
-
-                public void hitByMonster () {
-                    float halfHelth = 50;
-                    float noHealth = 0;
-
-                    if (hud.getHealth() >= noHealth && hud.getHealth() >= halfHelth) {
-
-                        hud.setHealth(hud.getHealth() * 0.75f);
-                    } else if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
-
-                        hud.setHealth(noHealth);
-                }
-
+    /** Load the next level map
+     * @return false after loading once. otherwise it will keep loading for some reason
+     */
 
          /** Load the next level map
          * @return false after loading once. otherwise it will keep loading for some reason
@@ -749,6 +776,7 @@ public void monsterFiexdPath(){
                     }
                     return false;
                 }
+
 
 
 

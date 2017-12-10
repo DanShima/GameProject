@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -29,14 +32,23 @@ public class HUD implements Disposable  {
     private int level = 0;
     public Stage stage;
     private Viewport viewport;
-    private  int score = 100;
+    private static int score = Constants.SCORE_START;
     private  Label ScoreLabel;
     private Label LevelLabel;
     private Table table;
     private TextButton button ;
-    private Skin myskin ;// skin for better UI
-
+    private Skin skin ;// skin for better UI
+    TextButton Continue ;
+    TextButton  TryAgain;
+    TextButton  Settings ;
+    TextButton  Menu;
+    MenuScreen menuScreen;
+    private Window PauseMenu;
     final ProgressBar progressBar;
+
+
+
+    boolean isPaused = false;
 
 
     public HUD(SpriteBatch sb)
@@ -45,46 +57,114 @@ public class HUD implements Disposable  {
 
         viewport=new StretchViewport (Constants.mapWidth,Constants.mapHeight,new OrthographicCamera ());//
         stage=new Stage(viewport,sb);//stage is as box and try to put widget and organize things inside that table
-        myskin = new Skin ( Gdx.files.internal ( Constants.skin ) );
-        final Dialog dialog = new Dialog ( "click me",myskin,"default" );
+        skin = new Skin ( Gdx.files.internal ( Constants.skin ) );
+        menuScreen = new MenuScreen();
         table = new Table();
         table.setFillParent(true);//table is now fill all the stage
         table.top();//table at top of the stage
-        ScoreLabel=new Label("Score" + score ,myskin,"default");//label for gdx
+        ScoreLabel=new Label("Score" + score ,skin,"default");//label for gdx
         ScoreLabel.setFontScale(3,2);
-        button = new TextButton ( "Menu",myskin,"default" );
+        button = new TextButton ( "Menu",skin,"default" );
+        PauseMenu = new Window("Options", skin);
+        PauseMenu.add(createSettingsButtons()).row();
+        // hide options window by default
+        PauseMenu.setVisible(false);
+        // set size and position
+        PauseMenu.pack();
+        PauseMenu.setPosition(900, 500);
+        PauseMenu.setMovable(false);
+        PauseMenu.toFront();
 
         button.addListener(new InputListener() {
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-               // dialog.show(stage);
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
-                return true;}});
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, final int button) {
+                // fill the window with content: Sound/Music checkBoxes and volume sliders
+                Gdx.graphics.setContinuousRendering(false);
+                isPaused = true;
+                PauseMenu.setVisible(true);
+                // set size and position
+                return true; }});
 
-        LevelLabel =new Label("Level :" + level ,myskin, "default");//label for gdx
+
+        LevelLabel =new Label("Level :" + level ,skin, "default");//label for gdx
         LevelLabel.setFontScale(3,2);
 
-        ProgressBar.ProgressBarStyle progressBarStyle = myskin.get("fancy", ProgressBar.ProgressBarStyle.class);
-        TiledDrawable tiledDrawable = myskin.getTiledDrawable("progress-bar");// take the skin and put it inside TiledDrawable
+        ProgressBar.ProgressBarStyle progressBarStyle = skin.get("fancy", ProgressBar.ProgressBarStyle.class);
+        TiledDrawable tiledDrawable = skin.getTiledDrawable("progress-bar");// take the skin and put it inside TiledDrawable
         tiledDrawable.setMinWidth(0.0f);
         progressBarStyle.background = tiledDrawable;// background of the health bar( when the bar is empty).
 
-        tiledDrawable = myskin.getTiledDrawable("progress-bar-knob");
+        tiledDrawable = skin.getTiledDrawable("progress-bar-knob");
         tiledDrawable.setMinWidth(0.0f);
         progressBarStyle.knobBefore = tiledDrawable;
 
-        progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, myskin, "fancy");
-       // progressBar.setAnimateDuration(2);
-        progressBar.setValue(50f);//initializing the bar
+        progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, skin, "fancy");
+        progressBar.setValue(75.0f);//initializing the bar
+//        progressBar.setAnimateDuration(2f);
+
 
         // add the widgets to a table
         table.add(progressBar).width(335.0f);
         table.add(ScoreLabel).expandX();
         table.add(LevelLabel).expandX();
         table.add (button);
+        // table.add(popUpSettings);
         table.row();
         stage.addActor(table);
+        stage.addActor(PauseMenu);
     }
-   // getters and setters
+
+    private Table createSettingsButtons() {
+        Table table = new Table();
+        table.row();
+
+        Continue = new TextButton("Continue", skin);
+        table.add(Continue);
+        Continue.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.graphics.setContinuousRendering(true);
+                isPaused = false;
+               // Gdx.graphics.requestRendering();
+                PauseMenu.setVisible(false);
+            }
+        });
+        table.row();
+        TryAgain = new TextButton("TryAgain", skin);
+        table.add(TryAgain);
+        TryAgain.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Constants.currentLevel = 0;
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
+            }
+        });
+//        table.row();
+//        Settings = new TextButton("Settings", skin);
+//        table.add(Settings);
+//        Settings.addListener(new ChangeListener() {
+//            @Override
+//            public void changed(ChangeEvent event, Actor actor) {
+//               // menuScreen.onSettingsClicked();
+//                // menuScreen.
+//            }
+//        });
+        table.row();
+        Menu = new TextButton("Menu", skin);
+        table.add(Menu);
+        Menu.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                ((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
+            }
+        });
+
+
+        return table;
+    }
+
+
+
+    // getters and setters
     public  void setScore(int value) {
         score = value;
         ScoreLabel.setText(String.format("Score :" + score));
@@ -108,10 +188,12 @@ public class HUD implements Disposable  {
     {
         return progressBar.getValue();
     }
+    public boolean getisPaused() {
+        return isPaused;
+    }
     @Override
     public void dispose() {
         stage.dispose();
     }
-
 
 }
