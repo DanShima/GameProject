@@ -77,8 +77,12 @@ public class Item {
      * @return
      */
     public int giveScorePoint() {
-        return 20;
+        return 100;
     }
+    public int giveHealthPoint() {
+        return 50;
+    }
+
 
     //this maybe should be in tiledtest class
     public void dispose() {
