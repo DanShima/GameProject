@@ -33,7 +33,7 @@ public class Monster  {
 
     private int simpleMonsterX;
     private int simpleMonsterY;
-    private int simplePlayerInvertedy;
+
 
     //Yeti monster
     public Monster(){
@@ -96,9 +96,7 @@ public class Monster  {
         return simpleMonsterY;
     }
 
- public int getSimplePlayerInvertedy() {
-        return simplePlayerInvertedy;
-    }
+
 
     public void move(int playerPositionX, int playerPositionY){
 
@@ -106,8 +104,8 @@ public class Monster  {
         simpleMonsterX= (int) Math.floor( Math.max(0,XposMonster/(float) tileSize));
 
         int diffBetweenX= playerPositionX-simpleMonsterX;
-        simplePlayerInvertedy=(Constants.tileCountH-1-playerPositionY);
-        int diffBetweenY=simplePlayerInvertedy-simpleMonsterY;
+
+        int diffBetweenY=playerPositionY-simpleMonsterY;
 
         if ((Math.signum((int)diffBetweenX) == -1)){
            if (simpleMonsterX!=playerPositionX ){
@@ -116,7 +114,7 @@ public class Monster  {
             if ((Math.signum((int)diffBetweenY) == -1)){
 
 
-                  if (simpleMonsterY!=simplePlayerInvertedy ){
+                  if (simpleMonsterY!=playerPositionY ){
 
                 YposMonster-=tileSize;
 
@@ -127,7 +125,7 @@ public class Monster  {
                 XposMonster+=tileSize;
                 if ((Math.signum((int)diffBetweenY) == 1)){
 
-                     if (simpleMonsterY!=simplePlayerInvertedy  ){
+                     if (simpleMonsterY!=playerPositionY  ){
                     YposMonster+=tileSize;
 
                      }

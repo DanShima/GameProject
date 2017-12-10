@@ -1,5 +1,6 @@
 
 package com.mygdx.game;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Timer;
 
 /**
      * This class is the controller for game objects and map
@@ -524,6 +526,7 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
         if(Constants.currentLevel == 1) {
             exitLevel(13, 7);}
         return false;
+
     }
 
     /**
@@ -562,6 +565,11 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
     }
 
 
+    public int  invertedPlayerPostionY(int playerYposition) {
+
+        return (Constants.tileCountH-1-playerYposition);
+    }
+
     public void convertPlayerPositionToSimplified () {
                     //get player positions
                     //we need to invert the Y because the sprite is in a different coordinate system
@@ -597,25 +605,45 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
                 public void checkTurn () {
 
-                    if (turnCounter % 2 == 0) {
-                        yeti.move(playerPositionX, playerPositionY);
+                    //if (turnCounter % 2 == 0) {
+                    int prx = yeti.getSimpleMonsterX();
+                    int pry = yeti.getSimpleMonsterY();
+                    yeti.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
+                    Gdx.app.log("PLAYER XXX " + (playerPositionX), "Yeetti ter XXXXX" + yeti.getSimpleMonsterX());
+                    Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + yeti.getSimpleMonsterY() + 1);
 
 
-                        if (yeti.getSimpleMonsterX() == playerPositionX - 1 && yeti.getSimpleMonsterY() == yeti.getSimplePlayerInvertedy()) {
-                            hitByMonster();
+                    if (yeti.getSimpleMonsterX() == playerPositionX && yeti.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
+                        hitByMonster();
+
+                        //    }
+                    }
+                    //if (turnCounter % 2 == 1) {
+
+                    Gdx.app.log("PLAYER XXX " + (playerPositionX), "Gazeetttiii XXXXX" + gazeti.getSimpleMonsterX());
+                    Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + gazeti.getSimpleMonsterY() + 1);
+                    Timer.schedule(new Timer.Task() {
+
+                        /**
+                         * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+                         * method.
+                         */
+                        @Override
+                        public void run() {
+                            gazeti.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
 
                         }
-                    } else if (turnCounter % 2 == 1) {
-                        Gdx.app.log("GGGGGG  xxx  " + yeti.getSimpleMonsterX(), "YYYYYY" + (yeti.getSimpleMonsterY() + 1));
+                    },1);
 
-                        Gdx.app.log("PLAYER XXX " + (playerPositionX - 1), "PLAYER   YYYYYY" + yeti.getSimplePlayerInvertedy());
-                        gazeti.move(playerPositionX, playerPositionY);
-                        if (gazeti.getSimpleMonsterX() == playerPositionX - 1 && gazeti.getSimpleMonsterY() == gazeti.getSimplePlayerInvertedy()) {
+
+
+                        if (gazeti.getSimpleMonsterX() == playerPositionX && gazeti.getSimpleMonsterY() + 1 == (invertedPlayerPostionY(playerPositionY))) {
                             hitByMonster();
                         }
                     }
 
-                }
+
+              //  }
 
                 public void hitByMonster () {
                     float halfHelth = 50;
