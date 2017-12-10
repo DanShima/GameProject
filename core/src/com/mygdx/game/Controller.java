@@ -150,7 +150,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             initialItemRender();
                 // apple give health only
                 if(item.getName().equals("apple")){
-                    hud.setHealth(hud.getHealth()+item.giveScorePoint());
+                    hud.setHealth(hud.getHealth()+item.giveHealthPoint());
                 }
                 else {hud.setScore(hud.getScore()+item.giveScorePoint());
 
@@ -675,14 +675,15 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         float noHealth = 0f;
         if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
         { ((Game)Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
-            hud.setHealth(noHealth);}
+            hud.setHealth(noHealth);
+        }
         else {
             hud.setHealth(hud.getHealth() * 0.75f);}
     }
 
     public void ScoreMoveDecrease(){
         if(hud.getScore()>0)
-            hud.setScore(hud.getScore()-10);
+            hud.setScore(hud.getScore()-20);
         else hud.setScore(0);
     }
 
