@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.util.Stack;
+
 import static com.mygdx.game.Constants.FPS;
 import static com.mygdx.game.Constants.mapWidth;
 import static com.mygdx.game.Constants.tileCountW;
@@ -32,10 +34,10 @@ public class Monster  {
     protected float XposMonster;
     protected boolean initialMonsterPos=false;
     private  Controller playerPos;
-
+    private Stack<Float> steps ;
     private int simpleMonsterX;
     private int simpleMonsterY;
-
+    private boolean backStep;
 
 
     //Yeti monster
@@ -56,8 +58,9 @@ public class Monster  {
         walkAnimation = new Animation<TextureRegion>(FPS, idleFrames);
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-
+        steps= new Stack<Float>();
         this.turnOrder = turnOrder;
+        backStep=false;
     }
 
 
@@ -106,12 +109,25 @@ public class Monster  {
 
 
             Gdx.app.log("monster pherrrront XXX " + (XposMonster), " XXXXX" );
-            if(XposMonster > (mapWidth/tileCountW-tileSize)) {
+            if(XposMonster > (mapWidth/tileCountW-tileSize) && backStep==false) {
+                steps.push(XposMonster);
+
                 XposMonster -= tileSize;
 
-            }else {
+            }else
+            {
+                backStep=true;
+                if (!(steps.isEmpty())){
+                    if (XposMonster != steps.pop()){
 
-                XposMonster-=tileSize;
+                        XposMonster += tileSize;
+                    }
+            }
+               else
+
+                    backStep=false;
+
+
             }
 
     }
