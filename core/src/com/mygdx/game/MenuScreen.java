@@ -101,10 +101,11 @@ public class MenuScreen implements Screen {
                 Gdx.app.exit();
             }
         });
+
         Table settingsWindow = createSettingsWindow(); //the settings pop-up window
         stage.addActor(playButton);
         stage.addActor(settingsButton);
-        stage.addActor(settingsWindow);
+        stage.addActor(settingsWindow ());
         stage.addActor(scoreButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
@@ -229,7 +230,7 @@ public class MenuScreen implements Screen {
     /**
      * Define what happens when the player clicks on Settings in the menu
      */
-    private void onSettingsClicked() {
+    protected void onSettingsClicked() {
           loadSettings();
           popUpSettings.setVisible(true);//make the pop-up visible
         popUpSettings.toFront();
@@ -263,6 +264,12 @@ public class MenuScreen implements Screen {
         setting.setMusicVolume(sliderMusic.getValue());
         setting.save();
   }
+  public Table settingsWindow (){
+
+      Table settingsWindow = createSettingsWindow(); //the settings pop-up window
+      return settingsWindow;
+  }
+
     @Override
     public void resize(int width, int height) {
     }
