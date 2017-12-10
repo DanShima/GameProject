@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 /*
-The Hud class is responsible for displaying the current level, score and health status on top of the screen.
+The Hud  is responsible for displaying the current level, score and health status on top of the screen.
 The constructor takes "SpriteBatch" in order to be able to draw the "stage" which is a box that contain
  the widgets such as labels, buttons and progress bar.
  */
@@ -111,6 +111,7 @@ public class HUD implements Disposable  {
         table.row();
         stage.addActor(table);
         stage.addActor(PauseMenu);
+        stage.addActor(menuScreen.settingsWindow ());
     }
 
     private Table createSettingsButtons() {
@@ -134,20 +135,22 @@ public class HUD implements Disposable  {
         TryAgain.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Constants.currentLevel = 0;
+                Constants.SCORE_START = 1000;
+                Constants.currentLevel = Constants.currentLevel;
+                Gdx.graphics.setContinuousRendering(true);
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
             }
         });
-//        table.row();
-//        Settings = new TextButton("Settings", skin);
-//        table.add(Settings);
-//        Settings.addListener(new ChangeListener() {
-//            @Override
-//            public void changed(ChangeEvent event, Actor actor) {
-//               // menuScreen.onSettingsClicked();
-//                // menuScreen.
-//            }
-//        });
+        table.row();
+        Settings = new TextButton("Settings", skin);
+        table.add(Settings);
+        Settings.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                menuScreen.onSettingsClicked();
+
+            }
+        });
         table.row();
         Menu = new TextButton("Menu", skin);
         table.add(Menu);
