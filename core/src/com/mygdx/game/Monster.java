@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import static com.mygdx.game.Constants.FPS;
+import static com.mygdx.game.Constants.mapWidth;
+import static com.mygdx.game.Constants.tileCountW;
 
 /**
  * just a placeholder class for monster. feel free to modify or change completely
@@ -33,7 +35,8 @@ public class Monster  {
 
     private int simpleMonsterX;
     private int simpleMonsterY;
-    private int simplePlayerInvertedy;
+
+
 
     //Yeti monster
     public Monster(){
@@ -96,18 +99,42 @@ public class Monster  {
         return simpleMonsterY;
     }
 
- public int getSimplePlayerInvertedy() {
-        return simplePlayerInvertedy;
+    public void monsterProceduralPatternMovement(){
+
+        simpleMonsterY = SimpleMonsterYPosition();
+        simpleMonsterX= SimpleMonsterXPosition();
+
+
+            Gdx.app.log("monster pherrrront XXX " + (XposMonster), " XXXXX" );
+            if(XposMonster > (mapWidth/tileCountW-tileSize)) {
+                XposMonster -= tileSize;
+
+            }else {
+
+                XposMonster-=tileSize;
+            }
+
+    }
+
+    public int SimpleMonsterXPosition(){
+
+        return (int) Math.floor( Math.max(0,XposMonster/(float) tileSize));
+
+    }
+
+    public int SimpleMonsterYPosition(){
+
+return (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tileSize));
     }
 
     public void move(int playerPositionX, int playerPositionY){
 
-        simpleMonsterY = (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tileSize));
-        simpleMonsterX= (int) Math.floor( Math.max(0,XposMonster/(float) tileSize));
+        simpleMonsterY = SimpleMonsterYPosition();
+        simpleMonsterX= SimpleMonsterXPosition();
 
         int diffBetweenX= playerPositionX-simpleMonsterX;
-        simplePlayerInvertedy=(Constants.tileCountH-1-playerPositionY);
-        int diffBetweenY=simplePlayerInvertedy-simpleMonsterY;
+
+        int diffBetweenY=playerPositionY-simpleMonsterY;
 
         if ((Math.signum((int)diffBetweenX) == -1)){
            if (simpleMonsterX!=playerPositionX ){
@@ -116,7 +143,7 @@ public class Monster  {
             if ((Math.signum((int)diffBetweenY) == -1)){
 
 
-                  if (simpleMonsterY!=simplePlayerInvertedy ){
+                  if (simpleMonsterY!=playerPositionY ){
 
                 YposMonster-=tileSize;
 
@@ -127,7 +154,7 @@ public class Monster  {
                 XposMonster+=tileSize;
                 if ((Math.signum((int)diffBetweenY) == 1)){
 
-                     if (simpleMonsterY!=simplePlayerInvertedy  ){
+                     if (simpleMonsterY!=playerPositionY  ){
                     YposMonster+=tileSize;
 
                      }

@@ -1,5 +1,6 @@
 
 package com.mygdx.game;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Timer;
 
 
 /**
@@ -40,9 +42,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private Player girl; //animated player
 
     private GazetiMonster gazeti;
-    private MushRoomMonster yeti;
-    private Monster wasp;
-    private Monster golem;
+    private MushRoomMonster mushrom;
+    private Wasp wasp;
+    private Golem golem;
+    private Phreoni phreeoni;
 
     private String message;
 
@@ -63,8 +66,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private int playerPositionX;
 
     private ItemList itemList;
+    private boolean notMovedYetToNextMap;
 
     public Controller(GameView GameView) {
+        notMovedYetToNextMap=false;
         interactView = GameView;
         interactMap = new Map();
         create();
@@ -88,9 +93,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         // Gdx.app.debug("SOUND", "CONTROLLERRRR");
 
         gazeti = new GazetiMonster();
-        yeti = new MushRoomMonster();
-        wasp = new Monster(Constants.WASP, 4, 3, 1, 1);
-        golem = new Monster(Constants.GOLEM, 4, 3, 1, 2);
+        mushrom = new MushRoomMonster();
+        wasp = new Wasp();
+        golem = new Golem();
+        phreeoni = new Phreoni();
         itemList = new ItemList();
 
     }
@@ -122,15 +128,18 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         if(Constants.currentLevel == 0) {
 
             itemList.renderItemsLevelZero();
-            gazeti.render(782, 640); //spawn gazeti at the given position in the map
-            yeti.render(256, 352); //spawn yeti at the given position in the map
+            golem.render(782, 640); //spawn gazeti at the given position in the map
+            wasp.render(256, 352); //spawn mushrom at the given position in the map
         }
         if(Constants.currentLevel == 1){
 
             itemList.renderItemsLevelOne();
-            wasp.render(512, 256);
-            golem.render(256, 782);
-            golem.render(256, 782); //
+
+            gazeti.render(512, 256);
+            mushrom.render(256, 782);
+
+            phreeoni.render(1152,384);//spawn phreeoni at the given position in the map
+
         }
     }
 
@@ -551,6 +560,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     turnCounter++;
                     ScoreMoveDecrease();
                     checkTurn();
+
                 } else if (Math.signum((float) differenceInPositionY) == 1) {
                     girl.setCurrentAnimation(girl.getWalkAnimationUP());
                     girl.setCurrentAnimationUnderwear(girl.getWalkAnimationUPUnderwear());
@@ -562,6 +572,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     turnCounter++;
                     ScoreMoveDecrease();
                     checkTurn();
+
                 }
             }
         }
@@ -574,6 +585,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         if(Constants.currentLevel == 1) {
             exitLevel(13, 7);}
         return false;
+
     }
 
     /**
@@ -611,24 +623,44 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         return false;
     }
 
-    public void convertPlayerPositionToSimplified () {
-        //get player positions
-        //we need to invert the Y because the sprite is in a different coordinate system
-        playerPositionY = invertScreenPos((int) girl.getOldY());
-        playerPositionX = (int) girl.getOldX();
-        //convert player positions to the simplified version
-        playerPositionX = ScreenPosXtoSimplified(playerPositionX);
-        playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+
+
+    public int  invertedPlayerPostionY(int playerYposition) {
+
+        return (Constants.tileCountH-1-playerYposition);
     }
 
-    public int getPlayerPositionY () {
-        return playerPositionY;
-    }
+
+    private  void convertPlayerPositionToSimplified () {
+                    //get player positions
+                    //we need to invert the Y because the sprite is in a different coordinate system
+                    playerPositionY = invertScreenPos((int) girl.getOldY());
+                    playerPositionX = (int) girl.getOldX();
+                    //convert player positions to the simplified version
+                    playerPositionX = ScreenPosXtoSimplified(playerPositionX);
+                    playerPositionY = ScreenPosYtoSimplified(playerPositionY);
+                }
+
+                public int getPlayerPositionY () {
+                    return playerPositionY;
+                }
+
 
     public int getPlayerPositionX () {
         return playerPositionX;
     }
 
+
+                public void checkTurn () {
+                    if (notMovedYetToNextMap == false) {
+                        moveInTurn(wasp, golem);
+                    } else if (notMovedYetToNextMap == true) {
+
+                        moveInTurn(gazeti, mushrom);
+                        monsterFiexdPath();
+
+                    }
+                }
     /**
      * This method checks player position against a position that we specify as the exit (Danning)
      * We want to have the exit as parameter because each level might have its exit in a different place.
@@ -646,29 +678,52 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             }
             else updateLevel();
         }
-    }
-
-    public void checkTurn () {
-
-        if (turnCounter % 2 == 0) {
-            yeti.move(playerPositionX, playerPositionY);
+      }
 
 
-            if (yeti.getSimpleMonsterX() == playerPositionX - 1 && yeti.getSimpleMonsterY() == yeti.getSimplePlayerInvertedy()) {
-                hitByMonster();
+                    public void moveInTurn(final Monster monster1, final Monster monster2 ){
 
-            }
-        } else if (turnCounter % 2 == 1) {
-            Gdx.app.log("GGGGGG  xxx  " + yeti.getSimpleMonsterX(), "YYYYYY" + (yeti.getSimpleMonsterY() + 1));
+                        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
+                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Yeetti ter XXXXX" + monster1.getSimpleMonsterX());
+                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + monster1.getSimpleMonsterY() + 1);
 
-            Gdx.app.log("PLAYER XXX " + (playerPositionX - 1), "PLAYER   YYYYYY" + yeti.getSimplePlayerInvertedy());
-            gazeti.move(playerPositionX, playerPositionY);
-            if (gazeti.getSimpleMonsterX() == playerPositionX - 1 && gazeti.getSimpleMonsterY() == gazeti.getSimplePlayerInvertedy()) {
-                hitByMonster();
-            }
-        }
+                        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
+                            hitByMonster();
 
-    }
+                        }
+
+                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Gazeetttiii XXXXX" + monster2.getSimpleMonsterX());
+                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + monster2.getSimpleMonsterY() + 1);
+                        Timer.schedule(new Timer.Task() {
+
+                            /**
+                             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+                             * method.
+                             */
+                            @Override
+                            public void run() {
+                                monster2.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
+
+                            }
+                        }, 1);
+
+
+                        if (monster2.getSimpleMonsterX() == playerPositionX && monster2.getSimpleMonsterY() + 1 == (invertedPlayerPostionY(playerPositionY))) {
+                            hitByMonster();
+                        }
+
+
+
+                    }
+
+                        public void monsterFiexdPath() {
+
+                        phreeoni.monsterProceduralPatternMovement();
+
+
+                    }
+
+
 
     public void hitByMonster () {
         float halfHelth = 50f;
@@ -691,29 +746,38 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     /** Load the next level map
      * @return false after loading once. otherwise it will keep loading for some reason
      */
-    public boolean updateLevel() {
-        boolean notMovedYet = true;
-        if (notMovedYet) {
-            Constants.currentLevel++;
 
-            interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
-            interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
+         /** Load the next level map
+         * @return false after loading once. otherwise it will keep loading for some reason
+         */
+                public boolean updateLevel() {
+                     notMovedYetToNextMap = true;
+                    if (notMovedYetToNextMap) {
+                        Constants.currentLevel++;
 
-            //getProperties();
-            //clear monster from the previous level
-            itemList.renderItemsLevelOne();
-            wasp.render(512, 256);
-            golem.render(256, 782);
-            yeti.dispose();
-            gazeti.dispose();
-            hud.setLevel(Constants.currentLevel);
-            //change background music
-            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
-            // Gdx.app.debug("SOUND", "NEXT LEVEL");
-            //TODO add monsters and itemsLevelZero to next level and finalize exit position. change player starting position in the second map
-        }
-        return false;
-    }
+                       interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
+                       interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
+
+                        //getProperties();
+                        //clear monster from the previous level
+                        itemList.renderItemsLevelOne();
+                        gazeti.render(512, 256);
+                        mushrom.render(256, 782);
+                        phreeoni.render(1152,384);
+                        golem.dispose();
+                        wasp.dispose();
+
+                        hud.setLevel(Constants.currentLevel);
+                        //change background music
+                        SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
+                       // Gdx.app.debug("SOUND", "NEXT LEVEL");
+                        //TODO add monsters and itemsLevelZero to next level and finalize exit position. change player starting position in the second map
+
+                    }
+                    return false;
+                }
+
+
 
 
 }
