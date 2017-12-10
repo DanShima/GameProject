@@ -68,6 +68,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private ItemList itemList;
     private boolean notMovedYetToNextMap;
 
+    private boolean isMonsterTurn = false;
+
     public Controller(GameView GameView) {
         notMovedYetToNextMap=false;
         interactView = GameView;
@@ -517,6 +519,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (isMonsterTurn == false){
 
         int differenceInPositionX; //difference between simplified player position and simplified touch position in X
         int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
@@ -528,6 +531,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         convertPlayerPositionToSimplified();
         differenceInPositionX = touchPositionX - playerPositionX;
         differenceInPositionY = playerPositionY - touchPositionY;
+
         if (differenceInPositionX == 0 && differenceInPositionY == 0) {
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
         } else if ((Math.abs(differenceInPositionX) < 3 && differenceInPositionY == 0)) {
@@ -598,8 +602,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
         if(Constants.currentLevel == 1) {
             exitLevel(13, 7);}
+        }
         return false;
-
     }
 
     /**
@@ -655,7 +659,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     playerPositionY = ScreenPosYtoSimplified(playerPositionY);
                 }
 
-                public int getPlayerPositionY () {
+    public int getPlayerPositionY () {
                     return playerPositionY;
                 }
 
@@ -665,16 +669,14 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
 
-                public void checkTurn () {
-                    if (notMovedYetToNextMap == false) {
-                        moveInTurn(wasp, golem);
-                    } else if (notMovedYetToNextMap == true) {
-
-                        moveInTurn(gazeti, mushrom);
-                        monsterFiexdPath();
-
-                    }
-                }
+    public void checkTurn () {
+        if (notMovedYetToNextMap == false) {
+            moveInTurn(wasp, golem);
+        } else if (notMovedYetToNextMap == true) {
+            moveInTurn(gazeti, mushrom);
+            monsterFiexdPath();
+        }
+    }
     /**
      * This method checks player position against a position that we specify as the exit (Danning)
      * We want to have the exit as parameter because each level might have its exit in a different place.
@@ -693,47 +695,48 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
       }
 
 
-                    public void moveInTurn(final Monster monster1, final Monster monster2 ){
+    public void moveInTurn(final Monster monster1, final Monster monster2 ){
+        enemyTurnStart(); // prevent further player input until monsters have moved!!!
 
-                        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
-                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Yeetti ter XXXXX" + monster1.getSimpleMonsterX());
-                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + monster1.getSimpleMonsterY() + 1);
-
-                        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
-                            hitByMonster();
-
-                        }
-
-                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Gazeetttiii XXXXX" + monster2.getSimpleMonsterX());
-                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + monster2.getSimpleMonsterY() + 1);
-                        Timer.schedule(new Timer.Task() {
-
-                            /**
-                             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
-                             * method.
-                             */
-                            @Override
-                            public void run() {
-                                monster2.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
-
-                            }
-                        }, 1);
+        Gdx.app.log("movement" + (playerPositionX), "Yeetti ter XXXXX" + monster1.getSimpleMonsterX());
+        Gdx.app.log("movement" + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + monster1.getSimpleMonsterY() + 1);
+        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
 
 
-                        if (monster2.getSimpleMonsterX() == playerPositionX && monster2.getSimpleMonsterY() + 1 == (invertedPlayerPostionY(playerPositionY))) {
-                            hitByMonster();
-                        }
+        Gdx.app.log("movement" + (playerPositionX), "Gazeetttiii XXXXX" + monster2.getSimpleMonsterX());
+        Gdx.app.log("movement" + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + monster2.getSimpleMonsterY() + 1);
+        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
+            hitByMonster();
+
+        }
+
+        Timer.schedule(new Timer.Task() {
+
+            /**
+             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+             * method.
+             */
+            @Override
+            public void run() {
+                monster2.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
+                if ( monster2.getSimpleMonsterX() == playerPositionX  &&  monster2.getSimpleMonsterY()+1 == invertedPlayerPostionY(playerPositionY) ) {
+                    hitByMonster();
+                }
+                enemyTurnEnd(); // prevent further player input until monsters have moved!!!
+            }
+        }, 1);
 
 
 
-                    }
 
-                        public void monsterFiexdPath() {
+    }
 
-                        phreeoni.monsterProceduralPatternMovement();
+    public void monsterFiexdPath() {
+
+        phreeoni.monsterProceduralPatternMovement();
 
 
-                    }
+    }
 
 
 
@@ -763,6 +766,13 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
     }
 
+    public void enemyTurnStart(){
+        isMonsterTurn = true;
+    }
+
+    public void enemyTurnEnd(){
+        isMonsterTurn = false;
+    }
 
     /** Load the next level map
      * @return false after loading once. otherwise it will keep loading for some reason
