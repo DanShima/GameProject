@@ -27,11 +27,13 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         private Skin skin;
         private HUD hud ;
         private int score;
-      //  private int Hscore = 0;
         private Texture background;
-        //GameSetting prefs;
 
-        public GameOver(SpriteBatch sp){
+    /**
+     * Create the layout of GameOver screen
+     * @param sp spritebatch used to render the screen
+     */
+    public GameOver(SpriteBatch sp){
             viewport=new StretchViewport(Constants.mapWidth,Constants.mapHeight,new OrthographicCamera());//
             background =new Texture("winter.png");
             hud = new HUD(sp);
@@ -47,8 +49,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
             Label ScoreLabel=new Label("Score: " + score ,skin,"default");
             ScoreLabel.setFontScale(7f,7f);
-       //   Label HighestScoreLabel=new Label("Highest Score : " + Hscore ,skin,"default");
-          //  HighestScoreLabel.setFontScale(5f,5f);
 
 
             TextButton replay = new TextButton("Play again!",skin,"default");
@@ -74,26 +74,15 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             table.row();
             table.add(ScoreLabel).padTop(40f);
             table.row();
-           // table.add(HighestScoreLabel).expandX().padTop(10f);
             table.row();
             table.add(replay).padTop(150f).padRight(200f);
             table.row();
             table.add(menu).padTop(150f).padRight(200f);
             stage.addActor(table);
-
         }
-//        public int getHscore() {
-//            return Hscore;
-//        }
-//
-//        public void setHscore(int hscore) {
-//            Hscore = hscore;
-//        }
 
         @Override
-        public void show() {
-
-        }
+        public void show() {}
 
         @Override
         public void render(float delta) {
@@ -104,7 +93,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             stage.getBatch().draw(background,0,0,Constants.mapWidth,Constants.mapHeight);
             stage.getBatch().end();
             stage.draw();
-
         }
 
         @Override

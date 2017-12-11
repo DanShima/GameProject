@@ -14,12 +14,12 @@ public class Constants {
     public static  final int  mapWidth = tileSize * tileCountW;
     public static  final int  mapHeight = tileSize * tileCountH;
 
-    // number of points at the start of the game
+    //number of points at the start of the game
     public static  int SCORE_START = 1000;
-    // number of lives at the start of the game
+    //number of lives at the start of the game
     public static final int LIVES = 4;
 
-    // location of the sprite sheet for the player without clothes
+    //location of the sprite sheet for the player without clothes
     public static final String GIRL_NAKED = "pinkGirl_v02.png";
     //locations of the sprite sheets for itemsLevelZero
     public static final String UNDERWEAR = "underwear.png";
@@ -29,14 +29,10 @@ public class Constants {
     public static final String APPLE = "apple1.png";
     //locations of the sprite sheets for monsters
     public static final String GAZETI = "gazeti.png";
-    public static final String HYDRA = "hydra.png";
-    public static final String MUMMY = "mummy.png";
     public static final String GOLEM = "golem.png";
-    public static final String ORC = "orcwarrior.png";
     public static final String WASP = "wasp.png";
-    public static final String WINDGHOST = "windghost.png";
     public static final String MUSHROOM = "mossmushroom.png";
-    public static final String Phreeoni = "Phreoni.png";
+    public static final String PHREONI = "PhreoniMonster.png";
     //UI skin for buttons and bars
     public static final String skin = new String("skin/freezing-ui.json");
     //to Display menu
@@ -49,11 +45,6 @@ public class Constants {
 
     //time between frames in seconds
     public static final float FPS = 0.3f;
-
-    // location of tilemap file for map level 1 desert
-    public static final String LEVEL_ONE = "blocking_v1.tmx";
-    // location of tilemap file for map level 2 snow
-    public static final String LEVEL_TWO = "snow128_16x10_v02.tmx";
     //an array of all the LEVELS
     public static final String[] LEVELS = {"blocking_v1.tmx", "snow128_16x10_v02.tmx"};
     //current level map index from the array

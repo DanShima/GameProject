@@ -136,7 +136,7 @@ public class HUD implements Disposable  {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Constants.SCORE_START = 1000;
-                Constants.currentLevel = Constants.currentLevel;
+                Constants.currentLevel = 0;
                 Gdx.graphics.setContinuousRendering(true);
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
             }

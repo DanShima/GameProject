@@ -45,7 +45,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private MushRoomMonster mushrom;
     private Wasp wasp;
     private Golem golem;
-    private Phreoni phreeoni;
+    private PhreoniMonster phreeoni;
 
     private String message;
 
@@ -98,7 +98,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         mushrom = new MushRoomMonster();
         wasp = new Wasp();
         golem = new Golem();
-        phreeoni = new Phreoni();
+        phreeoni = new PhreoniMonster();
         itemList = new ItemList();
 
     }
@@ -590,7 +590,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     turnCounter++;
                     ScoreMoveDecrease();
                     checkTurn();
-
                 }
             }
         }
@@ -669,17 +668,16 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
 
+    public void checkTurn () {
+        if (notMovedYetToNextMap == false) {
+            moveInTurn(wasp, golem);
+        } else if (notMovedYetToNextMap == true) {
 
-                public void checkTurn () {
-                    if (notMovedYetToNextMap == false) {
-                        moveInTurn(wasp, golem);
-                    } else if (notMovedYetToNextMap == true) {
+            moveInTurn(gazeti, mushrom);
+            monsterFiexdPath(phreeoni);
 
-                        moveInTurn(gazeti, mushrom);
-                        monsterFiexdPath(phreeoni);
-
-                    }
-                }
+        }
+    }
 
     /**
      * This method checks player position against a position that we specify as the exit (Danning)
@@ -806,6 +804,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                         wasp.dispose();
 
                         hud.setLevel(Constants.currentLevel);
+                        hud.setHealth(hud.getHealth() - 50);
                         //change background music
                         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
                        // Gdx.app.debug("SOUND", "NEXT LEVEL");
