@@ -6,15 +6,7 @@ package com.mygdx.game;
 
 public class WaspMonster extends Monster {
     public WaspMonster() {
-        super(Constants.WASP, 4, 3, 1, 1);
-    }
-
-    public float getXposMonster(){
-        return XposMonster = 640;
-    }
-
-    public float getYposMonster(){
-        return YposMonster = 768;
+        super(Constants.WASP, 4, 3, 1, 1,640,768);
     }
 
 }
