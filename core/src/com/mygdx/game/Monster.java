@@ -40,6 +40,8 @@ public class Monster  {
     private int simpleMonsterY;
     private boolean backStep;
 
+    private int monsterDamage=30;
+
 
     //Yeti monster
     public Monster(){
@@ -101,10 +103,39 @@ public class Monster  {
         return simpleMonsterY;
     }
 
-    public void monsterProceduralPatternMovement(){
+    public boolean move2(int playerPositionX, int playerPositionY){
+
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
-            Gdx.app.log("monster pherrrront XXX " + (XposMonster), " XXXXX" );
+
+        //Gdx.app.log("movement", "next Monster: ");
+        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
+        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
+
+        int diffBetweenX = playerPositionX-simpleMonsterX;
+        int diffBetweenY = playerPositionY-simpleMonsterY;
+        //Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
+
+        if(diffBetweenX!=0 && diffBetweenY!=0) { //prevent diagonal movement and make it horizontal
+            YposMonster += Math.signum(diffBetweenY) * tileSize;
+        }else{
+            // this would be movement horizontal vertical and diagonal
+            XposMonster += Math.signum(diffBetweenX) * tileSize;
+            YposMonster += Math.signum(diffBetweenY) * tileSize;
+        }
+
+        // hit check
+        if( playerPositionX-SimpleMonsterXPosition() == 0 && playerPositionY-SimpleMonsterYPosition() == 0 ){
+            return true;
+        }else {
+            return false;
+        }
+
+
+/*
+        simpleMonsterY = SimpleMonsterYPosition();
+        simpleMonsterX = SimpleMonsterXPosition();
+            //Gdx.app.log("movement", "simpleMonsterY: " + simpleMonsterY);
             if(XposMonster > (MAP_WIDTH / TILE_COUNT_WIDTH -tileSize) && backStep==false) {
                 steps.push(XposMonster);
                 XposMonster -= tileSize;
@@ -117,6 +148,7 @@ public class Monster  {
                 }else
                 backStep=false;
             }
+            */
     }
 
 
@@ -150,44 +182,46 @@ public class Monster  {
         );
     }
 
-    public void move(int playerPositionX, int playerPositionY){
+    public boolean move(int playerPositionX, int playerPositionY){
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
 
-        Gdx.app.log("movement", "next Monster: ");
-        Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
-        Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
+        //Gdx.app.log("movement", "next Monster: ");
+        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
+        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
 
         int diffBetweenX = playerPositionX-simpleMonsterX;
         int diffBetweenY = playerPositionY-simpleMonsterY;
-        Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
+        //Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
 
-        XposMonster += Math.signum(diffBetweenX)*tileSize;
-        YposMonster += Math.signum(diffBetweenY)*tileSize;
 
-        /*
-            if (diffBetweenX < 0){
-                XposMonster -= tileSize; //monster gets closer to player by one tile
-                if (diffBetweenY < 0){
-                    if (simpleMonsterY != playerPositionY ){
-                        YposMonster -= tileSize;
-                    }
-                }
-            }else if (diffBetweenX > 0){
-                XposMonster += tileSize;
-                if (diffBetweenY > 0){
-                    if (simpleMonsterY != playerPositionY  ){
-                        YposMonster += tileSize;
-                    }
-                }
-            }
-            */
+        if(diffBetweenX!=0 && diffBetweenY!=0) { //prevent diagonal movement and make it horizontal
+            XposMonster += Math.signum(diffBetweenX) * tileSize;
+        }else{
+            // this would be movement horizontal vertical and diagonal
+            XposMonster += Math.signum(diffBetweenX) * tileSize;
+            YposMonster += Math.signum(diffBetweenY) * tileSize;
         }
 
+        // hit check
+        if( playerPositionX-SimpleMonsterXPosition() == 0 && playerPositionY-SimpleMonsterYPosition() == 0 ){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
+
+    public int getMonsterDamage() {
+        return monsterDamage;
+    }
 
     public void dispose() {
         spriteBatch.dispose();
         texture.dispose();
     }
+
+
 
 }

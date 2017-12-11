@@ -60,12 +60,12 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private TiledMapTileLayer.Cell obstacles;
 
     private ItemList itemList;
-    private boolean notMovedYetToNextMap;
+    private boolean movedYetToNextMap;
 
     private boolean isMonsterTurn = false;
 
     public Controller(GameView GameView) {
-        notMovedYetToNextMap=false;
+        movedYetToNextMap =false;
         interactView = GameView;
         interactMap = new Map();
         create();
@@ -652,13 +652,12 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
     public void checkTurn () {
-        if (notMovedYetToNextMap == false) {
+        if (movedYetToNextMap == false) {
             moveInTurn(wasp, golem);
-        } else if (notMovedYetToNextMap == true) {
+        } else if (movedYetToNextMap == true) {
 
             moveInTurn(gazeti, mushRoomMonster);
 
-            moveInTurn(gazeti, mushRoomMonster);
             Timer.schedule(new Timer.Task() {
 
                 /**
@@ -670,7 +669,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
                     monsterFixedPath(phreeoni);
                 }
-            }, 2);
+            }, 1);
 
 
         }
@@ -704,10 +703,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         final int playerPosX = getPlayerPositionSimplifiedX();
         final int playerPosY = invertedPlayerPostionY( getPlayerPositionSimplifiedY() ) ;
 
-        monster1.move( playerPosX, playerPosY );
-
-        if ( monster1.getSimpleMonsterX() == playerPosX  &&  monster1.getSimpleMonsterY() + 1 == playerPosY ) {
-            hitByMonster();
+        if ( monster1.move( playerPosX, playerPosY ) ) {
+            hitByMonster(monster1);
 
         }
 
@@ -719,9 +716,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
              */
             @Override
             public void run() {
-                monster2.move( playerPosX , playerPosY );
-                if ( monster2.getSimpleMonsterX() == playerPosX  &&  monster2.getSimpleMonsterY()+1 == playerPosY ) {
-                    hitByMonster();
+                if ( monster2.move( playerPosX , playerPosY ) ) {
+                    hitByMonster(monster2);
                 }
                 enemyTurnEnd(); // prevent further player input until monsters have moved!!!
             }
@@ -729,25 +725,23 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
     public void monsterFixedPath(Monster fixedPathMonster) {
-        phreeoni.monsterProceduralPatternMovement();
-        if (fixedPathMonster.getSimpleMonsterX() == getPlayerPositionSimplifiedX() && fixedPathMonster.getSimpleMonsterY() == (invertedPlayerPostionY( getPlayerPositionSimplifiedY() ))) {
-            hitByMonster();
+        final int playerPosX = getPlayerPositionSimplifiedX();
+        final int playerPosY = invertedPlayerPostionY( getPlayerPositionSimplifiedY() ) ;
+
+        if ( fixedPathMonster.move2( playerPosX, playerPosY ) ) {
+            hitByMonster(fixedPathMonster);
         }
     }
 
 
 
 
-    public void hitByMonster () {
-        float halfHelth = 50f;
-        float noHealth = 0f;
-        if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
+    public void hitByMonster (Monster monster) {
+        //reduce health reduces the health and returns true if the player is at 0 health or lower
+        if (  hud.reduceHealth( monster.getMonsterDamage() )  )
         {
-            hud.setHealth(noHealth);
             GameOverSettings();
         }
-        else {
-            hud.setHealth(hud.getHealth() * 0.75f);}
     }
 
     /**
@@ -781,8 +775,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * @return false after loading once. otherwise it will keep loading for some reason
      */
          public boolean updateLevel() {
-             notMovedYetToNextMap = true;
-             if (notMovedYetToNextMap) {
+             movedYetToNextMap = true;
+             if (movedYetToNextMap) {
                  Constants.CURRENT_LEVEL++;
 
                  interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.CURRENT_LEVEL]));
