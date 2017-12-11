@@ -197,7 +197,7 @@ public class Player implements ApplicationListener {
 
     public float getPlainX() { return x; }
 
-    public float getX() { return x - (float)(Constants.tileSize*0.25); } //place the animation in the center of the tile
+    public float getX() { return x - (float)(Constants.TILE_SIZE *0.25); } //place the animation in the center of the tile
 
     public float getY() {return y;}
 

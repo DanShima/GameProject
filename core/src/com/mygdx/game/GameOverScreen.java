@@ -18,27 +18,29 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
- * Created by Hammode on 12/8/17.
+ * The Game Over screen shows up after the player finishes the game
  */
 
-    public class GameOver implements Screen {
+    public class GameOverScreen implements Screen {
         private Viewport viewport;
         private Stage stage;
         private Skin skin;
         private HUD hud ;
         private int score;
-      //  private int Hscore = 0;
         private Texture background;
-        //GameSetting prefs;
 
-        public GameOver(SpriteBatch sp){
-            viewport=new StretchViewport(Constants.mapWidth,Constants.mapHeight,new OrthographicCamera());//
+    /**
+     * Create the layout of GameOverScreen screen with a table of buttons
+     * @param sp spritebatch used to render the screen
+     */
+    public GameOverScreen(SpriteBatch sp){
+            viewport=new StretchViewport(Constants.MAP_WIDTH,Constants.MAP_HEIGHT,new OrthographicCamera());//
             background =new Texture("winter.png");
             hud = new HUD(sp);
             stage = new Stage(viewport, sp);
-            skin = new Skin ( Gdx.files.internal ( Constants.skin ) );
-            score=hud.getScore();
-            //prefs = GameSetting.newSetting;
+            skin = new Skin ( Gdx.files.internal ( Constants.SKIN) );
+            score = hud.getScore();
+
             Table table = new Table();
             table.center();
             table.setFillParent(true);
@@ -47,8 +49,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
             Label ScoreLabel=new Label("Score: " + score ,skin,"default");
             ScoreLabel.setFontScale(7f,7f);
-       //   Label HighestScoreLabel=new Label("Highest Score : " + Hscore ,skin,"default");
-          //  HighestScoreLabel.setFontScale(5f,5f);
 
 
             TextButton replay = new TextButton("Play again!",skin,"default");
@@ -59,7 +59,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             replay.setTransform(true);
             replay.setScale(2f);
 
-
             TextButton menu = new TextButton("Menu",skin,"default");
             menu.addListener(new InputListener() {
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -68,32 +67,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             menu.setTransform(true);
             menu.setScale(2f);
 
-
             table.center();
             table.add(gameOverLabel).padTop(50f).expandX();
             table.row();
             table.add(ScoreLabel).padTop(40f);
             table.row();
-           // table.add(HighestScoreLabel).expandX().padTop(10f);
             table.row();
             table.add(replay).padTop(150f).padRight(200f);
             table.row();
             table.add(menu).padTop(150f).padRight(200f);
             stage.addActor(table);
-
         }
-//        public int getHscore() {
-//            return Hscore;
-//        }
-//
-//        public void setHscore(int hscore) {
-//            Hscore = hscore;
-//        }
 
         @Override
-        public void show() {
-
-        }
+        public void show() {}
 
         @Override
         public void render(float delta) {
@@ -101,31 +88,22 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
             Gdx.input.setInputProcessor(stage);
             stage.getBatch().begin();
-            stage.getBatch().draw(background,0,0,Constants.mapWidth,Constants.mapHeight);
+            stage.getBatch().draw(background,0,0,Constants.MAP_WIDTH,Constants.MAP_HEIGHT);
             stage.getBatch().end();
             stage.draw();
-
         }
 
         @Override
-        public void resize(int width, int height) {
-
-        }
+        public void resize(int width, int height) {}
 
         @Override
-        public void pause() {
-
-        }
+        public void pause() {}
 
         @Override
-        public void resume() {
-
-        }
+        public void resume() {}
 
         @Override
-        public void hide() {
-
-        }
+        public void hide() {}
 
         @Override
         public void dispose() {

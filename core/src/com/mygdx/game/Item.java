@@ -79,7 +79,7 @@ public class Item {
      * @return
      */
     public int giveScorePoint() {
-        return 100;
+        return 1000;
     }
     public int giveHealthPoint() {
         return 50;
