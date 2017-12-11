@@ -185,6 +185,19 @@ public class HUD implements Disposable  {
     public void setHealth(float value) {
         progressBar.setValue(value);
     }
+
+    public boolean reduceHealth(float value) {
+        float newHealth = progressBar.getValue() - value;
+        progressBar.setValue( Math.max(0,newHealth) );
+        //true if dead, false if still alive
+        if(newHealth<=0){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     public  float getHealth()
     {
         return progressBar.getValue();
