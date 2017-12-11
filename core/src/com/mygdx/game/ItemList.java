@@ -44,7 +44,7 @@ public class ItemList {
 
     public void addItemLevelOne() {
         itemsLevelOne.add(new Item("socks", SOCKS,1280, 896));
-        itemsLevelOne.add(new Item("pants", PANTS, 637, 256));
+        itemsLevelOne.add(new Item("pants", PANTS, 640, 256));
         itemsLevelOne.add(new Item("apple", APPLE, 384, 512));
     }
 

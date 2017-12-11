@@ -58,7 +58,7 @@ public class Monster  {
         walkAnimation = new Animation<TextureRegion>(FPS, idleFrames);
         spriteBatch = new SpriteBatch();
         stateTime = 0f;
-        steps= new Stack<Float>();
+        steps = new Stack<Float>();
         this.turnOrder = turnOrder;
         backStep=false;
     }
@@ -105,7 +105,7 @@ public class Monster  {
     public void monsterProceduralPatternMovement(){
 
         simpleMonsterY = SimpleMonsterYPosition();
-        simpleMonsterX= SimpleMonsterXPosition();
+        simpleMonsterX = SimpleMonsterXPosition();
 
 
             Gdx.app.log("monster pherrrront XXX " + (XposMonster), " XXXXX" );
@@ -136,37 +136,37 @@ public class Monster  {
     public int SimpleMonsterXPosition(){
 
         return (int) Math.floor( Math.max(0,XposMonster/(float) tileSize));
-
     }
 
     public int SimpleMonsterYPosition(){
 
-return (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tileSize));
+        return (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tileSize));
     }
 
     public void move(int playerPositionX, int playerPositionY){
 
         simpleMonsterY = SimpleMonsterYPosition();
-        simpleMonsterX= SimpleMonsterXPosition();
+        simpleMonsterX = SimpleMonsterXPosition();
 
-        int diffBetweenX= playerPositionX-simpleMonsterX;
+        int diffBetweenX = playerPositionX-simpleMonsterX;
 
-        int diffBetweenY=playerPositionY-simpleMonsterY;
+        int diffBetweenY = playerPositionY-simpleMonsterY;
 
-        if ((Math.signum((int)diffBetweenX) == -1)){
+        if ( diffBetweenX < 0){
            if (simpleMonsterX!=playerPositionX ){
 
-                XposMonster-=tileSize;
-            if ((Math.signum((int)diffBetweenY) == -1)){
+                XposMonster -= tileSize;
+            if ((Math.signum(diffBetweenY) == -1)){
 
 
                   if (simpleMonsterY!=playerPositionY ){
 
-                YposMonster-=tileSize;
+                    YposMonster-=tileSize;
 
-                  }
+                    }
+                }
             }
-        } }else if ((Math.signum((int)diffBetweenX) == 1)){
+        }else if ((Math.signum((int)diffBetweenX) == 1)){
             if (simpleMonsterX!=playerPositionX){
                 XposMonster+=tileSize;
                 if ((Math.signum((int)diffBetweenY) == 1)){
@@ -180,7 +180,7 @@ return (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tile
 
             }
 
-            }
+        }
 
 
 

@@ -68,6 +68,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private ItemList itemList;
     private boolean notMovedYetToNextMap;
 
+    private boolean isMonsterTurn = false;
+
     public Controller(GameView GameView) {
         notMovedYetToNextMap=false;
         interactView = GameView;
@@ -220,25 +222,39 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
     public void checkCollisionPlayerAndItem() {
-        //Gdx.app.log("SOUND", "COLLISION QUERY");
-        // convertPlayerPositionToSimplified(); TODO change this hardcoded positionCheck
-        if (girl.getOldX() > 1152 && girl.getOldX() < 1408 && girl.getOldY() > 768 && girl.getOldY() < 1024) {
-            playerCollideWithItem(itemList.getSpecificItemLevelOne(0)); //socks 1280, 896
-        }
-        if (girl.getOldX() > 1216 && girl.getOldX() < 1344 && girl.getOldY() > 320 && girl.getOldY() < 448) {
-            playerCollideWithItem(itemList.getSpecificItemLevelZero(1)); //shirt
-        }
-        if (girl.getOldX() > 192 && girl.getOldX() < 320 && girl.getOldY() > 192 && girl.getOldY() < 320) {
+        //CollisionCheck for underwear
+        if(girl.getOldX()==itemList.getSpecificItemLevelZero(0).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelZero(0).getPositionY()) {
             playerCollideWithItem(itemList.getSpecificItemLevelZero(0)); //underwear
         }
-        if (girl.getOldX() > 509 && girl.getOldX() < 765 && girl.getOldY() > 192 && girl.getOldY() < 320) {
-            playerCollideWithItem(itemList.getSpecificItemLevelOne(1)); //pants
+        //CollisionCheck for Shirt
+        if(girl.getOldX()==itemList.getSpecificItemLevelZero(1).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelZero(1).getPositionY()) {
+            playerCollideWithItem(itemList.getSpecificItemLevelZero(1)); //shirt
         }
-        if (girl.getOldX() > 256 && girl.getOldX() < 512 && girl.getOldY() > 384 && girl.getOldY() < 640) {
-            playerCollideWithItem(itemList.getSpecificItemLevelZero(2)); //apple
-            playerCollideWithItem(itemList.getSpecificItemLevelOne(2)); //apple
+        //CollisionCheck for apple in level1
+        if(girl.getOldX()==itemList.getSpecificItemLevelZero(2).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelZero(2).getPositionY()) {
+
+                playerCollideWithItem(itemList.getSpecificItemLevelZero(2)); //apple
+            }
+            //CollisionCheck for Socks
+            if (girl.getOldX() == itemList.getSpecificItemLevelOne(0).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelOne(0).getPositionY()) {
+                playerCollideWithItem(itemList.getSpecificItemLevelOne(0)); //socks 1280, 896
+            }
+            //CollisionCheck for pants
+            if (girl.getOldX() == itemList.getSpecificItemLevelOne(1).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelOne(1).getPositionY()) {
+                playerCollideWithItem(itemList.getSpecificItemLevelOne(1)); //pants
+            }
+            //CollisionCheck for apple in level1
+            if (girl.getOldX() == itemList.getSpecificItemLevelOne(2).getPositionX() && girl.getOldY() == itemList.getSpecificItemLevelOne(2).getPositionY()) {
+                {
+                    playerCollideWithItem(itemList.getSpecificItemLevelOne(2)); //apple
+                }
 
         }
+    }
+
+    public void compareposition(int x, int y)
+    {
+
     }
 
     @Override
@@ -503,6 +519,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      */
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (isMonsterTurn == false){
 
         int differenceInPositionX; //difference between simplified player position and simplified touch position in X
         int differenceInPositionY; //difference between simplified player position and simplified touch position in Y
@@ -514,6 +531,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         convertPlayerPositionToSimplified();
         differenceInPositionX = touchPositionX - playerPositionX;
         differenceInPositionY = playerPositionY - touchPositionY;
+
         if (differenceInPositionX == 0 && differenceInPositionY == 0) {
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
         } else if ((Math.abs(differenceInPositionX) < 3 && differenceInPositionY == 0)) {
@@ -584,8 +602,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
         if(Constants.currentLevel == 1) {
             exitLevel(13, 7);}
+        }
         return false;
-
     }
 
     /**
@@ -641,7 +659,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     playerPositionY = ScreenPosYtoSimplified(playerPositionY);
                 }
 
-                public int getPlayerPositionY () {
+    public int getPlayerPositionY () {
                     return playerPositionY;
                 }
 
@@ -649,6 +667,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public int getPlayerPositionX () {
         return playerPositionX;
     }
+
 
 
                 public void checkTurn () {
@@ -661,6 +680,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
                     }
                 }
+
     /**
      * This method checks player position against a position that we specify as the exit (Danning)
      * We want to have the exit as parameter because each level might have its exit in a different place.
@@ -679,55 +699,51 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
       }
 
 
-                    public void moveInTurn (final Monster monster1, final Monster monster2 ){
-
-                        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY()  == (invertedPlayerPostionY(playerPositionY))) {
-                            hitByMonster();
-
-                        }
-                        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
-                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Yeetti ter XXXXX" + monster1.getSimpleMonsterX());
-                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + (monster1.getSimpleMonsterY() ));
-
-
-
-                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Gazeetttiii XXXXX" + monster2.getSimpleMonsterX());
-                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + (monster2.getSimpleMonsterY() ));
-
-                        if (monster2.getSimpleMonsterX() == playerPositionX && monster2.getSimpleMonsterY()  == (invertedPlayerPostionY(playerPositionY))) {
-                            hitByMonster();
-                            Gdx.app.log("hiiiiiiittttttttttt ","hiiiiiiiiiiiiiittt");
-
-                        }
-                        Timer.schedule(new Timer.Task() {
-
-                            /**
-                             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
-                             * method.
-                             */
-                            @Override
-                            public void run() {
-
-                                monster2.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
-
-                            }
-                        }, 1);
 
 
 
 
 
+    public void moveInTurn(final Monster monster1, final Monster monster2 ){
+        enemyTurnStart(); // prevent further player input until monsters have moved!!!
 
-                    }
+        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
+
+        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
+            hitByMonster();
+
+        }
+
+        Timer.schedule(new Timer.Task() {
+
+            /**
+             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+             * method.
+             */
+            @Override
+            public void run() {
+                monster2.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
+                if ( monster2.getSimpleMonsterX() == playerPositionX  &&  monster2.getSimpleMonsterY()+1 == invertedPlayerPostionY(playerPositionY) ) {
+                    hitByMonster();
+                }
+                enemyTurnEnd(); // prevent further player input until monsters have moved!!!
+            }
+        }, 1);
+
+
+
+
+    }
+
 
                         public void monsterFiexdPath(Monster fixedPathMonster) {
 
-                        phreeoni.monsterProceduralPatternMovement();
-                    if (fixedPathMonster.getSimpleMonsterX() == playerPositionX && fixedPathMonster.getSimpleMonsterY()  == (invertedPlayerPostionY(playerPositionY))){
-                        hitByMonster();
-                    }
+                            phreeoni.monsterProceduralPatternMovement();
+                            if (fixedPathMonster.getSimpleMonsterX() == playerPositionX && fixedPathMonster.getSimpleMonsterY() == (invertedPlayerPostionY(playerPositionY))) {
+                                hitByMonster();
+                            }
+                        }
 
-                    }
 
 
 
@@ -749,11 +765,21 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         else hud.setScore(0);
     }
     public void GameOverSettings(){
-        Constants.SCORE_START=1000;
         Constants.currentLevel=0;
         ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+        hud.setScore(1000);
+
+
+
     }
 
+    public void enemyTurnStart(){
+        isMonsterTurn = true;
+    }
+
+    public void enemyTurnEnd(){
+        isMonsterTurn = false;
+    }
 
     /** Load the next level map
      * @return false after loading once. otherwise it will keep loading for some reason
