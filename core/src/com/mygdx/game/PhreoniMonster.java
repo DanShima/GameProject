@@ -1,7 +1,7 @@
 package com.mygdx.game;
 
 /**
- * Created by Waseem on 12/10/2017.
+ * This class creates the Phreoni Monster monster with specified starting position
  */
 
 public class PhreoniMonster extends Monster {
@@ -10,11 +10,11 @@ public class PhreoniMonster extends Monster {
         super(Constants.PHREONI, 4, 3, 2, 4);
     }
 
+    public float getXposMonster(){
+        return XposMonster = 1152;
+    }
 
-
-    public void move(){
-
-
-
+    public float getYposMonster(){
+        return YposMonster = 384;
     }
 }

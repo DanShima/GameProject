@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -20,10 +19,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-/*
-The Hud  is responsible for displaying the current level, score and health status on top of the screen.
-The constructor takes "SpriteBatch" in order to be able to draw the "stage" which is a box that contain
- the widgets such as labels, buttons and progress bar.
+/**
+*The Hud  is responsible for displaying the current level, score and health status on top of the screen.
+*The constructor takes "SpriteBatch" in order to be able to draw the "stage" which is a box that contain
+ * the widgets such as labels, buttons and progress bar.
  */
 
 
@@ -37,7 +36,7 @@ public class HUD implements Disposable  {
     private Label LevelLabel;
     private Table table;
     private TextButton button ;
-    private Skin skin ;// skin for better UI
+    private Skin skin ;
     TextButton Continue ;
     TextButton  TryAgain;
     TextButton  Settings ;
@@ -54,10 +53,9 @@ public class HUD implements Disposable  {
     public HUD(SpriteBatch sb)
 
     {
-
-        viewport=new StretchViewport (Constants.mapWidth,Constants.mapHeight,new OrthographicCamera ());//
+        viewport=new StretchViewport (Constants.MAP_WIDTH,Constants.MAP_HEIGHT,new OrthographicCamera ());//
         stage=new Stage(viewport,sb);//stage is as box and try to put widget and organize things inside that table
-        skin = new Skin ( Gdx.files.internal ( Constants.skin ) );
+        skin = new Skin ( Gdx.files.internal ( Constants.SKIN) );
         menuScreen = new MenuScreen();
         table = new Table();
         table.setFillParent(true);//table is now fill all the stage
@@ -89,7 +87,7 @@ public class HUD implements Disposable  {
         LevelLabel.setFontScale(3,2);
 
         ProgressBar.ProgressBarStyle progressBarStyle = skin.get("fancy", ProgressBar.ProgressBarStyle.class);
-        TiledDrawable tiledDrawable = skin.getTiledDrawable("progress-bar");// take the skin and put it inside TiledDrawable
+        TiledDrawable tiledDrawable = skin.getTiledDrawable("progress-bar");// take the SKIN and put it inside TiledDrawable
         tiledDrawable.setMinWidth(0.0f);
         progressBarStyle.background = tiledDrawable;// background of the health bar( when the bar is empty).
 
@@ -136,7 +134,7 @@ public class HUD implements Disposable  {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 Constants.SCORE_START = 1000;
-                Constants.currentLevel = 0;
+                Constants.CURRENT_LEVEL = 0;
                 Gdx.graphics.setContinuousRendering(true);
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
             }
