@@ -676,7 +676,23 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     } else if (notMovedYetToNextMap == true) {
 
                         moveInTurn(gazeti, mushrom);
-                        monsterFiexdPath(phreeoni);
+                        Timer.schedule(new Timer.Task() {
+
+                            /**
+                             * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+                             * method.
+                             */
+                            @Override
+                            public void run() {
+
+                                monsterFiexdPath(phreeoni);
+                            }
+                        }, 2);
+
+
+
+
+
 
                     }
                 }
