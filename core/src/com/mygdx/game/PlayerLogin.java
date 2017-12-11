@@ -38,13 +38,13 @@ public class PlayerLogin implements ApplicationListener, Screen {
         batch = new SpriteBatch();
         bgbatch =new SpriteBatch();
         background = new Texture("bg.jpg");
-        skin = new Skin(Gdx.files.internal(Constants.skin));
+        skin = new Skin(Gdx.files.internal(Constants.SKIN));
         stage = new Stage();
 
         //Login button :Validation of player in Firebase
         final TextButton LoginButton = new TextButton("LOGIN", skin, "default");
-        LoginButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        LoginButton.setPosition(Constants.centerX,Constants.centerY+250);
+        LoginButton.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        LoginButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +250);
         LoginButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -54,8 +54,8 @@ public class PlayerLogin implements ApplicationListener, Screen {
 
         //NewPlayer button: registration of new player
         final TextButton NewPlayerButton = new TextButton("NEW PLAYER", skin, "default");
-        NewPlayerButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        NewPlayerButton.setPosition(Constants.centerX ,Constants.centerY+50);
+        NewPlayerButton.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        NewPlayerButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +50);
         NewPlayerButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -65,8 +65,8 @@ public class PlayerLogin implements ApplicationListener, Screen {
 
         //Quickaplay button allows the player to directly enter the Game
         final TextButton QuickPlayButton = new TextButton("QUICK PLAY", skin, "default");
-        QuickPlayButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        QuickPlayButton.setPosition(Constants.centerX-200 ,Constants.centerY-150);
+        QuickPlayButton.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        QuickPlayButton.setPosition(Constants.CENTER_X -200 ,Constants.CENTER_Y -150);
         QuickPlayButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -79,8 +79,8 @@ public class PlayerLogin implements ApplicationListener, Screen {
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle.font.getData().setScale(2.0f);
         Player.setMessageText("PLAYER");
-        Player.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        Player.setPosition(Constants.centerX-350 ,Constants.centerY+250);
+        Player.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        Player.setPosition(Constants.CENTER_X -350 ,Constants.CENTER_Y +250);
 
         //Password to be entered by the player
         final TextField Password = new TextField("", skin, "default");
@@ -89,8 +89,8 @@ public class PlayerLogin implements ApplicationListener, Screen {
         Password.setMessageText("PASSWORD");
         Password.setPasswordCharacter('*');
         Password.setPasswordMode(true);
-        Password.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        Password.setPosition(Constants.centerX-350 ,Constants.centerY+50);
+        Password.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        Password.setPosition(Constants.CENTER_X -350 ,Constants.CENTER_Y +50);
 
         //Adding all Buttons and TextFiels to stage
         stage.addActor(LoginButton);

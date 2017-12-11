@@ -55,14 +55,14 @@ public class MenuScreen implements Screen {
         Gdx.app.debug("SOUND", "MENUUUU");
 
         batch = new SpriteBatch();
-        skin = new Skin(Gdx.files.internal(Constants.skin));
+        skin = new Skin(Gdx.files.internal(Constants.SKIN));
         stage = new Stage();
         bgbatch =new SpriteBatch();
         background = new Texture("background_02.png");
 
         final TextButton playButton = new TextButton("PLAY", skin, "default");
-        playButton.setSize(Constants.colWidth ,Constants.rowHeight);
-        playButton.setPosition(Constants.centerX,Constants.centerY+200);
+        playButton.setSize(Constants.COL_WIDTH,Constants.ROW_HEIGHT);
+        playButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +200);
         playButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -73,8 +73,8 @@ public class MenuScreen implements Screen {
             }
         });
         final TextButton settingsButton = new TextButton("SETTINGS", skin, "default");
-        settingsButton.setSize(Constants.colWidth ,Constants.rowHeight);
-        settingsButton.setPosition(Constants.centerX ,Constants.centerY+50);
+        settingsButton.setSize(Constants.COL_WIDTH,Constants.ROW_HEIGHT);
+        settingsButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +50);
         settingsButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -83,8 +83,8 @@ public class MenuScreen implements Screen {
             }
         });
         final TextButton scoreButton = new TextButton("SCORE", skin, "default");
-        scoreButton.setSize(Constants.colWidth ,Constants.rowHeight);
-        scoreButton.setPosition(Constants.centerX ,Constants.centerY-100);
+        scoreButton.setSize(Constants.COL_WIDTH,Constants.ROW_HEIGHT);
+        scoreButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y -100);
         scoreButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
@@ -93,8 +93,8 @@ public class MenuScreen implements Screen {
             }
         });
         final TextButton exitButton = new TextButton("EXIT", skin, "default");
-        exitButton.setSize(Constants.colWidth ,Constants.rowHeight);
-        exitButton.setPosition(Constants.centerX ,Constants.centerY-250);
+        exitButton.setSize(Constants.COL_WIDTH,Constants.ROW_HEIGHT);
+        exitButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y -250);
         exitButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){

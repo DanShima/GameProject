@@ -12,8 +12,6 @@ public class Score {
     private int health ;
     private Player player;
     private int maxScore ;
-    
-
 
 
 

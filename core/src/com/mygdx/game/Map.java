@@ -18,7 +18,7 @@ public class Map {
      */
     public void create() {
        //load map and create a renderer passing in our tiled map
-        tiledMap = new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]);
+        tiledMap = new TmxMapLoader().load(Constants.LEVELS[Constants.CURRENT_LEVEL]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
     }
 

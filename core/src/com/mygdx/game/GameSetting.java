@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
  */
 
 public class GameSetting {
-
+        //the class creates its own object
         public static final GameSetting newSetting = new GameSetting();
 
         private boolean hasSoundOn;

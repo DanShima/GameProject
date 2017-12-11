@@ -6,14 +6,12 @@ package com.mygdx.game;
  */
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.mygdx.game.SpriteAccessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenCallback;
@@ -22,13 +20,13 @@ public class Splash implements Screen
 {
     private Texture logo;
     private SpriteBatch spriteBatch;
-    private GearUp game;
+    private LoginScreen game;
     private Sprite sprite;
     private TweenManager tweenManager;
 
 
 
-    public Splash( GearUp game )
+    public Splash( LoginScreen game )
     {
         this.game = game;
     }
@@ -61,7 +59,7 @@ public class Splash implements Screen
         GL20 gl = Gdx.graphics.getGL20();
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.begin();
-        spriteBatch.draw(sprite, 0, 0, GearUp.WIDTH, GearUp.HEIGHT);
+        spriteBatch.draw(sprite, 0, 0, LoginScreen.WIDTH, LoginScreen.HEIGHT);
         spriteBatch.end();
         tweenManager.update(delta);
     }

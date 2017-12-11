@@ -29,8 +29,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private float oldX, oldY;
 
 
-    public final static int mapWidth = Constants.tileSize * Constants.tileCountW;
-    public final static int mapHeight = Constants.tileSize * Constants.tileCountH;
+    public final static int mapWidth = Constants.TILE_SIZE * Constants.TILE_COUNT_WIDTH;
+    public final static int mapHeight = Constants.TILE_SIZE * Constants.TILE_COUNT_HEIGHT;
     private int NumberOfMovedTiles = 2;
     public int tileWidth = 128;
     public int tileHeight = 128;
@@ -42,17 +42,14 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private Player girl; //animated player
 
     private GazetiMonster gazeti;
-    private MushRoomMonster mushrom;
-    private Wasp wasp;
-    private Golem golem;
+    private MushRoomMonster mushRoomMonster;
+    private WaspMonster wasp;
+    private GolemMonster golem;
     private PhreoniMonster phreeoni;
-
-    private String message;
 
     private HUD hud;
     private SpriteBatch sp;
 
-    //  static int currentLevel = 0;
 
     private int oneStepHorizontaly;
     private int twoStepsHorizontally;
@@ -95,9 +92,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         // Gdx.app.debug("SOUND", "CONTROLLERRRR");
 
         gazeti = new GazetiMonster();
-        mushrom = new MushRoomMonster();
-        wasp = new Wasp();
-        golem = new Golem();
+        mushRoomMonster = new MushRoomMonster();
+        wasp = new WaspMonster();
+        golem = new GolemMonster();
         phreeoni = new PhreoniMonster();
         itemList = new ItemList();
 
@@ -127,20 +124,20 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         girl.render();
         girl.updateSpriteBatch(itemList.getItemsLevelZero()); //update clothes on girl level 0
         girl.updateSpriteBatch(itemList.getItemsLevelOne()); //update clothes on girl level 1
-        if(Constants.currentLevel == 0) {
+        if(Constants.CURRENT_LEVEL == 0) {
 
             itemList.renderItemsLevelZero();
-            golem.render(384, 512); //spawn gazeti at the given position in the map
-            wasp.render(640 , 768); //spawn mushrom at the given position in the map
+            golem.render(); //spawn gazeti at the given position in the map
+            wasp.render(); //spawn mushRoomMonster at the given position in the map
         }
-        if(Constants.currentLevel == 1){
+        if(Constants.CURRENT_LEVEL == 1){
 
             itemList.renderItemsLevelOne();
 
-            gazeti.render(512, 256);
-            mushrom.render(256, 782);
+            gazeti.render();
+            mushRoomMonster.render();
 
-            phreeoni.render(1152,384);//spawn phreeoni at the given position in the map
+            phreeoni.render();//spawn phreeoni at the given position in the map
 
         }
     }
@@ -149,10 +146,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private void playerCollideWithItem(Item item){
         boolean isRightLevel = false;
         //refactor the following
-        if( itemList.getItemsLevelZero().contains(item,true) && Constants.currentLevel == 0 ){
+        if( itemList.getItemsLevelZero().contains(item,true) && Constants.CURRENT_LEVEL == 0 ){
             isRightLevel = true;
         }
-        else if( itemList.getItemsLevelOne().contains(item,true) && Constants.currentLevel == 1 ) {
+        else if( itemList.getItemsLevelOne().contains(item,true) && Constants.CURRENT_LEVEL == 1 ) {
             isRightLevel = true;
         }
 
@@ -435,10 +432,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         tileWidth = (int) Blockedlayer.getTileWidth();
         tileHeight = (int) Blockedlayer.getTileHeight();
 
-        oneStepHorizontaly = mapWidth / Constants.tileCountW;
-        twoStepsHorizontally = mapWidth / Constants.tileCountW * NumberOfMovedTiles;
-        oneStepVertically = mapHeight / Constants.tileCountH;
-        twoStepsvertically = mapHeight / Constants.tileCountH * NumberOfMovedTiles;
+        oneStepHorizontaly = mapWidth / Constants.TILE_COUNT_WIDTH;
+        twoStepsHorizontally = mapWidth / Constants.TILE_COUNT_WIDTH * NumberOfMovedTiles;
+        oneStepVertically = mapHeight / Constants.TILE_COUNT_HEIGHT;
+        twoStepsvertically = mapHeight / Constants.TILE_COUNT_HEIGHT * NumberOfMovedTiles;
     }
 
     /**
@@ -482,8 +479,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * This method converts screen Y position to simplified Y
      **/
     public int ScreenPosYtoSimplified(float PositionY) {
-        float temporary = (PositionY - (float) interactView.getMarginTop()) / (float) Constants.tileSize;
-        // Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + tileSize + "result" + temporary  );
+        float temporary = (PositionY - (float) interactView.getMarginTop()) / (float) Constants.TILE_SIZE;
+        // Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + TILE_SIZE + "result" + temporary  );
         return (int) Math.floor(Math.max(0.0, temporary));
         //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
@@ -492,7 +489,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * This method converts screen X position to simplified X
      */
     public int ScreenPosXtoSimplified(float PositionX) { //convert screen X position to simplified X
-        return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.tileSize)));
+        return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.TILE_SIZE)));
     }
 
     public int simplifiedXtoScreenPos(int PositionX) { //convert simplified X to screen X position
@@ -509,7 +506,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
     public int invertSimplifiedHeight(int simplified) {
-        return Constants.tileCountH - 1 - simplified;
+        return Constants.TILE_COUNT_HEIGHT - 1 - simplified;
     }
 
 
@@ -595,11 +592,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
 
 
-        if(Constants.currentLevel == 0) {
+        if(Constants.CURRENT_LEVEL == 0) {
             exitLevel(4, 1);
             exitLevel(3, 1);
         }
-        if(Constants.currentLevel == 1) {
+        if(Constants.CURRENT_LEVEL == 1) {
             exitLevel(13, 7);}
         }
         return false;
@@ -644,7 +641,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
     public int  invertedPlayerPostionY(int playerYposition) {
 
-        return (Constants.tileCountH-1-playerYposition);
+        return (Constants.TILE_COUNT_HEIGHT -1-playerYposition);
     }
 
 
@@ -673,7 +670,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             moveInTurn(wasp, golem);
         } else if (notMovedYetToNextMap == true) {
 
-            moveInTurn(gazeti, mushrom);
+            moveInTurn(gazeti, mushRoomMonster);
             monsterFiexdPath(phreeoni);
 
         }
@@ -765,14 +762,14 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             hud.setScore(hud.getScore()-20);
         else hud.setScore(0);
     }
-    
+
 
     /**
      * When the game is finished. it takes you back to level 0 and the score is reset to 1000.
      */
     public void GameOverSettings(){
-        Constants.currentLevel=0;
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
+        Constants.CURRENT_LEVEL =0;
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp));
         hud.setScore(1000);
     }
 
@@ -794,21 +791,21 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
          public boolean updateLevel() {
              notMovedYetToNextMap = true;
              if (notMovedYetToNextMap) {
-                        Constants.currentLevel++;
+                        Constants.CURRENT_LEVEL++;
 
-                       interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
+                       interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.CURRENT_LEVEL]));
                        interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
 
                         //getProperties();
                         //clear monster from the previous level
                         itemList.renderItemsLevelOne();
-                        gazeti.render(512, 256);
-                        mushrom.render(256, 782);
-                        phreeoni.render(1152,384);
+                        gazeti.render();
+                        mushRoomMonster.render();
+                        phreeoni.render();
                         golem.dispose();
                         wasp.dispose();
 
-                        hud.setLevel(Constants.currentLevel);
+                        hud.setLevel(Constants.CURRENT_LEVEL);
                         hud.setHealth(hud.getHealth() - 50);
                         //change background music
                         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);

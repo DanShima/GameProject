@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.Stack;
 
 import static com.mygdx.game.Constants.FPS;
-import static com.mygdx.game.Constants.mapWidth;
-import static com.mygdx.game.Constants.tileCountW;
+import static com.mygdx.game.Constants.MAP_WIDTH;
+import static com.mygdx.game.Constants.TILE_COUNT_WIDTH;
 
 /**
  * just a placeholder class for monster. feel free to modify or change completely
@@ -30,6 +30,7 @@ public class Monster  {
     protected final static int merginTop=55;
     private AnimationUtil animationUtil;
     private int turnOrder;
+
     protected float YposMonster;
     protected float XposMonster;
     protected boolean initialMonsterPos=false;
@@ -64,7 +65,7 @@ public class Monster  {
     }
 
 
-    public void render(float positionX, float positionY) {
+    public void render() {
         // setting the received monster position from tiletest  for the monster
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
@@ -73,19 +74,15 @@ public class Monster  {
         spriteBatch.begin();
 
         if (!(initialMonsterPos)){
-            XposMonster=positionX;
-            YposMonster=positionY;
-            spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Draw current monster  at (position x, position Y)
-
+            XposMonster=getXposMonster();
+            YposMonster=getYposMonster();
+            spriteBatch.draw(currentFrame, XposMonster, YposMonster);
             initialMonsterPos=true;
 
         }else
         {
-
             spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Update the monster place
-
         }
-
         spriteBatch.end();
 
     }
@@ -109,7 +106,7 @@ public class Monster  {
 
 
             Gdx.app.log("monster pherrrront XXX " + (XposMonster), " XXXXX" );
-            if(XposMonster > (mapWidth/tileCountW-tileSize) && backStep==false) {
+            if(XposMonster > (MAP_WIDTH / TILE_COUNT_WIDTH -tileSize) && backStep==false) {
                 steps.push(XposMonster);
 
                 XposMonster -= tileSize;
@@ -132,6 +129,16 @@ public class Monster  {
 
 
     }
+
+
+    public float getYposMonster() {
+        return YposMonster;
+    }
+
+    public float getXposMonster() {
+        return XposMonster;
+    }
+
 
     public int SimpleMonsterXPosition(){
 
