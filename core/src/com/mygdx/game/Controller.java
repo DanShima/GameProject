@@ -130,8 +130,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         if(Constants.currentLevel == 0) {
 
             itemList.renderItemsLevelZero();
-            golem.render(782, 640); //spawn gazeti at the given position in the map
-            wasp.render(256, 352); //spawn mushrom at the given position in the map
+            golem.render(384, 512); //spawn gazeti at the given position in the map
+            wasp.render(640 , 768); //spawn mushrom at the given position in the map
         }
         if(Constants.currentLevel == 1){
 
@@ -492,7 +492,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * This method converts screen X position to simplified X
      */
     public int ScreenPosXtoSimplified(float PositionX) { //convert screen X position to simplified X
-        return (int) Math.floor(Math.max(0, PositionX / (float) Constants.tileSize));
+        return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.tileSize)));
     }
 
     public int simplifiedXtoScreenPos(int PositionX) { //convert simplified X to screen X position
@@ -669,14 +669,18 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
 
-    public void checkTurn () {
-        if (notMovedYetToNextMap == false) {
-            moveInTurn(wasp, golem);
-        } else if (notMovedYetToNextMap == true) {
-            moveInTurn(gazeti, mushrom);
-            monsterFiexdPath();
-        }
-    }
+
+                public void checkTurn () {
+                    if (notMovedYetToNextMap == false) {
+                        moveInTurn(wasp, golem);
+                    } else if (notMovedYetToNextMap == true) {
+
+                        moveInTurn(gazeti, mushrom);
+                        monsterFiexdPath(phreeoni);
+
+                    }
+                }
+
     /**
      * This method checks player position against a position that we specify as the exit (Danning)
      * We want to have the exit as parameter because each level might have its exit in a different place.
@@ -695,16 +699,16 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
       }
 
 
+
+
+
+
+
     public void moveInTurn(final Monster monster1, final Monster monster2 ){
         enemyTurnStart(); // prevent further player input until monsters have moved!!!
 
-        Gdx.app.log("movement" + (playerPositionX), "Yeetti ter XXXXX" + monster1.getSimpleMonsterX());
-        Gdx.app.log("movement" + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + monster1.getSimpleMonsterY() + 1);
         monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
 
-
-        Gdx.app.log("movement" + (playerPositionX), "Gazeetttiii XXXXX" + monster2.getSimpleMonsterX());
-        Gdx.app.log("movement" + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + monster2.getSimpleMonsterY() + 1);
         if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
             hitByMonster();
 
@@ -731,12 +735,15 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
     }
 
-    public void monsterFiexdPath() {
 
-        phreeoni.monsterProceduralPatternMovement();
+                        public void monsterFiexdPath(Monster fixedPathMonster) {
 
+                            phreeoni.monsterProceduralPatternMovement();
+                            if (fixedPathMonster.getSimpleMonsterX() == playerPositionX && fixedPathMonster.getSimpleMonsterY() == (invertedPlayerPostionY(playerPositionY))) {
+                                hitByMonster();
+                            }
+                        }
 
-    }
 
 
 

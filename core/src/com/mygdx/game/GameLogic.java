@@ -26,13 +26,17 @@ public class GameLogic extends InputAdapter {
          //map = new TiledMap() //TODO create a class only to hold info for map
      }
 
-     public void update() {}
+     public void update() {
+
+     }
      public boolean isGameOver() {
          return lives < 0;
      }
 
 
-    private void playerCollideWithMonster(Monster monster){}
+    private void playerCollideWithMonster(Monster monster){
+
+    }
 
     private void playerCollideWithItem(Item item){
         item.setCollected(true);
