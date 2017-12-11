@@ -657,10 +657,25 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         } else if (notMovedYetToNextMap == true) {
 
             moveInTurn(gazeti, mushRoomMonster);
-            monsterFixedPath(phreeoni);
+
+            moveInTurn(gazeti, mushRoomMonster);
+            Timer.schedule(new Timer.Task() {
+
+                /**
+                 * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+                 * method.
+                 */
+                @Override
+                public void run() {
+
+                    monsterFixedPath(phreeoni);
+                }
+            }, 2);
+
 
         }
     }
+
 
     /**
      * This method checks player position against a position that we specify as the exit (Danning)
