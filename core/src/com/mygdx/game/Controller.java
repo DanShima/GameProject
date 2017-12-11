@@ -809,6 +809,14 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 }
 
 
+    public TiledMapTileLayer getBlockedlayer() {
+        return Blockedlayer;
+    }
+
+    public TiledMapTileLayer getTerrain() {
+        return terrain;
+    }
+
 
 
 }
