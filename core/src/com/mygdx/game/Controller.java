@@ -128,8 +128,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         if(Constants.currentLevel == 0) {
 
             itemList.renderItemsLevelZero();
-            golem.render(782, 640); //spawn gazeti at the given position in the map
-            wasp.render(256, 352); //spawn mushrom at the given position in the map
+            golem.render(384, 512); //spawn gazeti at the given position in the map
+            wasp.render(640 , 768); //spawn mushrom at the given position in the map
         }
         if(Constants.currentLevel == 1){
 
@@ -476,7 +476,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * This method converts screen X position to simplified X
      */
     public int ScreenPosXtoSimplified(float PositionX) { //convert screen X position to simplified X
-        return (int) Math.floor(Math.max(0, PositionX / (float) Constants.tileSize));
+        return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.tileSize)));
     }
 
     public int simplifiedXtoScreenPos(int PositionX) { //convert simplified X to screen X position
@@ -657,7 +657,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                     } else if (notMovedYetToNextMap == true) {
 
                         moveInTurn(gazeti, mushrom);
-                        monsterFiexdPath();
+                        monsterFiexdPath(phreeoni);
 
                     }
                 }
@@ -679,19 +679,26 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
       }
 
 
-                    public void moveInTurn(final Monster monster1, final Monster monster2 ){
+                    public void moveInTurn (final Monster monster1, final Monster monster2 ){
 
-                        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
-                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Yeetti ter XXXXX" + monster1.getSimpleMonsterX());
-                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + monster1.getSimpleMonsterY() + 1);
-
-                        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
+                        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY()  == (invertedPlayerPostionY(playerPositionY))) {
                             hitByMonster();
 
                         }
+                        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
+                        Gdx.app.log("PLAYER XXX " + (playerPositionX), "Yeetti ter XXXXX" + monster1.getSimpleMonsterX());
+                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Yettii YYYY" + (monster1.getSimpleMonsterY() ));
+
+
 
                         Gdx.app.log("PLAYER XXX " + (playerPositionX), "Gazeetttiii XXXXX" + monster2.getSimpleMonsterX());
-                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + monster2.getSimpleMonsterY() + 1);
+                        Gdx.app.log("PLAYER YYYYY " + (invertedPlayerPostionY(playerPositionY)), "Gaaazzttteeii YYYY" + (monster2.getSimpleMonsterY() ));
+
+                        if (monster2.getSimpleMonsterX() == playerPositionX && monster2.getSimpleMonsterY()  == (invertedPlayerPostionY(playerPositionY))) {
+                            hitByMonster();
+                            Gdx.app.log("hiiiiiiittttttttttt ","hiiiiiiiiiiiiiittt");
+
+                        }
                         Timer.schedule(new Timer.Task() {
 
                             /**
@@ -700,24 +707,25 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                              */
                             @Override
                             public void run() {
+
                                 monster2.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
 
                             }
                         }, 1);
 
 
-                        if (monster2.getSimpleMonsterX() == playerPositionX && monster2.getSimpleMonsterY() + 1 == (invertedPlayerPostionY(playerPositionY))) {
-                            hitByMonster();
-                        }
+
 
 
 
                     }
 
-                        public void monsterFiexdPath() {
+                        public void monsterFiexdPath(Monster fixedPathMonster) {
 
                         phreeoni.monsterProceduralPatternMovement();
-
+                    if (fixedPathMonster.getSimpleMonsterX() == playerPositionX && fixedPathMonster.getSimpleMonsterY()  == (invertedPlayerPostionY(playerPositionY))){
+                        hitByMonster();
+                    }
 
                     }
 

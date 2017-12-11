@@ -130,6 +130,7 @@ public class Monster  {
 
             }
 
+
     }
 
     public int SimpleMonsterXPosition(){
