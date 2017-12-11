@@ -6,12 +6,7 @@ package com.mygdx.game;
 
 public class GolemMonster extends Monster {
     public GolemMonster() {
-        super(Constants.GOLEM, 4, 3, 1, 2);
+        super(Constants.GOLEM, 4, 3, 1, 2,384,512);
     }
-    public float getXposMonster(){
-        return XposMonster = 384;
-    }
-    public float getYposMonster(){
-        return YposMonster = 512;
-    }
+
 }

@@ -6,15 +6,9 @@ package com.mygdx.game;
 
 public class MushRoomMonster extends Monster {
     public MushRoomMonster() {
-        super(Constants.MUSHROOM,4,3,1,2);
-    }
-    public float getXposMonster(){
-        return XposMonster = 256;
+        super(Constants.MUSHROOM,4,3,1,2,256,782);
     }
 
-    public float getYposMonster(){
-        return YposMonster = 782;
-    }
 }
 
 

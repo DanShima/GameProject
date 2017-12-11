@@ -7,14 +7,7 @@ package com.mygdx.game;
 public class PhreoniMonster extends Monster {
 
     public PhreoniMonster() {
-        super(Constants.PHREONI, 4, 3, 2, 4);
+        super(Constants.PHREONI, 4, 3, 2, 4,1152,384);
     }
 
-    public float getXposMonster(){
-        return XposMonster = 1152;
-    }
-
-    public float getYposMonster(){
-        return YposMonster = 384;
-    }
 }
