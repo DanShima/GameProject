@@ -757,18 +757,23 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             hud.setHealth(hud.getHealth() * 0.75f);}
     }
 
+    /**
+     * decrease score points for every move you make. -20 score points per move
+     */
     public void ScoreMoveDecrease(){
         if(hud.getScore()>0)
             hud.setScore(hud.getScore()-20);
         else hud.setScore(0);
     }
+    
+
+    /**
+     * When the game is finished. it takes you back to level 0 and the score is reset to 1000.
+     */
     public void GameOverSettings(){
         Constants.currentLevel=0;
         ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
         hud.setScore(1000);
-
-
-
     }
 
     public void enemyTurnStart(){
@@ -786,9 +791,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
          /** Load the next level map
          * @return false after loading once. otherwise it will keep loading for some reason
          */
-                public boolean updateLevel() {
-                     notMovedYetToNextMap = true;
-                    if (notMovedYetToNextMap) {
+         public boolean updateLevel() {
+             notMovedYetToNextMap = true;
+             if (notMovedYetToNextMap) {
                         Constants.currentLevel++;
 
                        interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));

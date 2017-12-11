@@ -32,7 +32,7 @@ public class Constants {
     public static final String GOLEM = "golem.png";
     public static final String WASP = "wasp.png";
     public static final String MUSHROOM = "mossmushroom.png";
-    public static final String PHREONI = "PhreoniMonster.png";
+    public static final String PHREONI = "Phreoni.png";
     //UI skin for buttons and bars
     public static final String skin = new String("skin/freezing-ui.json");
     //to Display menu
