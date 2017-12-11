@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 
 /**
- * This class shows the player login page
+ * This class shows the player login page after 3 seconds splash display of 7 HURRICANES
  */
 
 public class LoginScreen extends Game {
@@ -15,10 +15,11 @@ public class LoginScreen extends Game {
 
     public LoginScreen() { super(); }
 
+
     @Override
     public void create() {
         this.setScreen(new PlayerLogin());
-        this.setScreen(new PlayerLogin());
+
 
         WIDTH = Gdx.graphics.getWidth();
         HEIGHT = Gdx.graphics.getHeight();
