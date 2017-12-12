@@ -43,10 +43,15 @@ public class HUD implements Disposable  {
     private Window PauseMenu;
     private final ProgressBar progressBar;
     boolean isPaused = false;
+    
+    /**
+     *The constructor initializing the labels, buttons, health bar
+     * @param sb spritebatch used to render the hud
+     */
 
-    public HUD(SpriteBatch sb)
 
-    {
+
+    public HUD(SpriteBatch sb) {
         viewport=new StretchViewport (Constants.MAP_WIDTH,Constants.MAP_HEIGHT,new OrthographicCamera ());//
         stage=new Stage(viewport,sb);//stage is as box and try to put widget and organize things inside that table
         skin = new Skin ( Gdx.files.internal ( Constants.SKIN) );
