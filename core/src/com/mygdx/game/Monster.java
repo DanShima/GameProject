@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.Stack;
 
 import static com.mygdx.game.Constants.FPS;
-import static com.mygdx.game.Constants.MAP_WIDTH;
-import static com.mygdx.game.Constants.TILE_COUNT_WIDTH;
 
 /**
  * just a placeholder class for monster. feel free to modify or change completely
@@ -108,13 +106,10 @@ public class Monster  {
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
 
-        //Gdx.app.log("movement", "next Monster: ");
-        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
-        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
+
 
         int diffBetweenX = playerPositionX-simpleMonsterX;
         int diffBetweenY = playerPositionY-simpleMonsterY;
-        //Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
 
         if(diffBetweenX!=0 && diffBetweenY!=0) { //prevent diagonal movement and make it horizontal
             YposMonster += Math.signum(diffBetweenY) * tileSize;
@@ -132,23 +127,7 @@ public class Monster  {
         }
 
 
-/*
-        simpleMonsterY = SimpleMonsterYPosition();
-        simpleMonsterX = SimpleMonsterXPosition();
-            //Gdx.app.log("movement", "simpleMonsterY: " + simpleMonsterY);
-            if(XposMonster > (MAP_WIDTH / TILE_COUNT_WIDTH -tileSize) && backStep==false) {
-                steps.push(XposMonster);
-                XposMonster -= tileSize;
-            }else{
-                backStep=true;
-                if (!(steps.isEmpty())){
-                    if (XposMonster != steps.pop() ){
-                        XposMonster += tileSize;
-                    }
-                }else
-                backStep=false;
-            }
-            */
+
     }
 
 
@@ -177,7 +156,7 @@ public class Monster  {
                 Math.max(
                         0,
                         YposMonster/(float) tileSize
-                        //(YposMonster-(float) merginTop)/(float) tileSize
+
                 )
         );
     }
@@ -186,9 +165,7 @@ public class Monster  {
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
 
-        //Gdx.app.log("movement", "next Monster: ");
-        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
-        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
+
 
         int diffBetweenX = playerPositionX-simpleMonsterX;
         int diffBetweenY = playerPositionY-simpleMonsterY;
