@@ -1,7 +1,5 @@
 package com.mygdx.game;
-/**
- * Created by Shashidhar on 07-12-2017.
- */
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -34,8 +32,11 @@ public class PlayerLogin implements ApplicationListener, Screen {
     private Texture background;
 
     //for login and New user
+
     static String name;
     String password;
+
+
 
     static public firebase fb;
     private TextButton LoginButton;
@@ -43,7 +44,6 @@ public class PlayerLogin implements ApplicationListener, Screen {
     private TextButton QuickPlayButton;
     private TextField Playername;
     private TextField Password;
-
     private Window invaliduser;
 
 
@@ -52,7 +52,9 @@ public class PlayerLogin implements ApplicationListener, Screen {
        create();
     }
 
-    // To display MenuScreen
+    /**
+     * bring the user to the next screen which is the menuscreen
+     */
     public void GoMenu(){
         create();
         ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());    }
@@ -62,7 +64,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
     public void create() {
         batch = new SpriteBatch();
         bgbatch =new SpriteBatch();
-        background = new Texture("bg.jpg");
+        background = new Texture("gear_up.jpg");
         skin = new Skin(Gdx.files.internal(Constants.SKIN));
         stage = new Stage();
         password=new String();
@@ -165,6 +167,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
         stage.draw();
         batch.end();
     }
+
  public Table invaliduserbutton()
  {
      Table table =new Table();
@@ -187,36 +190,23 @@ public class PlayerLogin implements ApplicationListener, Screen {
      return table;
  }
 
-    @Override
-    public void show() {
-
-    }
-
-
 
     @Override
-    public void resize(int width, int height) {
-
-    }
+    public void show() {}
 
     @Override
-    public void render() {
-
-    }
+    public void resize(int width, int height) {}
 
     @Override
-    public void pause() {
-
-    }
+    public void render() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void hide() {
+    public void resume() {}
 
-    }
+    @Override
+    public void hide() {}
 
 }

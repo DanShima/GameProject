@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
- * Created by Giddy on 26/11/2017.
+ * Model class for the game object item, such as a piece of clothes or food
  */
 
 public class Item {
@@ -71,9 +71,6 @@ public class Item {
         return collected ;
     }
 
-
-
-
     /**
      * this method returns the item's score that the player will receive when he collects it.
      * @return
@@ -81,39 +78,24 @@ public class Item {
     public int giveScorePoint() {
         return 1000;
     }
+
+    /**
+     * Food items reward health points
+     * @return
+     */
     public int giveHealthPoint() {
         return 50;
     }
 
-
-    //this maybe should be in tiledtest class
     public void dispose() {
         spriteBatch.dispose();
         texture.dispose();
     }
-
+    //getters
     public float getPositionX() {
         return x;
     }
-
-    public void setPositionX(float positionX) {
-        this.x = positionX;
-    }
-
     public float getPositionY() {
         return y;
     }
-
-    public void setPositionY(float positionY) {
-        this.y = positionY;
-    }
-
-    public void setTexture(Texture texture) {
-        this.texture = texture;
-    }
-    public Texture getTexture() {
-        return texture;
-    }
-
-
 }

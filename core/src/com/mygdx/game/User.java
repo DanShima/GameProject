@@ -1,10 +1,6 @@
 package com.mygdx.game;
 
 /**
- * Created by tmp-sda-1124 on 11/24/17.
- */
-
-/**
  * User detail for Login
  */
 public class User {
@@ -14,7 +10,6 @@ public class User {
     private int HighScore;
     private int Score;
 
-    //Constructors
 
     public User(){
     }
