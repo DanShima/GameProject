@@ -63,6 +63,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private boolean movedYetToNextMap;
 
     private boolean isMonsterTurn = false;
+    private Score score;
 
     public Controller(GameView GameView) {
         movedYetToNextMap =false;
@@ -76,6 +77,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public void create() {
         sp = new SpriteBatch();
         hud = new HUD(sp);
+        score = new Score(hud);
+        hud.setScore(score.getScore());
 
         interactMap.create();
         getTiledMapRender().setView(interactView.getCamera());
@@ -86,7 +89,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         // SoundEffect.newSoundEffect.create(new AssetManager()); //load audio
         GameSetting.newSetting.load(); //load audio settings
         SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap); //play background music
-        // Gdx.app.debug("SOUND", "CONTROLLERRRR");
+        
 
         gazeti = new GazetiMonster();
         mushRoomMonster = new MushRoomMonster();
@@ -124,17 +127,15 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         if(Constants.CURRENT_LEVEL == 0) {
 
             itemList.renderItemsLevelZero();
-            golem.render(); //spawn gazeti at the given position in the map
-            wasp.render(); //spawn mushRoomMonster at the given position in the map
+            //spawn monsters
+            golem.render();
+            wasp.render();
         }
         if(Constants.CURRENT_LEVEL == 1){
-
             itemList.renderItemsLevelOne();
-
             gazeti.render();
             mushRoomMonster.render();
-
-            phreeoni.render();//spawn phreeoni at the given position in the map
+            phreeoni.render();
 
         }
     }
@@ -157,7 +158,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 if(item.getName().equals("apple")){
                     hud.setHealth(hud.getHealth()+item.giveHealthPoint());
                 }
-                else {hud.setScore(hud.getScore()+item.giveScorePoint());
+
+                else {score.setScore(score.getScore()+item.giveScorePoint());
+                    hud.setScore(score.getScore());
 
                     //plays a sound effect when collecting a cloth ite
                     SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);}
@@ -169,32 +172,25 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 
     @Override
-    public void resize(int width, int height) {
-    }
+    public void resize(int width, int height) {}
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
         //free allocated memory
         interactMap.dispose();
         SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap.stop();
-        // Gdx.app.debug("SOUND", "DISPOSE");
         SoundEffect.newSoundEffect.backgroundMusic.musicDesertMap.stop();
         SoundEffect.newSoundEffect.sounds.collect.stop();
 
@@ -295,10 +291,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
 
-    public void debugMe() {
-        //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
-        // Gdx.app.log("movement", "oldX: " + (oldX / tileWidth) + " oldY: " + (oldY / tileHeight));
-    }
+
 
     /**
      * check the collision on the left side. if the Properties is blocked the character will stay on the old x, y
@@ -309,7 +302,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
 
-        debugMe();
+
         obstacles = terrain.getCell((int) (oldX / tileWidth), (int) (oldY / tileHeight) + 1);
         if (checkFirstLayer(ground) || checkSecondLayer(obstacles)) {
             girl.move(0, 0);
@@ -328,7 +321,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         ground = Blockedlayer.getCell((int) (oldX / tileWidth) + 2, (int) (oldY / tileHeight) + 1);
         obstacles = terrain.getCell((int) (oldX / tileWidth) + 2, (int) (oldY / tileHeight) + 1);
 
-        debugMe();
+
         if (checkFirstLayer(ground) || checkSecondLayer(obstacles)) {
             girl.move(0, 0);
         } else {
@@ -344,7 +337,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         ground = Blockedlayer.getCell((int) (oldX / tileWidth) + 1, (int) (oldY / tileHeight) + 2);
         obstacles = terrain.getCell((int) (oldX / tileWidth) + 1, (int) (oldY / tileHeight) + 2);
 
-        debugMe();
+
         if (checkFirstLayer(ground) || checkSecondLayer(obstacles)) {
             girl.move(0, 0);
         } else {
@@ -361,7 +354,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         girl.resetTimeTillIdle();
         ground = Blockedlayer.getCell((int) (oldX / tileWidth) + 1, (int) (oldY / tileHeight));
 
-        debugMe();
+
         obstacles = terrain.getCell((int) (oldX / tileWidth) + 1, (int) (oldY / tileHeight));
         if (checkFirstLayer(ground) || checkSecondLayer(obstacles)) {
             girl.move(0, 0);
@@ -375,7 +368,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         getProperties();
         girl.resetTimeTillIdle(); //go back to idle state
 
-        debugMe();
         boolean blocked = false;
         int posX = (int) (girl.getOldX() / tileWidth) + 1; // +1 because Blockedlayer and terrain are starting outside of the screen
         int posY = (int) (girl.getOldY() / tileHeight) + 1;
@@ -387,7 +379,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             obstacles = terrain.getCell(posX + directionSign, posY);
             blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
             if (limit == 2) {
-                //Gdx.app.log("movement","horizontal: oldX: " + (posX + directionSign) + " oldY: " +  posY  );
+
                 ground = Blockedlayer.getCell(posX + directionSign * 2, posY);
                 obstacles = terrain.getCell(posX + directionSign * 2, posY);
                 blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
@@ -395,12 +387,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         } else if (stepsX == 0) {//vertical movement
             int directionSign = Integer.signum(stepsY); //-1 for left, otherwise 1
             int limit = Math.abs(stepsY);
-            //Gdx.app.log("movement","directionSign: " + directionSign + " limit: " +  limit  );
             ground = Blockedlayer.getCell(posX, posY + directionSign);
             obstacles = terrain.getCell(posX, posY + directionSign);
             blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
             if (limit == 2) {
-                //Gdx.app.log("movement","vertical: oldX: " + posX + " oldY: " +  (posY + directionSign) );
                 ground = Blockedlayer.getCell(posX, posY + directionSign * 2);
                 obstacles = terrain.getCell(posX, posY + directionSign * 2);
                 blocked = checkFirstLayer(ground) || checkSecondLayer(obstacles) || blocked;
@@ -408,7 +398,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         } else {
             blocked = true;
         }
-        //Gdx.app.log("movement","horizontal: oldX: " + (posX + directionSign*i) + " oldY: " +  posY  );
         return !blocked;
     }
 
@@ -472,7 +461,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      **/
     public int ScreenPosYtoSimplified(float PositionY) {
         float temporary = (PositionY - (float) interactView.getMarginTop()) / (float) Constants.TILE_SIZE;
-        // Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + TILE_SIZE + "result" + temporary  );
         return (int) Math.floor(Math.max(0.0, temporary));
         //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
@@ -515,8 +503,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
         int touchPositionX = ScreenPosXtoSimplified(screenX); //simplified touch position X
         int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
-        //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
-        //Gdx.app.log("move", "screenY: " + screenY + " Simplified pos Y: " + touchPositionY + " Set pos Y:" + simplifiedYtoScreenPos(touchPositionY) );
+
+
         differenceInPositionX = touchPositionX - getPlayerPositionSimplifiedX();
         differenceInPositionY = getPlayerPositionSimplifiedY() - touchPositionY;
 
@@ -748,9 +736,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * decrease score points for every move you make. -20 score points per move
      */
     public void ScoreMoveDecrease(){
-        if(hud.getScore()>0)
-            hud.setScore(hud.getScore()-20);
-        else hud.setScore(0);
+        if(score.getScore()>0)
+        {score.setScore(score.getScore()-20);
+            hud.setScore(score.getScore());}
+        else {score.setScore(0);
+            hud.setScore(score.getScore());}
     }
 
 
@@ -758,8 +748,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * When the game is finished. it takes you back to level 0 and the score is reset to 1000.
      */
     public void GameOverSettings(){
+
         Constants.CURRENT_LEVEL =0;
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp));
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp,score.getMaxScore()));
         hud.setScore(1000);
     }
 
@@ -797,7 +788,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
              }
              return false;
          }
-
 
 
 

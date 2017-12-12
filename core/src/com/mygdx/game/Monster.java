@@ -9,11 +9,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.Stack;
 
 import static com.mygdx.game.Constants.FPS;
-import static com.mygdx.game.Constants.MAP_WIDTH;
-import static com.mygdx.game.Constants.TILE_COUNT_WIDTH;
 
 /**
- * just a placeholder class for monster. feel free to modify or change completely
+ * Superclass monster
  */
 
 public class Monster  {

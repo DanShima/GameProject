@@ -24,7 +24,7 @@ public class LoginScreen extends Game {
         WIDTH = Gdx.graphics.getWidth();
         HEIGHT = Gdx.graphics.getHeight();
 
-        setScreen( new Splash(this) );
+        setScreen( new TeamLogoScreen(this) );
 
         final long splash_start_time = System.currentTimeMillis();
 
