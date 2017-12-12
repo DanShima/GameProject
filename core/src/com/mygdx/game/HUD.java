@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class HUD implements Disposable  {
 
     private int level = 0;
-    public Stage stage;
+    private Stage stage;
     private Viewport viewport;
     private static int score;
     private  Label ScoreLabel;
@@ -190,6 +190,10 @@ public class HUD implements Disposable  {
         }else{
             return false;
         }
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     public  float getHealth()

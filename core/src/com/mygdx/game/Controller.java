@@ -200,15 +200,15 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public void render(float delta) {
         initialRender();
         initialItemRender();
-        sp.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
+        sp.setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
         if(!hud.isPaused()){
             multiplexer = new InputMultiplexer();
-            multiplexer.addProcessor(hud.stage);
+            multiplexer.addProcessor(hud.getStage());
             multiplexer.addProcessor(this);
             Gdx.input.setInputProcessor(multiplexer);
         }
-        else  Gdx.input.setInputProcessor(hud.stage);
+        else  Gdx.input.setInputProcessor(hud.getStage());
     }
 
     public void checkCollisionPlayerAndItem() {
