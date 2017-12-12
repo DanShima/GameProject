@@ -29,28 +29,29 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         private int MaxScore;
         private Texture background;
 
+       // Firebase
+       public static firebase fb;
+       public  String name;
+       PlayerLogin play;
+
     /**
      * Create the layout of GameOverScreen screen with a table of buttons
      * @param sp spritebatch used to render the screen
      * @param  MaxScore int used to show the score plus health bonus
      */
     public GameOverScreen(SpriteBatch sp,int MaxScore) {
+        this.MaxScore=MaxScore;
         viewport = new StretchViewport(Constants.MAP_WIDTH, Constants.MAP_HEIGHT, new OrthographicCamera());//
         background = new Texture("winter.png");
         hud = new HUD(sp);
         stage = new Stage(viewport, sp);
         skin = new Skin(Gdx.files.internal(Constants.SKIN));
 
-
-
             Table table = new Table();
             table.center();
             table.setFillParent(true);
             Label gameOverLabel = new Label("GAME OVER", skin,"default");
             gameOverLabel.setFontScale(9f,9f);
-
-
-
 
             TextButton replay = new TextButton("Play again!",skin,"default");
             replay.addListener(new InputListener() {
@@ -68,11 +69,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             menu.setTransform(true);
             menu.setScale(2f);
 
-
              Label ScoreLabel=new Label("Score: " + MaxScore ,skin,"default");
              ScoreLabel.setFontScale(7f,7f);
 
-
+             name=play.name;
+             fb.setHighScore(MaxScore,name);
 
             table.center();
             table.add(gameOverLabel).padTop(50f).expandX();

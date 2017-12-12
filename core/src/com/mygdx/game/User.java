@@ -7,14 +7,14 @@ public class User {
     private String userId;
     private String userName;
     private String userpassword;
-    private long HighScore;
+    private int HighScore;
     private int Score;
 
 
     public User(){
     }
 
-    public User(String userId, String userName, String userpassword, long highScore, int score) {
+    public User(String userId, String userName, String userpassword, int highScore, int score) {
         this.userId = userId;
         this.userName = userName;
         this.userpassword = userpassword;
@@ -44,9 +44,17 @@ public class User {
         return userId;
     }
 
-    public long getHighScore() { return HighScore; }
+    public int getHighScore() { return HighScore; }
 
     public int getScore() {
         return Score;
     }
+
+    public void setHighScore(int highScore) {
+        HighScore = highScore;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
 }

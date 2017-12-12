@@ -41,7 +41,12 @@ public class MenuScreen implements Screen {
     private CheckBox checkBoxMusic;
     private Slider sliderSound;
     private Slider sliderMusic;
+    static firebase fb;
+    PlayerLogin play;
 
+    private int maxscore;
+
+    private Window HighScoreDisplay;
 
     public MenuScreen() {
         create();
@@ -60,6 +65,16 @@ public class MenuScreen implements Screen {
         bgbatch =new SpriteBatch();
         background = new Texture("background_02.png");
 
+        //Firebase
+        maxscore=fb.getHighScore(play.name);
+
+        HighScoreDisplay=new Window("SCORE",skin);
+        HighScoreDisplay.add(scorebutton()).row();
+        HighScoreDisplay.pack();
+        HighScoreDisplay.setPosition(1200,700);
+        HighScoreDisplay.setVisible(false);
+        HighScoreDisplay.toFront();
+
         final TextButton playButton = new TextButton("PLAY", skin, "default");
         playButton.setSize(Constants.COL_WIDTH,Constants.ROW_HEIGHT);
         playButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +200);
@@ -67,7 +82,6 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
 
-                //playButton.setText("You clicked the button");
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
 
             }
@@ -82,6 +96,8 @@ public class MenuScreen implements Screen {
                 onSettingsClicked();
             }
         });
+
+
         final TextButton scoreButton = new TextButton("SCORE", skin, "default");
         scoreButton.setSize(Constants.COL_WIDTH,Constants.ROW_HEIGHT);
         scoreButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y -100);
@@ -89,7 +105,7 @@ public class MenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y){
 
-                scoreButton.setText("You clicked the score button");
+                                HighScoreDisplay.setVisible(true);
             }
         });
         final TextButton exitButton = new TextButton("EXIT", skin, "default");
@@ -108,8 +124,20 @@ public class MenuScreen implements Screen {
         stage.addActor(settingsWindow ());
         stage.addActor(scoreButton);
         stage.addActor(exitButton);
+        stage.addActor(HighScoreDisplay);
         Gdx.input.setInputProcessor(stage);
 
+    }
+    //Method to display popup for score
+    public Table scorebutton()
+    {
+        Table table =new Table();
+        table.row();
+        Label label=new Label("SCORE: "+maxscore,skin,"default");
+        label.setFontScale(3,2);
+        table.add(label);
+        table .row();
+        return table;
     }
 
     @Override
