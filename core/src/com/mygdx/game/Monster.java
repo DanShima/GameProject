@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.Stack;
 
 import static com.mygdx.game.Constants.FPS;
-import static com.mygdx.game.Constants.mapWidth;
-import static com.mygdx.game.Constants.tileCountW;
+import static com.mygdx.game.Constants.MAP_WIDTH;
+import static com.mygdx.game.Constants.TILE_COUNT_WIDTH;
 
 /**
  * just a placeholder class for monster. feel free to modify or change completely
@@ -30,6 +30,7 @@ public class Monster  {
     protected final static int merginTop=55;
     private AnimationUtil animationUtil;
     private int turnOrder;
+
     protected float YposMonster;
     protected float XposMonster;
     protected boolean initialMonsterPos=false;
@@ -39,6 +40,8 @@ public class Monster  {
     private int simpleMonsterY;
     private boolean backStep;
 
+    private int monsterDamage=30;
+
 
     //Yeti monster
     public Monster(){
@@ -46,7 +49,7 @@ public class Monster  {
     }
 
     //customize a monster
-    public Monster(String pngFile, int rows, int columns, int specifyRow, int turnOrder){
+    public Monster(String pngFile, int rows, int columns, int specifyRow, int turnOrder , int startPosX, int startPosY){
         texture = new Texture(Gdx.files.internal(pngFile));
         TextureRegion[][] tmp = TextureRegion.split(texture,
                 texture.getWidth() / columns,
@@ -61,10 +64,12 @@ public class Monster  {
         steps = new Stack<Float>();
         this.turnOrder = turnOrder;
         backStep=false;
+        XposMonster = startPosX;
+        YposMonster = startPosY;
     }
 
 
-    public void render(float positionX, float positionY) {
+    public void render() {
         // setting the received monster position from tiletest  for the monster
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
@@ -73,19 +78,15 @@ public class Monster  {
         spriteBatch.begin();
 
         if (!(initialMonsterPos)){
-            XposMonster=positionX;
-            YposMonster=positionY;
-            spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Draw current monster  at (position x, position Y)
-
+            XposMonster=getXposMonster();
+            YposMonster=getYposMonster();
+            spriteBatch.draw(currentFrame, XposMonster, YposMonster);
             initialMonsterPos=true;
 
         }else
         {
-
             spriteBatch.draw(currentFrame, XposMonster, YposMonster); // Update the monster place
-
         }
-
         spriteBatch.end();
 
     }
@@ -102,99 +103,125 @@ public class Monster  {
         return simpleMonsterY;
     }
 
-    public void monsterProceduralPatternMovement(){
+    public boolean move2(int playerPositionX, int playerPositionY){
 
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
 
+        //Gdx.app.log("movement", "next Monster: ");
+        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
+        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
 
-            Gdx.app.log("monster pherrrront XXX " + (XposMonster), " XXXXX" );
-            if(XposMonster > (mapWidth/tileCountW-tileSize) && backStep==false) {
+        int diffBetweenX = playerPositionX-simpleMonsterX;
+        int diffBetweenY = playerPositionY-simpleMonsterY;
+        //Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
+
+        if(diffBetweenX!=0 && diffBetweenY!=0) { //prevent diagonal movement and make it horizontal
+            YposMonster += Math.signum(diffBetweenY) * tileSize;
+        }else{
+            // this would be movement horizontal vertical and diagonal
+            XposMonster += Math.signum(diffBetweenX) * tileSize;
+            YposMonster += Math.signum(diffBetweenY) * tileSize;
+        }
+
+        // hit check
+        if( playerPositionX-SimpleMonsterXPosition() == 0 && playerPositionY-SimpleMonsterYPosition() == 0 ){
+            return true;
+        }else {
+            return false;
+        }
+
+
+/*
+        simpleMonsterY = SimpleMonsterYPosition();
+        simpleMonsterX = SimpleMonsterXPosition();
+            //Gdx.app.log("movement", "simpleMonsterY: " + simpleMonsterY);
+            if(XposMonster > (MAP_WIDTH / TILE_COUNT_WIDTH -tileSize) && backStep==false) {
                 steps.push(XposMonster);
-
                 XposMonster -= tileSize;
-
-            }else
-            {
+            }else{
                 backStep=true;
                 if (!(steps.isEmpty())){
-                    if (XposMonster != steps.pop()){
-
+                    if (XposMonster != steps.pop() ){
                         XposMonster += tileSize;
                     }
+                }else
+                backStep=false;
             }
-               else
-
-                    backStep=false;
-
-
-            }
-
-
+            */
     }
+
+
+    public float getYposMonster() {
+        return YposMonster;
+    }
+
+    public float getXposMonster() {
+        return XposMonster;
+    }
+
 
     public int SimpleMonsterXPosition(){
 
-        return (int) Math.floor( Math.max(0,XposMonster/(float) tileSize));
+        return (int) Math.floor(
+                Math.max(
+                        0,
+                        XposMonster/(float) tileSize
+                )
+        );
     }
 
     public int SimpleMonsterYPosition(){
 
-        return (int) Math.floor( Math.max(0,(YposMonster-(float) merginTop)/(float) tileSize));
+        return (int) Math.floor(
+                Math.max(
+                        0,
+                        YposMonster/(float) tileSize
+                        //(YposMonster-(float) merginTop)/(float) tileSize
+                )
+        );
     }
 
-    public void move(int playerPositionX, int playerPositionY){
-
+    public boolean move(int playerPositionX, int playerPositionY){
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
 
+        //Gdx.app.log("movement", "next Monster: ");
+        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
+        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
+
         int diffBetweenX = playerPositionX-simpleMonsterX;
-
         int diffBetweenY = playerPositionY-simpleMonsterY;
-
-        if ( diffBetweenX < 0){
-           if (simpleMonsterX!=playerPositionX ){
-
-                XposMonster -= tileSize;
-            if ((Math.signum(diffBetweenY) == -1)){
+        //Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
 
 
-                  if (simpleMonsterY!=playerPositionY ){
-
-                    YposMonster-=tileSize;
-
-                    }
-                }
-            }
-        }else if ((Math.signum((int)diffBetweenX) == 1)){
-            if (simpleMonsterX!=playerPositionX){
-                XposMonster+=tileSize;
-                if ((Math.signum((int)diffBetweenY) == 1)){
-
-                     if (simpleMonsterY!=playerPositionY  ){
-                    YposMonster+=tileSize;
-
-                     }
-
-                }
-
-            }
-
+        if(diffBetweenX!=0 && diffBetweenY!=0) { //prevent diagonal movement and make it horizontal
+            XposMonster += Math.signum(diffBetweenX) * tileSize;
+        }else{
+            // this would be movement horizontal vertical and diagonal
+            XposMonster += Math.signum(diffBetweenX) * tileSize;
+            YposMonster += Math.signum(diffBetweenY) * tileSize;
         }
 
-
-
-
-
-
-
-
-
+        // hit check
+        if( playerPositionX-SimpleMonsterXPosition() == 0 && playerPositionY-SimpleMonsterYPosition() == 0 ){
+            return true;
+        }else {
+            return false;
         }
+
+    }
+
+
+    public int getMonsterDamage() {
+        return monsterDamage;
+    }
 
     public void dispose() {
         spriteBatch.dispose();
         texture.dispose();
     }
+
+
 
 }

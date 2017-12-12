@@ -5,20 +5,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Timer;
 
 /**
- * This class shows the player login page
+ * This class shows the player login page after 3 seconds splash display of 7 HURRICANES
  */
 
-public class GearUp extends Game {
+public class LoginScreen extends Game {
     public static int WIDTH;
     public static int HEIGHT;
     private static long SPLASH_MINIMUM_MILLIS = 3000L;
 
-    public GearUp() { super(); }
+    public LoginScreen() { super(); }
+
 
     @Override
     public void create() {
         this.setScreen(new PlayerLogin());
-        this.setScreen(new PlayerLogin());
+
 
         WIDTH = Gdx.graphics.getWidth();
         HEIGHT = Gdx.graphics.getHeight();
@@ -36,18 +37,18 @@ public class GearUp extends Game {
                     public void run() {
 
                         long splash_elapsed_time = System.currentTimeMillis() - splash_start_time;
-                        if (splash_elapsed_time < GearUp.SPLASH_MINIMUM_MILLIS)
+                        if (splash_elapsed_time < LoginScreen.SPLASH_MINIMUM_MILLIS)
                         {
                             Timer.schedule(
                                     new Timer.Task() {
                                         @Override
                                         public void run() {
-                                            GearUp.this.setScreen(new PlayerLogin());
+                                            LoginScreen.this.setScreen(new PlayerLogin());
                                         }
-                                    }, (float)(GearUp.SPLASH_MINIMUM_MILLIS - splash_elapsed_time) / 1000f);
+                                    }, (float)(LoginScreen.SPLASH_MINIMUM_MILLIS - splash_elapsed_time) / 1000f);
                         } else
                         {
-                            GearUp.this.setScreen(new PlayerLogin());
+                            LoginScreen.this.setScreen(new PlayerLogin());
                         }
                     }
                 });

@@ -29,8 +29,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private float oldX, oldY;
 
 
-    public final static int mapWidth = Constants.tileSize * Constants.tileCountW;
-    public final static int mapHeight = Constants.tileSize * Constants.tileCountH;
+    public final static int mapWidth = Constants.TILE_SIZE * Constants.TILE_COUNT_WIDTH;
+    public final static int mapHeight = Constants.TILE_SIZE * Constants.TILE_COUNT_HEIGHT;
     private int NumberOfMovedTiles = 2;
     public int tileWidth = 128;
     public int tileHeight = 128;
@@ -42,17 +42,14 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private Player girl; //animated player
 
     private GazetiMonster gazeti;
-    private MushRoomMonster mushrom;
-    private Wasp wasp;
-    private Golem golem;
+    private MushRoomMonster mushRoomMonster;
+    private WaspMonster wasp;
+    private GolemMonster golem;
     private PhreoniMonster phreeoni;
-
-    private String message;
 
     private HUD hud;
     private SpriteBatch sp;
 
-    //  static int currentLevel = 0;
 
     private int oneStepHorizontaly;
     private int twoStepsHorizontally;
@@ -62,17 +59,14 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private TiledMapTileLayer.Cell ground;
     private TiledMapTileLayer.Cell obstacles;
 
-    private int playerPositionY;
-    private int playerPositionX;
-
     private ItemList itemList;
-    private boolean notMovedYetToNextMap;
+    private boolean movedYetToNextMap;
 
     private boolean isMonsterTurn = false;
     private Score score;
 
     public Controller(GameView GameView) {
-        notMovedYetToNextMap=false;
+        movedYetToNextMap =false;
         interactView = GameView;
         interactMap = new Map();
         create();
@@ -98,9 +92,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         // Gdx.app.debug("SOUND", "CONTROLLERRRR");
 
         gazeti = new GazetiMonster();
-        mushrom = new MushRoomMonster();
-        wasp = new Wasp();
-        golem = new Golem();
+        mushRoomMonster = new MushRoomMonster();
+        wasp = new WaspMonster();
+        golem = new GolemMonster();
         phreeoni = new PhreoniMonster();
         itemList = new ItemList();
 
@@ -130,20 +124,20 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         girl.render();
         girl.updateSpriteBatch(itemList.getItemsLevelZero()); //update clothes on girl level 0
         girl.updateSpriteBatch(itemList.getItemsLevelOne()); //update clothes on girl level 1
-        if(Constants.currentLevel == 0) {
+        if(Constants.CURRENT_LEVEL == 0) {
 
             itemList.renderItemsLevelZero();
-            golem.render(384, 512); //spawn gazeti at the given position in the map
-            wasp.render(640 , 768); //spawn mushrom at the given position in the map
+            golem.render(); //spawn gazeti at the given position in the map
+            wasp.render(); //spawn mushRoomMonster at the given position in the map
         }
-        if(Constants.currentLevel == 1){
+        if(Constants.CURRENT_LEVEL == 1){
 
             itemList.renderItemsLevelOne();
 
-            gazeti.render(512, 256);
-            mushrom.render(256, 782);
+            gazeti.render();
+            mushRoomMonster.render();
 
-            phreeoni.render(1152,384);//spawn phreeoni at the given position in the map
+            phreeoni.render();//spawn phreeoni at the given position in the map
 
         }
     }
@@ -152,10 +146,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private void playerCollideWithItem(Item item){
         boolean isRightLevel = false;
         //refactor the following
-        if( itemList.getItemsLevelZero().contains(item,true) && Constants.currentLevel == 0 ){
+        if( itemList.getItemsLevelZero().contains(item,true) && Constants.CURRENT_LEVEL == 0 ){
             isRightLevel = true;
         }
-        else if( itemList.getItemsLevelOne().contains(item,true) && Constants.currentLevel == 1 ) {
+        else if( itemList.getItemsLevelOne().contains(item,true) && Constants.CURRENT_LEVEL == 1 ) {
             isRightLevel = true;
         }
 
@@ -255,11 +249,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 }
 
         }
-    }
-
-    public void compareposition(int x, int y)
-    {
-
     }
 
     @Override
@@ -393,9 +382,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
         debugMe();
         boolean blocked = false;
-        int posX = (int) (girl.getOldX() / tileWidth) + 1;
+        int posX = (int) (girl.getOldX() / tileWidth) + 1; // +1 because Blockedlayer and terrain are starting outside of the screen
         int posY = (int) (girl.getOldY() / tileHeight) + 1;
-        Gdx.app.log("movement", "before move: X: " + posX + " Y: " + posY);
+        Gdx.app.log("movement", "collision pos: X: " + posX + " Y: " + posY);
         if (stepsY == 0) {//horizontal movement
             int directionSign = Integer.signum(stepsX); //-1 for left, otherwise 1
             int limit = Math.abs(stepsX);
@@ -440,10 +429,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         tileWidth = (int) Blockedlayer.getTileWidth();
         tileHeight = (int) Blockedlayer.getTileHeight();
 
-        oneStepHorizontaly = mapWidth / Constants.tileCountW;
-        twoStepsHorizontally = mapWidth / Constants.tileCountW * NumberOfMovedTiles;
-        oneStepVertically = mapHeight / Constants.tileCountH;
-        twoStepsvertically = mapHeight / Constants.tileCountH * NumberOfMovedTiles;
+        oneStepHorizontaly = mapWidth / Constants.TILE_COUNT_WIDTH;
+        twoStepsHorizontally = mapWidth / Constants.TILE_COUNT_WIDTH * NumberOfMovedTiles;
+        oneStepVertically = mapHeight / Constants.TILE_COUNT_HEIGHT;
+        twoStepsvertically = mapHeight / Constants.TILE_COUNT_HEIGHT * NumberOfMovedTiles;
     }
 
     /**
@@ -487,8 +476,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * This method converts screen Y position to simplified Y
      **/
     public int ScreenPosYtoSimplified(float PositionY) {
-        float temporary = (PositionY - (float) interactView.getMarginTop()) / (float) Constants.tileSize;
-        // Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + tileSize + "result" + temporary  );
+        float temporary = (PositionY - (float) interactView.getMarginTop()) / (float) Constants.TILE_SIZE;
+        // Gdx.app.log("move","marginTop: " + marginTop + " tilesize: " + TILE_SIZE + "result" + temporary  );
         return (int) Math.floor(Math.max(0.0, temporary));
         //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
@@ -497,7 +486,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * This method converts screen X position to simplified X
      */
     public int ScreenPosXtoSimplified(float PositionX) { //convert screen X position to simplified X
-        return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.tileSize)));
+        return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.TILE_SIZE)));
     }
 
     public int simplifiedXtoScreenPos(int PositionX) { //convert simplified X to screen X position
@@ -514,7 +503,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     }
 
     public int invertSimplifiedHeight(int simplified) {
-        return Constants.tileCountH - 1 - simplified;
+        return Constants.TILE_COUNT_HEIGHT - 1 - simplified;
     }
 
 
@@ -533,9 +522,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         int touchPositionY = ScreenPosYtoSimplified(screenY); //simplified touch position Y
         //Gdx.app.log("move", "Clicked pos X: " + touchPositionX + " Set pos X:" + simplifiedXtoScreenPos(touchPositionX) );
         //Gdx.app.log("move", "screenY: " + screenY + " Simplified pos Y: " + touchPositionY + " Set pos Y:" + simplifiedYtoScreenPos(touchPositionY) );
-        convertPlayerPositionToSimplified();
-        differenceInPositionX = touchPositionX - playerPositionX;
-        differenceInPositionY = playerPositionY - touchPositionY;
+        differenceInPositionX = touchPositionX - getPlayerPositionSimplifiedX();
+        differenceInPositionY = getPlayerPositionSimplifiedY() - touchPositionY;
 
         if (differenceInPositionX == 0 && differenceInPositionY == 0) {
             //probably best to give some kind of feedback. Probably best to draw where the player can go.
@@ -600,11 +588,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
 
 
-        if(Constants.currentLevel == 0) {
+        if(Constants.CURRENT_LEVEL == 0) {
             exitLevel(4, 1);
             exitLevel(3, 1);
         }
-        if(Constants.currentLevel == 1) {
+        if(Constants.CURRENT_LEVEL == 1) {
             exitLevel(13, 7);}
         }
         return false;
@@ -649,40 +637,49 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
     public int  invertedPlayerPostionY(int playerYposition) {
 
-        return (Constants.tileCountH-1-playerYposition);
+        return (Constants.TILE_COUNT_HEIGHT -1-playerYposition);
     }
 
 
-    private  void convertPlayerPositionToSimplified () {
-                    //get player positions
-                    //we need to invert the Y because the sprite is in a different coordinate system
-                    playerPositionY = invertScreenPos((int) girl.getOldY());
-                    playerPositionX = (int) girl.getOldX();
-                    //convert player positions to the simplified version
-                    playerPositionX = ScreenPosXtoSimplified(playerPositionX);
-                    playerPositionY = ScreenPosYtoSimplified(playerPositionY);
-                }
-
-    public int getPlayerPositionY () {
-                    return playerPositionY;
-                }
-
-
-    public int getPlayerPositionX () {
-        return playerPositionX;
+    private int getPlayerPositionSimplifiedY() {
+        return ScreenPosYtoSimplified(
+                //we need to invert the Y because the sprite is in a different coordinate system
+                invertScreenPos(
+                        (int) girl.getOldY()
+                )
+        );
     }
 
+    private int getPlayerPositionSimplifiedX() {
+        return ScreenPosXtoSimplified(
+                (int) girl.getOldX()
+        );
+    }
 
     public void checkTurn () {
-        if (notMovedYetToNextMap == false) {
+        if (movedYetToNextMap == false) {
             moveInTurn(wasp, golem);
-        } else if (notMovedYetToNextMap == true) {
+        } else if (movedYetToNextMap == true) {
 
-            moveInTurn(gazeti, mushrom);
-            monsterFiexdPath(phreeoni);
+            moveInTurn(gazeti, mushRoomMonster);
+
+            Timer.schedule(new Timer.Task() {
+
+                /**
+                 * If this is the last time the task will be ran or the task is first cancelled, it may be scheduled again in this
+                 * method.
+                 */
+                @Override
+                public void run() {
+
+                    monsterFixedPath(phreeoni);
+                }
+            }, 1);
+
 
         }
     }
+
 
     /**
      * This method checks player position against a position that we specify as the exit (Danning)
@@ -692,10 +689,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * @param tileY exit tile position in Y
      */
     public void exitLevel ( int tileX, int tileY){
-        convertPlayerPositionToSimplified();
         //if player position is the same as the tile position marked as "exit", then call the next level loader method
-        if (playerPositionX == tileX && playerPositionY == tileY) {
-            if( playerPositionX == 13 && playerPositionY == 7)
+        if (getPlayerPositionSimplifiedX() == tileX && getPlayerPositionSimplifiedY() == tileY) {
+            if( getPlayerPositionSimplifiedX() == 13 && getPlayerPositionSimplifiedY() == 7)
                 GameOverSettings();
             else updateLevel();
         }
@@ -709,11 +705,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
     public void moveInTurn(final Monster monster1, final Monster monster2 ){
         enemyTurnStart(); // prevent further player input until monsters have moved!!!
+        final int playerPosX = getPlayerPositionSimplifiedX();
+        final int playerPosY = invertedPlayerPostionY( getPlayerPositionSimplifiedY() ) ;
 
-        monster1.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
-
-        if (monster1.getSimpleMonsterX() == playerPositionX && monster1.getSimpleMonsterY() + 1 == invertedPlayerPostionY(playerPositionY)) {
-            hitByMonster();
+        if ( monster1.move( playerPosX, playerPosY ) ) {
+            hitByMonster(monster1);
 
         }
 
@@ -725,41 +721,32 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
              */
             @Override
             public void run() {
-                monster2.move(playerPositionX, invertedPlayerPostionY(playerPositionY));
-                if ( monster2.getSimpleMonsterX() == playerPositionX  &&  monster2.getSimpleMonsterY()+1 == invertedPlayerPostionY(playerPositionY) ) {
-                    hitByMonster();
+                if ( monster2.move( playerPosX , playerPosY ) ) {
+                    hitByMonster(monster2);
                 }
                 enemyTurnEnd(); // prevent further player input until monsters have moved!!!
             }
         }, 1);
+    }
 
+    public void monsterFixedPath(Monster fixedPathMonster) {
+        final int playerPosX = getPlayerPositionSimplifiedX();
+        final int playerPosY = invertedPlayerPostionY( getPlayerPositionSimplifiedY() ) ;
 
-
-
+        if ( fixedPathMonster.move2( playerPosX, playerPosY ) ) {
+            hitByMonster(fixedPathMonster);
+        }
     }
 
 
-                        public void monsterFiexdPath(Monster fixedPathMonster) {
-
-                            phreeoni.monsterProceduralPatternMovement();
-                            if (fixedPathMonster.getSimpleMonsterX() == playerPositionX && fixedPathMonster.getSimpleMonsterY() == (invertedPlayerPostionY(playerPositionY))) {
-                                hitByMonster();
-                            }
-                        }
 
 
-
-
-    public void hitByMonster () {
-        float halfHelth = 50f;
-        float noHealth = 0f;
-        if (hud.getHealth() < halfHelth && hud.getHealth() > noHealth)
+    public void hitByMonster (Monster monster) {
+        //reduce health reduces the health and returns true if the player is at 0 health or lower
+        if (  hud.reduceHealth( monster.getMonsterDamage() )  )
         {
-            hud.setHealth(noHealth);
             GameOverSettings();
         }
-        else {
-            hud.setHealth(hud.getHealth() * 0.75f);}
     }
 
     /**
@@ -772,15 +759,16 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         else {score.setScore(0);
             hud.setScore(score.getScore());}
     }
-    
+
 
     /**
      * When the game is finished. it takes you back to level 0 and the score is reset to 1000.
      */
     public void GameOverSettings(){
-        Constants.currentLevel=0;
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp,score.getMaxScore()));
-        hud.setScore(score.StartScore());
+
+        Constants.CURRENT_LEVEL =0;
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp,score.getMaxScore()));
+        hud.setScore(1000);
     }
 
     public void enemyTurnStart(){
@@ -794,37 +782,29 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     /** Load the next level map
      * @return false after loading once. otherwise it will keep loading for some reason
      */
-
-         /** Load the next level map
-         * @return false after loading once. otherwise it will keep loading for some reason
-         */
          public boolean updateLevel() {
-             notMovedYetToNextMap = true;
-             if (notMovedYetToNextMap) {
-                        Constants.currentLevel++;
+             movedYetToNextMap = true;
+             if (movedYetToNextMap) {
+                 Constants.CURRENT_LEVEL++;
 
-                       interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.currentLevel]));
-                       interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
+                 interactMap.setTiledMap(new TmxMapLoader().load(Constants.LEVELS[Constants.CURRENT_LEVEL]));
+                 interactMap.setTiledMapRenderer(new OrthogonalTiledMapRenderer(interactMap.getTiledMap()));
 
-                        //getProperties();
-                        //clear monster from the previous level
-                        itemList.renderItemsLevelOne();
-                        gazeti.render(512, 256);
-                        mushrom.render(256, 782);
-                        phreeoni.render(1152,384);
-                        golem.dispose();
-                        wasp.dispose();
+                 itemList.renderItemsLevelOne();
+                 gazeti.render();
+                 mushRoomMonster.render();
+                 phreeoni.render();
+                 //clear monster from the previous level
+                 golem.dispose();
+                 wasp.dispose();
 
-                        hud.setLevel(Constants.currentLevel);
-                        hud.setHealth(hud.getHealth() - 50);
-                        //change background music
-                        SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
-                       // Gdx.app.debug("SOUND", "NEXT LEVEL");
-                        //TODO add monsters and itemsLevelZero to next level and finalize exit position. change player starting position in the second map
-
-                    }
-                    return false;
-                }
+                 hud.setLevel(Constants.CURRENT_LEVEL);
+                 hud.setHealth(hud.getHealth() - 50);
+                 //change background music
+                 SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.backgroundMusic.musicSnowMap);
+             }
+             return false;
+         }
 
 
 

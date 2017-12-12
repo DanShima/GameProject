@@ -21,82 +21,103 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
   */
 public class PlayerLogin implements ApplicationListener, Screen {
 
-
+    //For display
     private SpriteBatch batch;
     private SpriteBatch bgbatch;
     private Skin skin;
     private Stage stage;
     private Texture background;
 
+    //for login and New user
+    String name,password;
+    static public firebase fb;
+    private TextButton LoginButton;
+    private TextButton NewPlayerButton;
+    private TextButton QuickPlayButton;
+    private TextField Playername;
+    private TextField Password;
+
     //Constructor
     public PlayerLogin() {
        create();
     }
+
+    // To display MenuScreen
+    public void GoMenu(){
+        create();
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());    }
+
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         bgbatch =new SpriteBatch();
         background = new Texture("bg.jpg");
-        skin = new Skin(Gdx.files.internal(Constants.skin));
+        skin = new Skin(Gdx.files.internal(Constants.SKIN));
         stage = new Stage();
+        name=new String();
+        password=new String();
 
         //Login button :Validation of player in Firebase
-        final TextButton LoginButton = new TextButton("LOGIN", skin, "default");
-        LoginButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        LoginButton.setPosition(Constants.centerX,Constants.centerY+250);
+         LoginButton = new TextButton("LOGIN", skin, "default");
+        LoginButton.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        LoginButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +250);
         LoginButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                LoginButton.setText("You clicked the button");
+                name=Playername.getText().toString().trim();
+                password=Password.getText().toString().trim();
+                if(fb.onclicklogin(name,password)) { GoMenu(); }
             }
         });
 
-        //NewPlayer button: registration of new player
-        final TextButton NewPlayerButton = new TextButton("NEW PLAYER", skin, "default");
-        NewPlayerButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        NewPlayerButton.setPosition(Constants.centerX ,Constants.centerY+50);
+        //NewPlayer button: registration of new player in Firebase
+         NewPlayerButton = new TextButton("NEW PLAYER", skin, "default");
+        NewPlayerButton.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        NewPlayerButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +50);
         NewPlayerButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                 NewPlayerButton.setText("You clicked the button");
+                name=Playername.getText().toString().trim();
+                password=Password.getText().toString().trim();
+                if(fb.onclicknewuser(name,password)){ GoMenu();   }
                 }
-                });
+            });
 
         //Quickaplay button allows the player to directly enter the Game
-        final TextButton QuickPlayButton = new TextButton("QUICK PLAY", skin, "default");
-        QuickPlayButton.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        QuickPlayButton.setPosition(Constants.centerX-200 ,Constants.centerY-150);
+       QuickPlayButton = new TextButton("QUICK PLAY", skin, "default");
+        QuickPlayButton.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        QuickPlayButton.setPosition(Constants.CENTER_X -200 ,Constants.CENTER_Y -150);
         QuickPlayButton.addListener(new ClickListener(){
             @Override
-            public void clicked(InputEvent event, float x, float y){
-                ((Game)Gdx.app.getApplicationListener()).setScreen(new MenuScreen());
-            }
+            public void clicked(InputEvent event, float x, float y){ GoMenu();  }
         });
 
         //User Input:player name
-        final TextField Player = new TextField("", skin, "default");
+        Playername = new TextField("", skin, "default");
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle.font.getData().setScale(2.0f);
-        Player.setMessageText("PLAYER");
-        Player.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        Player.setPosition(Constants.centerX-350 ,Constants.centerY+250);
+        Playername.setMessageText("PLAYER");
+        Playername.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        Playername.setPosition(Constants.CENTER_X -350 ,Constants.CENTER_Y +250);
+
 
         //Password to be entered by the player
-        final TextField Password = new TextField("", skin, "default");
+        Password = new TextField("", skin, "default");
         TextField.TextFieldStyle textFieldStyle1 = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle1.font.getData().setScale(2.0f);
         Password.setMessageText("PASSWORD");
         Password.setPasswordCharacter('*');
         Password.setPasswordMode(true);
-        Password.setSize(Constants.colWidth+50 ,Constants.rowHeight);
-        Password.setPosition(Constants.centerX-350 ,Constants.centerY+50);
+        Password.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
+        Password.setPosition(Constants.CENTER_X -350 ,Constants.CENTER_Y +50);
+
 
         //Adding all Buttons and TextFiels to stage
         stage.addActor(LoginButton);
         stage.addActor(NewPlayerButton);
         stage.addActor(QuickPlayButton);
-        stage.addActor(Player);
+        stage.addActor(Playername);
         stage.addActor(Password);
 
         //set the InputProcessor

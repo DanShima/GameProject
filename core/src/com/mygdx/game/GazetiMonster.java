@@ -1,17 +1,14 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+
 /**
- * Created by Waseem on 12/6/2017.
+ * This class creates the Gazeti Monster monster with specified starting position
  */
 
 public class GazetiMonster extends Monster {
 
     public GazetiMonster() {
-        super(Constants.GAZETI,4,3,1,3);
+        super(Constants.GAZETI,4,3,1,3,768,256);
     }
-
-
-
-
-
 }

@@ -19,6 +19,7 @@ public class Score {
         this.hud = hud;
     }
 
+
     public int getScore() {
         return score;
     }

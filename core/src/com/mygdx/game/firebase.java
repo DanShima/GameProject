@@ -5,7 +5,8 @@ package com.mygdx.game;
  */
 
 public interface firebase {
+    //Method for login validation
     public boolean onclicklogin(String name,String password);
+    //Method for new user registration
     public boolean onclicknewuser(String name,String password);
-
 }

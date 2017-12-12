@@ -1,20 +1,13 @@
 package com.mygdx.game;
 
 /**
- * Created by Waseem on 12/10/2017.
+ * This class creates the Phreoni Monster monster with specified starting position
  */
 
 public class PhreoniMonster extends Monster {
 
     public PhreoniMonster() {
-        super(Constants.PHREONI, 4, 3, 2, 4);
+        super(Constants.PHREONI, 4, 3, 2, 4,1152,384);
     }
 
-
-
-    public void move(){
-
-
-
-    }
 }
