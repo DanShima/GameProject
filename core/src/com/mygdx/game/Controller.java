@@ -27,43 +27,33 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private GameView interactView;
     private Map interactMap;
     private float oldX, oldY;
-
-
-    public final static int mapWidth = Constants.TILE_SIZE * Constants.TILE_COUNT_WIDTH;
+    private  final static int mapWidth = Constants.TILE_SIZE * Constants.TILE_COUNT_WIDTH;
     public final static int mapHeight = Constants.TILE_SIZE * Constants.TILE_COUNT_HEIGHT;
     private int NumberOfMovedTiles = 2;
-    public int tileWidth = 128;
-    public int tileHeight = 128;
-
+    private  int tileWidth = 128;
+    private  int tileHeight = 128;
     private TiledMapTileLayer Blockedlayer;
     private TiledMapTileLayer terrain;
     private InputMultiplexer multiplexer;
-
     private Player girl; //animated player
-
     private GazetiMonster gazeti;
     private MushRoomMonster mushRoomMonster;
     private WaspMonster wasp;
     private GolemMonster golem;
     private PhreoniMonster phreeoni;
-
     private HUD hud;
     private SpriteBatch sp;
-
-
     private int oneStepHorizontaly;
     private int twoStepsHorizontally;
     private int oneStepVertically;
     private int twoStepsvertically;
-
     private TiledMapTileLayer.Cell ground;
     private TiledMapTileLayer.Cell obstacles;
-
     private ItemList itemList;
     private boolean movedYetToNextMap;
-
     private boolean isMonsterTurn = false;
     private Score score;
+
 
     public Controller(GameView GameView) {
         movedYetToNextMap =false;
@@ -210,6 +200,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
         else  Gdx.input.setInputProcessor(hud.getStage());
     }
+
+
+    /**
+     * This Method is to check if there is any item on the same position of player .
+     */
 
     public void checkCollisionPlayerAndItem() {
         //CollisionCheck for underwear
@@ -364,6 +359,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
     }
 
+    /**
+     * check obstacles created on the map itsefl and collsion with border of the map
+     */
+
     public boolean collisionCheck(int stepsX, int stepsY) {
         getProperties();
         girl.resetTimeTillIdle(); //go back to idle state
@@ -459,21 +458,28 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.TILE_SIZE)));
     }
 
+    /**
+     * This method converts Simplified  X position to screen  X position
+     */
     public int simplifiedXtoScreenPos(int PositionX) { //convert simplified X to screen X position
         return PositionX * tileWidth;
     }
+
+    /**
+     * This method converts Simplified  Y position to screen  Y position
+     */
 
     public int simplifiedYtoScreenPos(int PositionY) { //convert simplified Y to screen Y position
         return PositionY * tileHeight + interactView.getMarginTop() + tileHeight - 1;
     }
 
-    public int invertScreenPos(int PositionY) { //convert sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
-        int screenHeight = Gdx.graphics.getHeight();
-        return screenHeight - interactView.getMarginTop() - PositionY; //probably slightly wrong in the offset (+-1 or something like that), but works to convert sprite position
-    }
+    /**
+     *  This method converts sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
+     */
 
-    public int invertSimplifiedHeight(int simplified) {
-        return Constants.TILE_COUNT_HEIGHT - 1 - simplified;
+    public int invertScreenPos(int PositionY) {
+        int screenHeight = Gdx.graphics.getHeight();
+        return screenHeight - interactView.getMarginTop() - PositionY;
     }
 
 
@@ -615,6 +621,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         );
     }
 
+    /**
+     * Each game character has its own turn. you cannot move before another character has had its turn
+     */
     public void checkTurn () {
         if (movedYetToNextMap == false) {
             moveInTurn(wasp, golem);
@@ -631,7 +640,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 @Override
                 public void run() {
 
-                    monsterFixedPath(phreeoni);
+                   if(phreeoni.monsterFixedPath(phreeoni,getPlayerPositionSimplifiedX(),invertedPlayerPostionY( getPlayerPositionSimplifiedY()))){
+                       hitByMonster(phreeoni);
+                   }
                 }
             }, 1);
 
@@ -657,7 +668,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
       }
 
 
-
+    /**
+     * This method defines monster movements per turn
+     *  @param monster1
+     * @param monster2
+     */
     public void moveInTurn(final Monster monster1, final Monster monster2 ){
         enemyTurnStart(); // prevent further player input until monsters have moved!!!
         final int playerPosX = getPlayerPositionSimplifiedX();
@@ -684,18 +699,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }, 1);
     }
 
-    /**
-     *
-     * @param fixedPathMonster
-     */
-    public void monsterFixedPath(Monster fixedPathMonster) {
-        final int playerPosX = getPlayerPositionSimplifiedX();
-        final int playerPosY = invertedPlayerPostionY( getPlayerPositionSimplifiedY() ) ;
 
-        if ( fixedPathMonster.move2( playerPosX, playerPosY ) ) {
-            hitByMonster(fixedPathMonster);
-        }
-    }
+
+    
 
     /**
      * If the player is hit by the monster, damage will be done to his health. if health is 0,
@@ -766,7 +772,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
              }
              return false;
          }
-
 
 
 }
