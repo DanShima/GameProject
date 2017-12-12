@@ -200,15 +200,15 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public void render(float delta) {
         initialRender();
         initialItemRender();
-        sp.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
+        sp.setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
         if(!hud.isPaused()){
             multiplexer = new InputMultiplexer();
-            multiplexer.addProcessor(hud.stage);
+            multiplexer.addProcessor(hud.getStage());
             multiplexer.addProcessor(this);
             Gdx.input.setInputProcessor(multiplexer);
         }
-        else  Gdx.input.setInputProcessor(hud.stage);
+        else  Gdx.input.setInputProcessor(hud.getStage());
     }
 
     public void checkCollisionPlayerAndItem() {
@@ -443,18 +443,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         return false;     //else do nothing
     }
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    /**
-     * Called when the user touches the screen
-     */
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
 
     /**
      * This method converts screen Y position to simplified Y
@@ -462,7 +450,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public int ScreenPosYtoSimplified(float PositionY) {
         float temporary = (PositionY - (float) interactView.getMarginTop()) / (float) Constants.TILE_SIZE;
         return (int) Math.floor(Math.max(0.0, temporary));
-        //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
 
     /**
@@ -581,41 +568,30 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         return false;
     }
 
-    /**
-     * Called when a finger or the mouse was dragged.
-     *
-     * @param screenX
-     * @param screenY
-     * @param pointer the pointer for the event.  @return whether the input was processed
-     */
+
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
 
-    /**
-     * Called when the mouse was moved without any buttons being pressed. Will not be called on iOS.
-     *
-     * @param screenX
-     * @param screenY
-     * @return whether the input was processed
-     */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 
-    /**
-     * Called when the mouse wheel was scrolled. Will not be called on iOS.
-     *
-     * @param amount the scroll amount, -1 or 1 depending on the direction the wheel was scrolled.
-     * @return whether the input was processed.
-     */
     @Override
     public boolean scrolled(int amount) {
         return false;
     }
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
 
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
 
 
     public int  invertedPlayerPostionY(int playerYposition) {
@@ -682,10 +658,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
 
 
-
-
-
-
     public void moveInTurn(final Monster monster1, final Monster monster2 ){
         enemyTurnStart(); // prevent further player input until monsters have moved!!!
         final int playerPosX = getPlayerPositionSimplifiedX();
@@ -712,6 +684,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }, 1);
     }
 
+    /**
+     *
+     * @param fixedPathMonster
+     */
     public void monsterFixedPath(Monster fixedPathMonster) {
         final int playerPosX = getPlayerPositionSimplifiedX();
         final int playerPosY = invertedPlayerPostionY( getPlayerPositionSimplifiedY() ) ;
@@ -721,9 +697,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
     }
 
-
-
-
+    /**
+     * If the player is hit by the monster, damage will be done to his health. if health is 0,
+     * game over screen is shown
+     * @param monster
+     */
     public void hitByMonster (Monster monster) {
         //reduce health reduces the health and returns true if the player is at 0 health or lower
         if (  hud.reduceHealth( monster.getMonsterDamage() )  )
