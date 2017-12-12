@@ -26,20 +26,21 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         private Stage stage;
         private Skin skin;
         private HUD hud ;
-        private int score;
+        private int MaxScore;
         private Texture background;
 
     /**
      * Create the layout of GameOverScreen screen with a table of buttons
      * @param sp spritebatch used to render the screen
      */
-    public GameOverScreen(SpriteBatch sp){
-            viewport=new StretchViewport(Constants.MAP_WIDTH,Constants.MAP_HEIGHT,new OrthographicCamera());//
-            background =new Texture("winter.png");
-            hud = new HUD(sp);
-            stage = new Stage(viewport, sp);
-            skin = new Skin ( Gdx.files.internal ( Constants.SKIN) );
-            score = hud.getScore();
+    public GameOverScreen(SpriteBatch sp,int MaxScore) {
+        viewport = new StretchViewport(Constants.MAP_WIDTH, Constants.MAP_HEIGHT, new OrthographicCamera());//
+        background = new Texture("winter.png");
+        hud = new HUD(sp);
+        stage = new Stage(viewport, sp);
+        skin = new Skin(Gdx.files.internal(Constants.SKIN));
+
+
 
             Table table = new Table();
             table.center();
@@ -47,8 +48,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             Label gameOverLabel = new Label("GAME OVER", skin,"default");
             gameOverLabel.setFontScale(9f,9f);
 
-            Label ScoreLabel=new Label("Score: " + score ,skin,"default");
-            ScoreLabel.setFontScale(7f,7f);
+
 
 
             TextButton replay = new TextButton("Play again!",skin,"default");
@@ -66,6 +66,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
                     return true;}});
             menu.setTransform(true);
             menu.setScale(2f);
+
+
+             Label ScoreLabel=new Label("Score: " + MaxScore ,skin,"default");
+             ScoreLabel.setFontScale(7f,7f);
+
+
 
             table.center();
             table.add(gameOverLabel).padTop(50f).expandX();
@@ -92,6 +98,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             stage.getBatch().end();
             stage.draw();
         }
+
 
         @Override
         public void resize(int width, int height) {}

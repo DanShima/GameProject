@@ -52,7 +52,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private ItemList itemList;
     private boolean movedYetToNextMap;
     private boolean isMonsterTurn = false;
-
+    private Score score;
 
 
     public Controller(GameView GameView) {
@@ -67,6 +67,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public void create() {
         sp = new SpriteBatch();
         hud = new HUD(sp);
+        score = new Score(hud);
+        hud.setScore(score.getScore());
 
         interactMap.create();
         getTiledMapRender().setView(interactView.getCamera());
@@ -115,17 +117,15 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         if(Constants.CURRENT_LEVEL == 0) {
 
             itemList.renderItemsLevelZero();
-            golem.render(); //spawn gazeti at the given position in the map
-            wasp.render(); //spawn mushRoomMonster at the given position in the map
+            //spawn monsters
+            golem.render();
+            wasp.render();
         }
         if(Constants.CURRENT_LEVEL == 1){
-
             itemList.renderItemsLevelOne();
-
             gazeti.render();
             mushRoomMonster.render();
-
-            phreeoni.render();//spawn phreeoni at the given position in the map
+            phreeoni.render();
 
         }
     }
@@ -148,7 +148,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 if(item.getName().equals("apple")){
                     hud.setHealth(hud.getHealth()+item.giveHealthPoint());
                 }
-                else {hud.setScore(hud.getScore()+item.giveScorePoint());
+
+                else {score.setScore(score.getScore()+item.giveScorePoint());
+                    hud.setScore(score.getScore());
 
                     //plays a sound effect when collecting a cloth ite
                     SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);}
@@ -160,25 +162,19 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
 
     @Override
-    public void show() {
-    }
+    public void show() {}
 
     @Override
-    public void resize(int width, int height) {
-    }
+    public void resize(int width, int height) {}
 
     @Override
-    public void pause() {
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
@@ -194,16 +190,21 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public void render(float delta) {
         initialRender();
         initialItemRender();
-        sp.setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.draw();
-        if(!hud.getisPaused()){
+        sp.setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
+        if(!hud.isPaused()){
             multiplexer = new InputMultiplexer();
-            multiplexer.addProcessor(hud.stage);
+            multiplexer.addProcessor(hud.getStage());
             multiplexer.addProcessor(this);
             Gdx.input.setInputProcessor(multiplexer);
         }
-        else  Gdx.input.setInputProcessor(hud.stage);
+        else  Gdx.input.setInputProcessor(hud.getStage());
     }
+
+
+    /**
+     * This Method is to check if there is any item on the same position of player .
+     */
 
     public void checkCollisionPlayerAndItem() {
         //CollisionCheck for underwear
@@ -358,6 +359,10 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }
     }
 
+    /**
+     * check obstacles created on the map itsefl and collsion with border of the map
+     */
+
     public boolean collisionCheck(int stepsX, int stepsY) {
         getProperties();
         girl.resetTimeTillIdle(); //go back to idle state
@@ -437,18 +442,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         return false;     //else do nothing
     }
 
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    /**
-     * Called when the user touches the screen
-     */
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
 
     /**
      * This method converts screen Y position to simplified Y
@@ -456,7 +449,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public int ScreenPosYtoSimplified(float PositionY) {
         float temporary = (PositionY - (float) interactView.getMarginTop()) / (float) Constants.TILE_SIZE;
         return (int) Math.floor(Math.max(0.0, temporary));
-        //return (int) Math.floor( Math.max(0,(PositionY-56)/128.0));
     }
 
     /**
@@ -466,21 +458,28 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         return (int) Math.floor(Math.max(0, (PositionX / (float) Constants.TILE_SIZE)));
     }
 
+    /**
+     * This method converts Simplified  X position to screen  X position
+     */
     public int simplifiedXtoScreenPos(int PositionX) { //convert simplified X to screen X position
         return PositionX * tileWidth;
     }
+
+    /**
+     * This method converts Simplified  Y position to screen  Y position
+     */
 
     public int simplifiedYtoScreenPos(int PositionY) { //convert simplified Y to screen Y position
         return PositionY * tileHeight + interactView.getMarginTop() + tileHeight - 1;
     }
 
-    public int invertScreenPos(int PositionY) { //convert sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
-        int screenHeight = Gdx.graphics.getHeight();
-        return screenHeight - interactView.getMarginTop() - PositionY; //probably slightly wrong in the offset (+-1 or something like that), but works to convert sprite position
-    }
+    /**
+     *  This method converts sprite position to screenPosition which in turn can be used in ScreenPosYtoSimplified()
+     */
 
-    public int invertSimplifiedHeight(int simplified) {
-        return Constants.TILE_COUNT_HEIGHT - 1 - simplified;
+    public int invertScreenPos(int PositionY) {
+        int screenHeight = Gdx.graphics.getHeight();
+        return screenHeight - interactView.getMarginTop() - PositionY;
     }
 
 
@@ -575,41 +574,30 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         return false;
     }
 
-    /**
-     * Called when a finger or the mouse was dragged.
-     *
-     * @param screenX
-     * @param screenY
-     * @param pointer the pointer for the event.  @return whether the input was processed
-     */
+
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
     }
 
-    /**
-     * Called when the mouse was moved without any buttons being pressed. Will not be called on iOS.
-     *
-     * @param screenX
-     * @param screenY
-     * @return whether the input was processed
-     */
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
         return false;
     }
 
-    /**
-     * Called when the mouse wheel was scrolled. Will not be called on iOS.
-     *
-     * @param amount the scroll amount, -1 or 1 depending on the direction the wheel was scrolled.
-     * @return whether the input was processed.
-     */
     @Override
     public boolean scrolled(int amount) {
         return false;
     }
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
 
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
 
 
     public int  invertedPlayerPostionY(int playerYposition) {
@@ -633,6 +621,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         );
     }
 
+    /**
+     * Each game character has its own turn. you cannot move before another character has had its turn
+     */
     public void checkTurn () {
         if (movedYetToNextMap == false) {
             moveInTurn(wasp, golem);
@@ -649,7 +640,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 @Override
                 public void run() {
 
-                    monsterFixedPath(phreeoni);
+                   if(phreeoni.monsterFixedPath(phreeoni,getPlayerPositionSimplifiedX(),invertedPlayerPostionY( getPlayerPositionSimplifiedY()))){
+                       hitByMonster(phreeoni);
+                   }
                 }
             }, 1);
 
@@ -675,11 +668,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
       }
 
 
-
-
-
-
-
+    /**
+     * This method defines monster movements per turn
+     *  @param monster1
+     * @param monster2
+     */
     public void moveInTurn(final Monster monster1, final Monster monster2 ){
         enemyTurnStart(); // prevent further player input until monsters have moved!!!
         final int playerPosX = getPlayerPositionSimplifiedX();
@@ -706,18 +699,15 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         }, 1);
     }
 
-    public void monsterFixedPath(Monster fixedPathMonster) {
-        final int playerPosX = getPlayerPositionSimplifiedX();
-        final int playerPosY = invertedPlayerPostionY( getPlayerPositionSimplifiedY() ) ;
-
-        if ( fixedPathMonster.move2( playerPosX, playerPosY ) ) {
-            hitByMonster(fixedPathMonster);
-        }
-    }
 
 
+    
 
-
+    /**
+     * If the player is hit by the monster, damage will be done to his health. if health is 0,
+     * game over screen is shown
+     * @param monster
+     */
     public void hitByMonster (Monster monster) {
         //reduce health reduces the health and returns true if the player is at 0 health or lower
         if (  hud.reduceHealth( monster.getMonsterDamage() )  )
@@ -730,9 +720,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * decrease score points for every move you make. -20 score points per move
      */
     public void ScoreMoveDecrease(){
-        if(hud.getScore()>0)
-            hud.setScore(hud.getScore()-20);
-        else hud.setScore(0);
+        if(score.getScore()>0)
+        {score.setScore(score.getScore()-20);
+            hud.setScore(score.getScore());}
+        else {score.setScore(0);
+            hud.setScore(score.getScore());}
     }
 
 
@@ -740,8 +732,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * When the game is finished. it takes you back to level 0 and the score is reset to 1000.
      */
     public void GameOverSettings(){
+
         Constants.CURRENT_LEVEL =0;
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp));
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp,score.getMaxScore()));
         hud.setScore(1000);
     }
 
@@ -779,6 +772,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
              }
              return false;
          }
+
 
 }
 

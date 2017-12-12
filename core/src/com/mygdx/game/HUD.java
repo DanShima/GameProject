@@ -24,31 +24,25 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 *The constructor takes "SpriteBatch" in order to be able to draw the "stage" which is a box that contain
  * the widgets such as labels, buttons and progress bar.
  */
-
-
 public class HUD implements Disposable  {
 
     private int level = 0;
-    public Stage stage;
+    private Stage stage;
     private Viewport viewport;
-    private static int score = Constants.SCORE_START;
+    private static int score;
     private  Label ScoreLabel;
     private Label LevelLabel;
     private Table table;
     private TextButton button ;
     private Skin skin ;
-    TextButton Continue ;
-    TextButton  TryAgain;
-    TextButton  Settings ;
-    TextButton  Menu;
-    MenuScreen menuScreen;
+    private TextButton Continue ;
+    private TextButton  TryAgain;
+    private TextButton  Settings ;
+    private TextButton  Menu;
+    private MenuScreen menuScreen;
     private Window PauseMenu;
-    final ProgressBar progressBar;
-
-
-
+    private final ProgressBar progressBar;
     boolean isPaused = false;
-
 
     public HUD(SpriteBatch sb)
 
@@ -82,7 +76,6 @@ public class HUD implements Disposable  {
                 // set size and position
                 return true; }});
 
-
         LevelLabel =new Label("Level :" + level ,skin, "default");//label for gdx
         LevelLabel.setFontScale(3,2);
 
@@ -95,10 +88,8 @@ public class HUD implements Disposable  {
         tiledDrawable.setMinWidth(0.0f);
         progressBarStyle.knobBefore = tiledDrawable;
 
-        progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, skin, "fancy");
+        progressBar = new ProgressBar(0, 100, 1, false, skin, "fancy");
         progressBar.setValue(75.0f);//initializing the bar
-//        progressBar.setAnimateDuration(2f);
-
 
         // add the widgets to a table
         table.add(progressBar).width(335.0f);
@@ -112,6 +103,10 @@ public class HUD implements Disposable  {
         stage.addActor(menuScreen.settingsWindow ());
     }
 
+    /**
+     * Setting up the pop-up window containing options
+     * @return the pop-up window with table of buttons
+     */
     private Table createSettingsButtons() {
         Table table = new Table();
         table.row();
@@ -133,7 +128,6 @@ public class HUD implements Disposable  {
         TryAgain.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Constants.SCORE_START = 1000;
                 Constants.CURRENT_LEVEL = 0;
                 Gdx.graphics.setContinuousRendering(true);
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
@@ -159,10 +153,8 @@ public class HUD implements Disposable  {
             }
         });
 
-
         return table;
     }
-
 
 
     // getters and setters
@@ -178,31 +170,37 @@ public class HUD implements Disposable  {
         level =value;
         LevelLabel.setText(String.format("Level :" + level));
     }
-    public  int getLevel()
-    {
-        return level;
-    }
+
     public void setHealth(float value) {
         progressBar.setValue(value);
     }
 
+    /**
+     * when the monster is on the same position as the player, they do damage to the player
+     * and reduce the player's health
+     * @param value
+     * @return
+     */
     public boolean reduceHealth(float value) {
         float newHealth = progressBar.getValue() - value;
         progressBar.setValue( Math.max(0,newHealth) );
         //true if dead, false if still alive
-        if(newHealth<=0){
+        if(newHealth <= 0){
             return true;
         }else{
             return false;
         }
+    }
 
+    public Stage getStage() {
+        return stage;
     }
 
     public  float getHealth()
     {
         return progressBar.getValue();
     }
-    public boolean getisPaused() {
+    public boolean isPaused() {
         return isPaused;
     }
     @Override
