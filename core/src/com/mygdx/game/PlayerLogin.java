@@ -52,7 +52,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
     public void create() {
         batch = new SpriteBatch();
         bgbatch =new SpriteBatch();
-        background = new Texture("bg.jpg");
+        background = new Texture("bg5.jpg");
         skin = new Skin(Gdx.files.internal(Constants.SKIN));
         stage = new Stage();
         name=new String();
