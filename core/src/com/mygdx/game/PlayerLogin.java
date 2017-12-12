@@ -34,7 +34,9 @@ public class PlayerLogin implements ApplicationListener, Screen {
     private Texture background;
 
     //for login and New user
-    String name,password;
+    static String name;
+    String password;
+
     static public firebase fb;
     private TextButton LoginButton;
     private TextButton NewPlayerButton;
@@ -43,6 +45,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
     private TextField Password;
 
     private Window invaliduser;
+
 
     //Constructor
     public PlayerLogin() {
@@ -62,7 +65,6 @@ public class PlayerLogin implements ApplicationListener, Screen {
         background = new Texture("bg.jpg");
         skin = new Skin(Gdx.files.internal(Constants.SKIN));
         stage = new Stage();
-        name=new String();
         password=new String();
 
         invaliduser=new Window("Invalid User",skin);
