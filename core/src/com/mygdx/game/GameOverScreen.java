@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
     /**
      * Create the layout of GameOverScreen screen with a table of buttons
      * @param sp spritebatch used to render the screen
+     * @param  MaxScore int used to show the score plus health bonus
      */
     public GameOverScreen(SpriteBatch sp,int MaxScore) {
         viewport = new StretchViewport(Constants.MAP_WIDTH, Constants.MAP_HEIGHT, new OrthographicCamera());//
