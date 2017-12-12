@@ -42,13 +42,11 @@ public class Monster  {
 
     private int monsterDamage=30;
 
-
-    //Yeti monster
     public Monster(){
 
     }
 
-    //customize a monster
+    //create a monster
     public Monster(String pngFile, int rows, int columns, int specifyRow, int turnOrder , int startPosX, int startPosY){
         texture = new Texture(Gdx.files.internal(pngFile));
         TextureRegion[][] tmp = TextureRegion.split(texture,
@@ -68,9 +66,11 @@ public class Monster  {
         YposMonster = startPosY;
     }
 
-
+    /**
+     * draw an animated monster to the screen
+     */
     public void render() {
-        // setting the received monster position from tiletest  for the monster
+        // setting the received monster position from tiletest for the monster
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
         currentFrame = walkAnimation.getKeyFrame(stateTime, true);
@@ -91,30 +91,14 @@ public class Monster  {
 
     }
 
-    public Texture getTexture() {
-        return texture;
-    }
-
-    public int getSimpleMonsterX() {
-        return simpleMonsterX;
-    }
-
-    public int getSimpleMonsterY() {
-        return simpleMonsterY;
-    }
 
     public boolean move2(int playerPositionX, int playerPositionY){
 
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
 
-        //Gdx.app.log("movement", "next Monster: ");
-        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
-        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
-
         int diffBetweenX = playerPositionX-simpleMonsterX;
         int diffBetweenY = playerPositionY-simpleMonsterY;
-        //Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
 
         if(diffBetweenX!=0 && diffBetweenY!=0) { //prevent diagonal movement and make it horizontal
             YposMonster += Math.signum(diffBetweenY) * tileSize;
@@ -130,39 +114,21 @@ public class Monster  {
         }else {
             return false;
         }
-
-
-/*
-        simpleMonsterY = SimpleMonsterYPosition();
-        simpleMonsterX = SimpleMonsterXPosition();
-            //Gdx.app.log("movement", "simpleMonsterY: " + simpleMonsterY);
-            if(XposMonster > (MAP_WIDTH / TILE_COUNT_WIDTH -tileSize) && backStep==false) {
-                steps.push(XposMonster);
-                XposMonster -= tileSize;
-            }else{
-                backStep=true;
-                if (!(steps.isEmpty())){
-                    if (XposMonster != steps.pop() ){
-                        XposMonster += tileSize;
-                    }
-                }else
-                backStep=false;
-            }
-            */
     }
 
 
     public float getYposMonster() {
         return YposMonster;
     }
-
     public float getXposMonster() {
         return XposMonster;
     }
 
-
+    /**
+     * translate monster position in X to a simplified version
+     * @return the integer position
+     */
     public int SimpleMonsterXPosition(){
-
         return (int) Math.floor(
                 Math.max(
                         0,
@@ -170,32 +136,35 @@ public class Monster  {
                 )
         );
     }
-
+    /**
+     * translate monster position in Y to a simplified version
+     * @return the integer position
+     */
     public int SimpleMonsterYPosition(){
 
         return (int) Math.floor(
                 Math.max(
                         0,
                         YposMonster/(float) tileSize
-                        //(YposMonster-(float) merginTop)/(float) tileSize
                 )
         );
     }
 
+    /**
+     * Define how the monster moves
+     * @param playerPositionX
+     * @param playerPositionY
+     * @return true if can move
+     */
     public boolean move(int playerPositionX, int playerPositionY){
         simpleMonsterY = SimpleMonsterYPosition();
         simpleMonsterX = SimpleMonsterXPosition();
 
-        //Gdx.app.log("movement", "next Monster: ");
-        //Gdx.app.log("movement", "simpleMonsterX: " + simpleMonsterX + "   simpleMonsterY: " + simpleMonsterY );
-        //Gdx.app.log("movement", "playerPositionX: " + playerPositionX + "   playerPositionY: " + playerPositionY );
-
         int diffBetweenX = playerPositionX-simpleMonsterX;
         int diffBetweenY = playerPositionY-simpleMonsterY;
-        //Gdx.app.log("movement", "diffBetweenX: " + diffBetweenX + "  diffBetweenY: " + diffBetweenY );
 
-
-        if(diffBetweenX!=0 && diffBetweenY!=0) { //prevent diagonal movement and make it horizontal
+        if(diffBetweenX!=0 && diffBetweenY!=0) {
+            //prevent diagonal movement and make it horizontal
             XposMonster += Math.signum(diffBetweenX) * tileSize;
         }else{
             // this would be movement horizontal vertical and diagonal
@@ -209,7 +178,6 @@ public class Monster  {
         }else {
             return false;
         }
-
     }
 
 
@@ -221,7 +189,4 @@ public class Monster  {
         spriteBatch.dispose();
         texture.dispose();
     }
-
-
-
 }

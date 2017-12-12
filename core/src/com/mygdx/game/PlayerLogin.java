@@ -1,7 +1,5 @@
 package com.mygdx.game;
-/**
- * Created by Shashidhar on 07-12-2017.
- */
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -29,7 +27,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
     private Texture background;
 
     //for login and New user
-    String name,password;
+    private String name,password;
     static public firebase fb;
     private TextButton LoginButton;
     private TextButton NewPlayerButton;
@@ -42,7 +40,9 @@ public class PlayerLogin implements ApplicationListener, Screen {
        create();
     }
 
-    // To display MenuScreen
+    /**
+     * bring the user to the next screen which is the menuscreen
+     */
     public void GoMenu(){
         create();
         ((Game) Gdx.app.getApplicationListener()).setScreen(new MenuScreen());    }
@@ -143,37 +143,22 @@ public class PlayerLogin implements ApplicationListener, Screen {
         batch.end();
     }
 
+    @Override
+    public void show() {}
 
     @Override
-    public void show() {
-
-    }
-
-
+    public void resize(int width, int height) {}
 
     @Override
-    public void resize(int width, int height) {
-
-    }
+    public void render() {}
 
     @Override
-    public void render() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void pause() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
 }

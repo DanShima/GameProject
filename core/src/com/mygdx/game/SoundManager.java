@@ -13,7 +13,11 @@ public class SoundManager {
 
         private SoundManager() { }
 
-        public void play (Sound sound) {
+    /**
+     * Play a sound effect
+     * @param sound
+     */
+    public void play (Sound sound) {
             play(sound, 1.0f);
         }
 

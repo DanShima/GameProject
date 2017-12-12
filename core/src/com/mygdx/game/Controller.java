@@ -206,7 +206,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         initialItemRender();
         sp.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-        if(!hud.getisPaused()){
+        if(!hud.isPaused()){
             multiplexer = new InputMultiplexer();
             multiplexer.addProcessor(hud.stage);
             multiplexer.addProcessor(this);
@@ -374,7 +374,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public boolean collisionCheck(int stepsX, int stepsY) {
         getProperties();
         girl.resetTimeTillIdle(); //go back to idle state
-        //Gdx.app.log("movement","ground: " + checkFirstLayer(ground) + " obstacles:" + checkSecondLayer(obstacles) );
+
         debugMe();
         boolean blocked = false;
         int posX = (int) (girl.getOldX() / tileWidth) + 1; // +1 because Blockedlayer and terrain are starting outside of the screen

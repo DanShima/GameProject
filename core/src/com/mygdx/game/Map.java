@@ -21,7 +21,7 @@ public class Map {
         tiledMap = new TmxMapLoader().load(Constants.LEVELS[Constants.CURRENT_LEVEL]);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
     }
-
+    //setters
     public void setTiledMap(TiledMap tiledMap) {
         this.tiledMap = tiledMap;
     }
@@ -29,7 +29,7 @@ public class Map {
     public void setTiledMapRenderer(TiledMapRenderer tiledMapRenderer) {
         this.tiledMapRenderer = tiledMapRenderer;
     }
-
+    //getters
     public TiledMap getTiledMap() {
         return tiledMap;
     }

@@ -14,11 +14,10 @@ import java.util.List;
 import static com.mygdx.game.Constants.GIRL_NAKED;
 
 /**
- * Created by Giddy on 23/11/2017.
+ * This class creates the player character and her animations
  */
 
-public class Player implements ApplicationListener {
-
+public class Player {
 
     // Constant rows and columns of the sprite sheet
     private static final int FRAME_COLS = 3, FRAME_ROWS = 5;
@@ -43,8 +42,6 @@ public class Player implements ApplicationListener {
     private float y = 0; //current y position
     private float oldX = 0; //old X position
     private float oldY = 0; //old Y position
-
-    boolean updateAnimationStateTime =false;
 
     //underwear sprite sheet
     private Texture underwearSheet;
@@ -94,7 +91,7 @@ public class Player implements ApplicationListener {
     private AnimationUtil animationUtil;
 
 
-    @Override
+
     public void create() {
         // Load the sprite sheet as a Texture
         walkSheet = new Texture(Gdx.files.internal(GIRL_NAKED));
@@ -149,29 +146,11 @@ public class Player implements ApplicationListener {
 
     }
 
-    public void setCurrentAnimation(Animation<TextureRegion> currentAnimation) {
-        this.currentAnimation = currentAnimation;
-    }
-
-    public void setCurrentAnimationSocks(Animation<TextureRegion> currentAnimation) {
-        this.currentAnimationSocks = currentAnimation;
-    }
-
-    public Animation<TextureRegion> getCurrentAnimation() {
-        return currentAnimation;
-    }
-
     public void resetTimeTillIdle() {
         timeTillIdle = 0;
     }
 
-    public TextureRegion getCurrentFrameUnderwear() {
-        return currentFrameUnderwear;
-    }
-
-    @Override
     public void render() {
-
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         timeTillIdle += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
         // Get current frame of animation for the current stateTime:
@@ -194,12 +173,6 @@ public class Player implements ApplicationListener {
         spriteBatch.draw(currentFrame, getX(), getY()); //naked girl rendering
         spriteBatch.end();
     }
-
-    public float getPlainX() { return x; }
-
-    public float getX() { return x - (float)(Constants.TILE_SIZE *0.25); } //place the animation in the center of the tile
-
-    public float getY() {return y;}
 
     /**
      * Update girl with clothes on
@@ -236,10 +209,6 @@ public class Player implements ApplicationListener {
         oldY = y;
     }
 
-    public float getOldX() {return oldX;}
-    public float getOldY() {return oldY;}
-
-    @Override
     public void dispose() {
         spriteBatch.dispose();
         walkSheet.dispose();
@@ -248,29 +217,31 @@ public class Player implements ApplicationListener {
         pantsSheet.dispose();
         tshirtSheet.dispose();
     }
-    @Override
-    public void resume(){updateAnimationStateTime = true;}
-    @Override
-    public void pause(){}
-    @Override
-    public void resize(int x, int y){}
 
+
+    public float getOldX() {return oldX;}
+    public float getOldY() {return oldY;}
+    public float getX() {
+        //place the animation in the center of the tile
+        return x - (float)(Constants.TILE_SIZE *0.25); }
+
+    public float getY() {return y;}
+
+    public Animation<TextureRegion> getCurrentAnimation() {
+        return currentAnimation;
+    }
     public Animation<TextureRegion> getWalkAnimationDOWN() {
         return walkAnimationDOWN;
     }
-
     public Animation<TextureRegion> getWalkAnimationUP() {
         return walkAnimationUP;
     }
-
     public Animation<TextureRegion> getWalkAnimationLEFT() {
         return walkAnimationLEFT;
     }
-
     public Animation<TextureRegion> getWalkAnimationRIGHT() {
         return walkAnimationRIGHT;
     }
-
     public Animation<TextureRegion> getIdleAnimation() {
         return idleAnimation;
     }
@@ -281,134 +252,89 @@ public class Player implements ApplicationListener {
     public Animation<TextureRegion> getCurrentAnimationSocks() {
         return currentAnimationSocks;
     }
-
     public Animation<TextureRegion> getIdleAnimationUnderwear() {
         return idleAnimationUnderwear;
     }
-
     public Animation<TextureRegion> getWalkAnimationDOWNUnderwear() {
         return walkAnimationDOWNUnderwear;
     }
-
     public Animation<TextureRegion> getWalkAnimationUPUnderwear() {
         return walkAnimationUPUnderwear;
     }
-
     public Animation<TextureRegion> getWalkAnimationLEFTUnderwear() {
         return walkAnimationLEFTUnderwear;
     }
-
     public Animation<TextureRegion> getWalkAnimationRIGHTUnderwear() {
         return walkAnimationRIGHTUnderwear;
     }
+
+    public Animation<TextureRegion> getIdleAnimationSocks() {
+        return idleAnimationSocks;
+    }
+    public Animation<TextureRegion> getWalkAnimationDOWNSocks() {
+        return walkAnimationDOWNSocks;
+    }
+    public Animation<TextureRegion> getWalkAnimationUPSocks() {
+        return walkAnimationUPSocks;
+    }
+    public Animation<TextureRegion> getWalkAnimationLEFTSocks() {
+        return walkAnimationLEFTSocks;
+    }
+    public Animation<TextureRegion> getWalkAnimationRIGHTSocks() {
+        return walkAnimationRIGHTSocks;
+    }
+    public Animation<TextureRegion> getIdleAnimationShirt() {
+        return idleAnimationShirt;
+    }
+    public Animation<TextureRegion> getWalkAnimationDOWNShirt() {
+        return walkAnimationDOWNShirt;
+    }
+    public Animation<TextureRegion> getWalkAnimationUPShirt() {
+        return walkAnimationUPShirt;
+    }
+    public Animation<TextureRegion> getWalkAnimationLEFTShirt() {
+        return walkAnimationLEFTShirt;
+    }
+    public Animation<TextureRegion> getWalkAnimationRIGHTShirt() {
+        return walkAnimationRIGHTShirt;
+    }
+    public Animation<TextureRegion> getWalkAnimationUPPants() {
+        return walkAnimationUPPants;
+    }
+    public Animation<TextureRegion> getWalkAnimationLEFTPants() {
+        return walkAnimationLEFTPants;
+    }
+    public Animation<TextureRegion> getWalkAnimationRIGHTPants() {
+        return walkAnimationRIGHTPants;
+    }
+    public Animation<TextureRegion> getCurrentAnimationShirt() {
+        return currentAnimationShirt;
+    }
+    public Animation<TextureRegion> getCurrentAnimationPants() {
+        return currentAnimationPants;
+    }
+    public Animation<TextureRegion> getIdleAnimationPants() {
+        return idleAnimationPants;
+    }
+    public Animation<TextureRegion> getWalkAnimationDOWNPants() {
+        return walkAnimationDOWNPants;
+    }
+
     public void setCurrentAnimationUnderwear(Animation<TextureRegion> currentAnimationUnderwear) {
         this.currentAnimationUnderwear = currentAnimationUnderwear;
     }
-
     public void setCurrentAnimationShirt(Animation<TextureRegion> currentAnimationShirt) {
         this.currentAnimationShirt = currentAnimationShirt;
     }
     public void setCurrentAnimationPants(Animation<TextureRegion> currentAnimationPants) {
         this.currentAnimationPants= currentAnimationPants;
     }
-
-
-    public Animation<TextureRegion> getIdleAnimationSocks() {
-        return idleAnimationSocks;
+    public void setCurrentAnimation(Animation<TextureRegion> currentAnimation) {
+        this.currentAnimation = currentAnimation;
     }
 
-    public Animation<TextureRegion> getWalkAnimationDOWNSocks() {
-        return walkAnimationDOWNSocks;
+    public void setCurrentAnimationSocks(Animation<TextureRegion> currentAnimation) {
+        this.currentAnimationSocks = currentAnimation;
     }
-
-    public Animation<TextureRegion> getWalkAnimationUPSocks() {
-        return walkAnimationUPSocks;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationLEFTSocks() {
-        return walkAnimationLEFTSocks;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationRIGHTSocks() {
-        return walkAnimationRIGHTSocks;
-    }
-
-
-    public Animation<TextureRegion> getIdleAnimationShirt() {
-        return idleAnimationShirt;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationDOWNShirt() {
-        return walkAnimationDOWNShirt;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationUPShirt() {
-        return walkAnimationUPShirt;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationLEFTShirt() {
-        return walkAnimationLEFTShirt;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationRIGHTShirt() {
-        return walkAnimationRIGHTShirt;
-    }
-
-    public TextureRegion getCurrentFrameShirt() {
-        return currentFrameShirt;
-    }
-
-
-    public TextureRegion getCurrentFrameSocks() {
-        return currentFrameSocks;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationUPPants() {
-        return walkAnimationUPPants;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationLEFTPants() {
-        return walkAnimationLEFTPants;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationRIGHTPants() {
-        return walkAnimationRIGHTPants;
-    }
-
-    public TextureRegion getCurrentFramePants() {
-        return currentFramePants;
-    }
-
-
-    public Animation<TextureRegion> getCurrentAnimationShirt() {
-        return currentAnimationShirt;
-    }
-
-    public Animation<TextureRegion> getCurrentAnimationPants() {
-        return currentAnimationPants;
-    }
-
-    public Animation<TextureRegion> getIdleAnimationPants() {
-        return idleAnimationPants;
-    }
-
-    public Animation<TextureRegion> getWalkAnimationDOWNPants() {
-        return walkAnimationDOWNPants;
-    }
-
-
-    public void makeAnimationList(Texture sheet){
-        List<Animation<TextureRegion>> list = new ArrayList<Animation<TextureRegion>>();
-        list.add(animationUtil.makeAnimation(sheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} ));
-
-        currentAnimation = animationUtil.makeAnimation(sheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
-        idleAnimation = animationUtil.makeAnimation(sheet, FRAME_COLS, FRAME_ROWS, 4, new int[]{0,2} );
-        walkAnimationDOWN = animationUtil.makeAnimation(sheet, 0 );
-        walkAnimationUP = animationUtil.makeAnimation(sheet,  3 );
-        walkAnimationLEFT = animationUtil.makeAnimation(sheet, 1 );
-        walkAnimationRIGHT = animationUtil.makeAnimation(sheet, 2 );
-    }
-
-
 
 }
