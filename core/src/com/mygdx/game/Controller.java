@@ -680,6 +680,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
 
         if ( monster1.move( playerPosX, playerPosY ) ) {
             hitByMonster(monster1);
+            SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.monsterGroan);
 
         }
 
@@ -693,6 +694,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
             public void run() {
                 if ( monster2.move( playerPosX , playerPosY ) ) {
                     hitByMonster(monster2);
+                    SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.monsterGroan);
                 }
                 enemyTurnEnd(); // prevent further player input until monsters have moved!!!
             }
