@@ -28,6 +28,8 @@ public class AndroidLauncher extends AndroidApplication implements firebase {
 
 		//Firebase
 		PlayerLogin.fb=this;
+		MenuScreen.fb=this;
+		GameOverScreen.fb=this;
         users=new ArrayList<>();
         databaseUser= FirebaseDatabase.getInstance().getReference("users");
 
@@ -95,5 +97,27 @@ public class AndroidLauncher extends AndroidApplication implements firebase {
         return registered;
     }
 
+	@Override
+	public void setHighScore(int Maxscore, String name) {
+		for (User u : users) {
+			if (u.getUserName().equals(name)) {
+				//lidUser = new User(u.getUserId(), u.getUserName(), u.getUserpassword(), u.getHighScore(), u.getScore());
+				u.setHighScore(Maxscore);
+				databaseUser.child(u.getUserId()).setValue(u);
+			}
+		}
 	}
+
+	@Override
+	public int getHighScore(String name) {
+		int score=0;
+			for(User u:users) {
+				if (u.getUserName().equals(name)) {
+					score = u.getHighScore();
+				}
+			}
+		return score;
+	}
+
+}
 
