@@ -9,11 +9,16 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
@@ -37,6 +42,8 @@ public class PlayerLogin implements ApplicationListener, Screen {
     private TextField Playername;
     private TextField Password;
 
+    private Window invaliduser;
+
     //Constructor
     public PlayerLogin() {
        create();
@@ -58,7 +65,14 @@ public class PlayerLogin implements ApplicationListener, Screen {
         name=new String();
         password=new String();
 
-        //Login button :Validation of player in Firebase
+        invaliduser=new Window("Invalid User",skin);
+        invaliduser.add(invaliduserbutton()).row();
+        invaliduser.pack();
+        invaliduser.setPosition(1500,700);
+        invaliduser.setVisible(false);
+        invaliduser.toFront();
+
+                //Login button :Validation of player in Firebase
          LoginButton = new TextButton("LOGIN", skin, "default");
         LoginButton.setSize(Constants.COL_WIDTH +50 ,Constants.ROW_HEIGHT);
         LoginButton.setPosition(Constants.CENTER_X,Constants.CENTER_Y +250);
@@ -68,6 +82,12 @@ public class PlayerLogin implements ApplicationListener, Screen {
                 name=Playername.getText().toString().trim();
                 password=Password.getText().toString().trim();
                 if(fb.onclicklogin(name,password)) { GoMenu(); }
+                else
+                {
+                    invaliduser.setVisible(true);
+
+
+                }
             }
         });
 
@@ -119,6 +139,7 @@ public class PlayerLogin implements ApplicationListener, Screen {
         stage.addActor(QuickPlayButton);
         stage.addActor(Playername);
         stage.addActor(Password);
+        stage.addActor(invaliduser);
 
         //set the InputProcessor
         Gdx.input.setInputProcessor(stage);
@@ -142,7 +163,27 @@ public class PlayerLogin implements ApplicationListener, Screen {
         stage.draw();
         batch.end();
     }
+ public Table invaliduserbutton()
+ {
+     Table table =new Table();
+     table.row();
+     Label label=new Label("Invalid User",skin,"default");
+     label.setFontScale(3,2);
+     table.add(label);
+     table .row();
+     TextButton Continue = new TextButton("Try again", skin);
+     table.add(Continue);
+     Continue.addListener(new ChangeListener() {
+         @Override
+         public void changed(ChangeEvent event, Actor actor) {
 
+             invaliduser.setVisible(false);
+             Playername.setText("");
+             Password.setText("");
+         }
+     });
+     return table;
+ }
 
     @Override
     public void show() {
