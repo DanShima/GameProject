@@ -69,6 +69,7 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private boolean notMovedYetToNextMap;
 
     private boolean isMonsterTurn = false;
+    private Score score;
 
     public Controller(GameView GameView) {
         notMovedYetToNextMap=false;
@@ -82,6 +83,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     public void create() {
         sp = new SpriteBatch();
         hud = new HUD(sp);
+        score = new Score(hud);
+        hud.setScore(score.getScore());
 
         interactMap.create();
         getTiledMapRender().setView(interactView.getCamera());
@@ -163,7 +166,9 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
                 if(item.getName().equals("apple")){
                     hud.setHealth(hud.getHealth()+item.giveHealthPoint());
                 }
-                else {hud.setScore(hud.getScore()+item.giveScorePoint());
+
+                else {score.setScore(score.getScore()+item.giveScorePoint());
+                    hud.setScore(score.getScore());
 
                     //plays a sound effect when collecting a cloth ite
                     SoundManager.newSoundManager.play(SoundEffect.newSoundEffect.sounds.collect);}
@@ -761,9 +766,11 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      * decrease score points for every move you make. -20 score points per move
      */
     public void ScoreMoveDecrease(){
-        if(hud.getScore()>0)
-            hud.setScore(hud.getScore()-20);
-        else hud.setScore(0);
+        if(score.getScore()>0)
+        {score.setScore(score.getScore()-20);
+            hud.setScore(score.getScore());}
+        else {score.setScore(0);
+            hud.setScore(score.getScore());}
     }
     
 
@@ -772,8 +779,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      */
     public void GameOverSettings(){
         Constants.currentLevel=0;
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp));
-        hud.setScore(1000);
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOver(sp,score.getMaxScore()));
+        hud.setScore(score.StartScore());
     }
 
     public void enemyTurnStart(){

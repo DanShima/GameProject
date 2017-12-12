@@ -32,7 +32,7 @@ public class HUD implements Disposable  {
     private int level = 0;
     public Stage stage;
     private Viewport viewport;
-    private static int score = Constants.SCORE_START;
+    private static int score;
     private  Label ScoreLabel;
     private Label LevelLabel;
     private Table table;
@@ -45,6 +45,7 @@ public class HUD implements Disposable  {
     MenuScreen menuScreen;
     private Window PauseMenu;
     final ProgressBar progressBar;
+
 
 
 
@@ -97,7 +98,7 @@ public class HUD implements Disposable  {
         tiledDrawable.setMinWidth(0.0f);
         progressBarStyle.knobBefore = tiledDrawable;
 
-        progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, skin, "fancy");
+        progressBar = new ProgressBar(0, 100, 1, false, skin, "fancy");
         progressBar.setValue(75.0f);//initializing the bar
 //        progressBar.setAnimateDuration(2f);
 
@@ -135,7 +136,6 @@ public class HUD implements Disposable  {
         TryAgain.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                Constants.SCORE_START = 1000;
                 Constants.currentLevel = 0;
                 Gdx.graphics.setContinuousRendering(true);
                 ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
