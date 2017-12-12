@@ -27,42 +27,33 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     private GameView interactView;
     private Map interactMap;
     private float oldX, oldY;
-
-
-    public final static int mapWidth = Constants.TILE_SIZE * Constants.TILE_COUNT_WIDTH;
+    private  final static int mapWidth = Constants.TILE_SIZE * Constants.TILE_COUNT_WIDTH;
     public final static int mapHeight = Constants.TILE_SIZE * Constants.TILE_COUNT_HEIGHT;
     private int NumberOfMovedTiles = 2;
-    public int tileWidth = 128;
-    public int tileHeight = 128;
-
+    private  int tileWidth = 128;
+    private  int tileHeight = 128;
     private TiledMapTileLayer Blockedlayer;
     private TiledMapTileLayer terrain;
     private InputMultiplexer multiplexer;
-
     private Player girl; //animated player
-
     private GazetiMonster gazeti;
     private MushRoomMonster mushRoomMonster;
     private WaspMonster wasp;
     private GolemMonster golem;
     private PhreoniMonster phreeoni;
-
     private HUD hud;
     private SpriteBatch sp;
-
-
     private int oneStepHorizontaly;
     private int twoStepsHorizontally;
     private int oneStepVertically;
     private int twoStepsvertically;
-
     private TiledMapTileLayer.Cell ground;
     private TiledMapTileLayer.Cell obstacles;
-
     private ItemList itemList;
     private boolean movedYetToNextMap;
-
     private boolean isMonsterTurn = false;
+
+
 
     public Controller(GameView GameView) {
         movedYetToNextMap =false;
@@ -788,9 +779,6 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
              }
              return false;
          }
-
-
-
 
 }
 

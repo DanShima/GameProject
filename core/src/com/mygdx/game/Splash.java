@@ -55,7 +55,7 @@ public class Splash implements Screen
     @Override
     public void render(float delta)
     {
-        handleInput();
+        
         GL20 gl = Gdx.graphics.getGL20();
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.begin();
@@ -64,13 +64,7 @@ public class Splash implements Screen
         tweenManager.update(delta);
     }
 
-    private void handleInput()
-    {
-        //if(Gdx.input.justTouched())
-        //{
-            //game.setScreen(new PlayerLogin());
-        //}
-    }
+
 
     @Override
     public void resize(int width, int height) {
