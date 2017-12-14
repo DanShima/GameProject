@@ -17,7 +17,6 @@ import static com.mygdx.game.Constants.FPS;
 public class Monster  {
     
     private Texture texture; //The texture that will hold the sprite sheet.
-    private Texture mummySheet;
     private SpriteBatch spriteBatch;
     private TextureRegion[] regions = new TextureRegion[4]; //if 4 monsters in one sheet
     private Animation<TextureRegion> walkAnimation;
@@ -39,10 +38,6 @@ public class Monster  {
     private boolean backStep;
 
     private int monsterDamage=30;
-
-    public Monster(){
-
-    }
 
     //create a monster
     public Monster(String pngFile, int rows, int columns, int specifyRow, int turnOrder , int startPosX, int startPosY){

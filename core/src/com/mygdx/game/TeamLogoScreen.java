@@ -1,9 +1,5 @@
 package com.mygdx.game;
 
-/**
- * Created by Pintu on 12/8/2017.
- * fading is added
- */
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.Gdx;

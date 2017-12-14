@@ -38,11 +38,5 @@ public class Score {
         else return score;
     }
 
-    public void setMaxScore(int maxScore) {
-        this.maxScore = maxScore;
-    }
-    public int StartScore(){
-        return score=Constants.SCORE_START;
-    }
 }
 

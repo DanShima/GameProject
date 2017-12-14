@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.Gdx;
 
 /**
  * This class creates the Gazeti Monster monster with specified starting position

@@ -1,7 +1,5 @@
 package com.mygdx.game;
-/**
- * Created by tmp-sda-1124 on 12/4/17.
- */
+
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;

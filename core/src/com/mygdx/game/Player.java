@@ -1,16 +1,11 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.mygdx.game.Constants.GIRL_NAKED;
 
 /**
@@ -48,8 +43,6 @@ public class Player {
     private Texture socksSheet;
     private Texture tshirtSheet;
     private Texture pantsSheet;
-
-    private Item item;
 
     //movement animation arrays for socks
     private Animation<TextureRegion> currentAnimationSocks;
