@@ -662,7 +662,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
         //if player position is the same as the tile position marked as "exit", then call the next level loader method
         if (getPlayerPositionSimplifiedX() == tileX && getPlayerPositionSimplifiedY() == tileY) {
             if( getPlayerPositionSimplifiedX() == 13 && getPlayerPositionSimplifiedY() == 7)
-                GameOverSettings();
+               // gameOverSettings();
+                victorySettings();
             else updateLevel();
         }
       }
@@ -712,9 +713,8 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
      */
     public void hitByMonster (Monster monster) {
         //reduce health reduces the health and returns true if the player is at 0 health or lower
-        if (  hud.reduceHealth( monster.getMonsterDamage() )  )
-        {
-            GameOverSettings();
+        if (  hud.reduceHealth( monster.getMonsterDamage() )  )        {
+            gameOverSettings();
         }
     }
 
@@ -733,11 +733,17 @@ public class Controller implements InputProcessor,Screen,ApplicationListener {
     /**
      * When the game is finished. it takes you back to level 0 and the score is reset to 1000.
      */
-    public void GameOverSettings(){
-
+    public void gameOverSettings(){
         Constants.CURRENT_LEVEL =0;
-        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp,score.getMaxScore()));
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp,score.getMaxScore(), "GAME OVER"));
         hud.setScore(1000);
+    }
+
+    /**
+     * Shows a game over screen with "victory" text label.
+     */
+    public void victorySettings(){
+        ((Game) Gdx.app.getApplicationListener()).setScreen(new GameOverScreen(sp,score.getMaxScore(), "VICTORY"));
     }
 
     public void enemyTurnStart(){

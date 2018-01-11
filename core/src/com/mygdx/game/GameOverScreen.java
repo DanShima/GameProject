@@ -28,29 +28,34 @@ import com.badlogic.gdx.utils.viewport.Viewport;
         private HUD hud ;
         private int MaxScore;
         private Texture background;
+        private Label gameOverLabel;
+        private String labelText;
 
        // Firebase
        public static firebase fb;
        public  String name;
        PlayerLogin play;
 
+
     /**
      * Create the layout of GameOverScreen screen with a table of buttons
      * @param sp spritebatch used to render the screen
      * @param  MaxScore int used to show the score plus health bonus
      */
-    public GameOverScreen(SpriteBatch sp,int MaxScore) {
+    public GameOverScreen(SpriteBatch sp,int MaxScore, String text) {
         this.MaxScore=MaxScore;
         viewport = new StretchViewport(Constants.MAP_WIDTH, Constants.MAP_HEIGHT, new OrthographicCamera());//
         background = new Texture("winter.png");
         hud = new HUD(sp);
         stage = new Stage(viewport, sp);
         skin = new Skin(Gdx.files.internal(Constants.SKIN));
+        labelText = text;
+
 
             Table table = new Table();
             table.center();
             table.setFillParent(true);
-            Label gameOverLabel = new Label("GAME OVER", skin,"default");
+            gameOverLabel = new Label(labelText, skin,"default");
             gameOverLabel.setFontScale(9f,9f);
 
             TextButton replay = new TextButton("Play again!",skin,"default");
@@ -85,6 +90,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             table.row();
             table.add(menu).padTop(150f).padRight(200f);
             stage.addActor(table);
+        }
+
+        public void setLabelText(String labelText) {
+        this.labelText = labelText;
         }
 
         @Override
