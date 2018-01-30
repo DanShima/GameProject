@@ -61,6 +61,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
             TextButton replay = new TextButton("Play again!",skin,"default");
             replay.addListener(new InputListener() {
                 public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                    Constants.CURRENT_LEVEL= 0;
                     ((Game)Gdx.app.getApplicationListener()).setScreen(new GameView());
                     return true;}});
             replay.setTransform(true);
